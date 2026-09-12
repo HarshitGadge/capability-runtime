@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-09-12T04:30:15.308Z",
+  "url": "about:blank",
+  "title": "",
+  "elements": [],
+  "textByFrame": {
+    "(top)": ""
+  },
+  "urlByFrame": {
+    "(top)": "about:blank"
+  },
+  "provider": "web/dom-scan",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  }
+}

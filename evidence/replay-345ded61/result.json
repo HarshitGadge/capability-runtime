@@ -1,0 +1,25 @@
+{
+  "status": "failure",
+  "capabilityId": "member.read_savings_balance",
+  "capabilityVersion": "1.0.0",
+  "runId": "345ded61",
+  "tenantId": "tenant-a",
+  "startedAt": "2026-09-12T04:30:15.161Z",
+  "durationMs": 240,
+  "evidenceDir": "evidence/replay-345ded61",
+  "trace": [],
+  "surfaceDrift": {
+    "recorded": "9677b7a99dbe5759",
+    "observed": "",
+    "comparedSteps": 0,
+    "totalSteps": 7,
+    "drifted": null,
+    "changedSteps": []
+  },
+  "kind": "invalid_input",
+  "expected": "input \"member_id\" to match /^[0-9]+$/",
+  "observed": "\"abc\"",
+  "remediation": "Fix the caller, not the capability.",
+  "screenshotPath": "evidence/replay-345ded61/screenshots/001-FAIL-invalid_input.png",
+  "observationPath": "evidence/replay-345ded61/observations/001-FAIL-invalid_input.json"
+}

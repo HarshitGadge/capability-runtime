@@ -4,3 +4,4 @@ node_modules/
 *.log
 scratch/
 evidence/.test/
+docs/interview-prep/
