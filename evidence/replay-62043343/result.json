@@ -1,0 +1,103 @@
+{
+  "status": "success",
+  "capabilityId": "member.open_sub_account",
+  "capabilityVersion": "1.0.0",
+  "runId": "62043343",
+  "tenantId": "tenant-a",
+  "startedAt": "2026-09-12T01:23:36.843Z",
+  "durationMs": 8170,
+  "evidenceDir": "evidence/replay-62043343",
+  "trace": [
+    {
+      "stepId": "enter_the_member_identifier_in_the_looku",
+      "intent": "Enter the member identifier in the lookup form",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 495,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 545,
+      "locatorStrategyUsed": "role_name(button, \"Search\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "open_the_matching_member_record_from_the",
+      "intent": "Open the matching member record from the results",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 545,
+      "locatorStrategyUsed": "role_name(link, \"View\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "open_the_new_sub_account_form_for_this_m",
+      "intent": "Open the new sub-account form for this member",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 532,
+      "locatorStrategyUsed": "role_name(link, \"Open Sub-Account\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "choose_the_sub_account_product_type",
+      "intent": "Choose the sub-account product type",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 545,
+      "locatorStrategyUsed": "proximity_label(combobox, \"Account Type\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "enter_the_opening_deposit_amount",
+      "intent": "Enter the opening deposit amount",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 505,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Opening Deposit\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_sub_account_opening",
+      "intent": "Submit the sub-account opening",
+      "recoveriesApplied": [],
+      "status": "skipped",
+      "attempts": 1,
+      "durationMs": 275
+    },
+    {
+      "stepId": "submit_the_sub_account_opening",
+      "intent": "Submit the sub-account opening",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 556,
+      "locatorStrategyUsed": "role_name(button, \"Open Account\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "read_the_confirmation_number_from_the_co",
+      "intent": "Read the confirmation number from the confirmation screen",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 399,
+      "locatorStrategyUsed": "proximity_label(cell, \"Confirmation Number\")",
+      "locatorCandidates": 1
+    }
+  ],
+  "outputs": {
+    "confirmation_number": "CNF-8846"
+  }
+}

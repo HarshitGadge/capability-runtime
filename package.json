@@ -1,0 +1,38 @@
+{
+  "name": "capability-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Record LLM-discovered UI flows as typed, versioned capability artifacts; replay them deterministically without a model in the loop.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "app": "tsx app/server.ts",
+    "session": "tsx src/cli/session.ts",
+    "discover": "tsx src/cli/discover.ts",
+    "replay": "tsx src/cli/replay.ts",
+    "operator": "tsx src/cli/operator.ts",
+    "compile": "tsx src/cli/compile.ts",
+    "schema": "tsx src/cli/schema.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "demo:handoff": "tsx scripts/demo-handoff.ts",
+    "fixtures": "tsx test/fixtures/scriptedRecording.ts",
+    "test:unit": "vitest run test/locator.test.ts test/redaction.test.ts test/policy.test.ts test/contract.test.ts",
+    "clean": "rm -rf .session evidence/replay-* evidence/discovery-*"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
+    "dotenv": "^17.4.2",
+    "playwright": "^1.56.0",
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.24.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

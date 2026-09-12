@@ -1,0 +1,4648 @@
+{
+  "goal": "Open a Holiday Savings sub-account for member 12345 and reach the confirmation screen",
+  "model": "fixture/scripted",
+  "capability": {
+    "id": "member.open_sub_account",
+    "name": "Open member sub-account",
+    "description": "Open a new savings sub-account for an existing member and return the confirmation number. The final step submits the account opening, which cannot be undone from within the application."
+  },
+  "inputs": [
+    {
+      "name": "memberId",
+      "type": "string",
+      "required": true,
+      "description": "The member identifier to open the sub-account for.",
+      "sensitivity": "internal",
+      "pattern": "^\\d{4,10}$",
+      "example": "12345"
+    },
+    {
+      "name": "accountType",
+      "type": "string",
+      "required": true,
+      "description": "Sub-account product type, exactly as listed in the product dropdown.",
+      "sensitivity": "public",
+      "example": "Holiday Savings"
+    },
+    {
+      "name": "openingDeposit",
+      "type": "string",
+      "required": true,
+      "description": "Opening deposit amount. The product enforces a $25.00 minimum.",
+      "sensitivity": "internal",
+      "example": "250.00"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "confirmation_number",
+      "type": "string",
+      "required": true,
+      "description": "Confirmation reference for the opened sub-account.",
+      "sensitivity": "regulated"
+    }
+  ],
+  "actions": [
+    {
+      "intent": "Enter the member identifier in the lookup form",
+      "element": {
+        "role": "textbox",
+        "name": "",
+        "value": "",
+        "proximityLabel": "Member ID",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 273.203125,
+          "y": 56,
+          "width": 125,
+          "height": 21
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Member ID",
+        "region": "Member Lookup",
+        "ref": "content#2"
+      },
+      "before": {
+        "observedAt": "2026-09-12T01:22:05.851Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Member Lookup",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member ID",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 77.203125,
+              "height": 35
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#1"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Member ID",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 273.203125,
+              "y": 56,
+              "width": 125,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#2"
+          },
+          {
+            "role": "button",
+            "name": "Search",
+            "value": "Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 408.203125,
+              "y": 54,
+              "width": 69.53125,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#3"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Lookup\nMember ID \nEnter a numeric member identifier. Partial matches are not supported."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T01:22:06.067Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Member Lookup",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member ID",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 77.203125,
+              "height": 35
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#1"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "12345",
+            "proximityLabel": "Member ID",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 273.203125,
+              "y": 56,
+              "width": 125,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#2"
+          },
+          {
+            "role": "button",
+            "name": "Search",
+            "value": "Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 408.203125,
+              "y": 54,
+              "width": 69.53125,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#3"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Lookup\nMember ID \nEnter a numeric member identifier. Partial matches are not supported."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "type",
+        "value": {
+          "kind": "const",
+          "value": "12345"
+        },
+        "clearFirst": true
+      }
+    },
+    {
+      "intent": "Submit the member search",
+      "element": {
+        "role": "button",
+        "name": "Search",
+        "value": "Search",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 408.203125,
+          "y": 54,
+          "width": 69.53125,
+          "height": 25
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Member ID",
+        "region": "Member Lookup",
+        "ref": "content#3"
+      },
+      "before": {
+        "observedAt": "2026-09-12T01:22:06.198Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Member Lookup",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member ID",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 77.203125,
+              "height": 35
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#1"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "12345",
+            "proximityLabel": "Member ID",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 273.203125,
+              "y": 56,
+              "width": 125,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#2"
+          },
+          {
+            "role": "button",
+            "name": "Search",
+            "value": "Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 408.203125,
+              "y": 54,
+              "width": 69.53125,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#3"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Lookup\nMember ID \nEnter a numeric member identifier. Partial matches are not supported."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T01:22:06.471Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Search Results",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Search Results",
+            "region": "Search Results",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180.5,
+              "y": 42.5,
+              "width": 140.390625,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 320.890625,
+              "y": 42.5,
+              "width": 220.375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 541.265625,
+              "y": 42.5,
+              "width": 119.5,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "Action",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 660.765625,
+              "y": 42.5,
+              "width": 118.734375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180.5,
+              "y": 70.5,
+              "width": 140.390625,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | J. Whitfield | active | View",
+            "region": "Search Results",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "12345",
+            "text": "J. Whitfield",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 320.890625,
+              "y": 70.5,
+              "width": 220.375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | J. Whitfield | active | View",
+            "region": "Search Results",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "J. Whitfield",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 541.265625,
+              "y": 70.5,
+              "width": 119.5,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | J. Whitfield | active | View",
+            "region": "Search Results",
+            "ref": "content#7"
+          },
+          {
+            "role": "link",
+            "name": "View",
+            "text": "View",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 671.265625,
+              "y": 77,
+              "width": 28.46875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | J. Whitfield | active | View",
+            "region": "Search Results",
+            "ref": "content#8"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 114,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Search Results",
+            "ref": "content#9"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Search Results\nMember Member Name Status Action\n12345 J. Whitfield active View\nNew Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "click"
+      }
+    },
+    {
+      "intent": "Open the matching member record from the results",
+      "element": {
+        "role": "link",
+        "name": "View",
+        "text": "View",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 671.265625,
+          "y": 77,
+          "width": 28.46875,
+          "height": 15
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "12345 | J. Whitfield | active | View",
+        "region": "Search Results",
+        "ref": "content#8"
+      },
+      "before": {
+        "observedAt": "2026-09-12T01:22:06.625Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Search Results",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Search Results",
+            "region": "Search Results",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180.5,
+              "y": 42.5,
+              "width": 140.390625,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 320.890625,
+              "y": 42.5,
+              "width": 220.375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 541.265625,
+              "y": 42.5,
+              "width": 119.5,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "Action",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 660.765625,
+              "y": 42.5,
+              "width": 118.734375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180.5,
+              "y": 70.5,
+              "width": 140.390625,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | J. Whitfield | active | View",
+            "region": "Search Results",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "12345",
+            "text": "J. Whitfield",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 320.890625,
+              "y": 70.5,
+              "width": 220.375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | J. Whitfield | active | View",
+            "region": "Search Results",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "J. Whitfield",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 541.265625,
+              "y": 70.5,
+              "width": 119.5,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | J. Whitfield | active | View",
+            "region": "Search Results",
+            "ref": "content#7"
+          },
+          {
+            "role": "link",
+            "name": "View",
+            "text": "View",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 671.265625,
+              "y": 77,
+              "width": 28.46875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | J. Whitfield | active | View",
+            "region": "Search Results",
+            "ref": "content#8"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 114,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Search Results",
+            "ref": "content#9"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Search Results\nMember Member Name Status Action\n12345 J. Whitfield active View\nNew Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T01:22:06.897Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | J. Whitfield",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "J. Whitfield",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | J. Whitfield",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name J. Whitfield\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "click"
+      }
+    },
+    {
+      "intent": "Open the new sub-account form for this member",
+      "element": {
+        "role": "link",
+        "name": "Open Sub-Account",
+        "text": "Open Sub-Account",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 180,
+          "y": 221,
+          "width": 112.21875,
+          "height": 15
+        },
+        "frame": [
+          "content"
+        ],
+        "region": "Member 12345",
+        "ref": "content#13"
+      },
+      "before": {
+        "observedAt": "2026-09-12T01:22:07.029Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | J. Whitfield",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "J. Whitfield",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | J. Whitfield",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name J. Whitfield\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T01:22:07.284Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Open Sub-Account — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Open Sub-Account — 12345",
+            "region": "Open Sub-Account",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 109.6875,
+              "height": 29
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#1"
+          },
+          {
+            "role": "combobox",
+            "name": "",
+            "value": "Holiday Savings",
+            "proximityLabel": "Account Type",
+            "text": "Holiday SavingsVacation ClubEmergency Fund",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 54,
+              "width": 124,
+              "height": 19
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 78,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#3"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Opening Deposit",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 83,
+              "width": 97,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Nickname",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 109,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#5"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Nickname",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 114,
+              "width": 181,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#6"
+          },
+          {
+            "role": "button",
+            "name": "Open Account",
+            "value": "Open Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 169,
+              "width": 111.796875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "",
+            "region": "Open Sub-Account",
+            "ref": "content#7"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Open Sub-Account — 12345\nAccount Type \nHoliday Savings\nVacation Club\nEmergency Fund\nOpening Deposit \nNickname \n \nOpening deposit must be at least $25.00. This action cannot be undone."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "click"
+      }
+    },
+    {
+      "intent": "Choose the sub-account product type",
+      "element": {
+        "role": "combobox",
+        "name": "",
+        "value": "Holiday Savings",
+        "proximityLabel": "Account Type",
+        "text": "Holiday SavingsVacation ClubEmergency Fund",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 305.6875,
+          "y": 54,
+          "width": 124,
+          "height": 19
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+        "region": "Open Sub-Account",
+        "ref": "content#2"
+      },
+      "before": {
+        "observedAt": "2026-09-12T01:22:07.422Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Open Sub-Account — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Open Sub-Account — 12345",
+            "region": "Open Sub-Account",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 109.6875,
+              "height": 29
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#1"
+          },
+          {
+            "role": "combobox",
+            "name": "",
+            "value": "Holiday Savings",
+            "proximityLabel": "Account Type",
+            "text": "Holiday SavingsVacation ClubEmergency Fund",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 54,
+              "width": 124,
+              "height": 19
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 78,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#3"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Opening Deposit",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 83,
+              "width": 97,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Nickname",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 109,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#5"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Nickname",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 114,
+              "width": 181,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#6"
+          },
+          {
+            "role": "button",
+            "name": "Open Account",
+            "value": "Open Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 169,
+              "width": 111.796875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "",
+            "region": "Open Sub-Account",
+            "ref": "content#7"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Open Sub-Account — 12345\nAccount Type \nHoliday Savings\nVacation Club\nEmergency Fund\nOpening Deposit \nNickname \n \nOpening deposit must be at least $25.00. This action cannot be undone."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T01:22:07.684Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Open Sub-Account — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Open Sub-Account — 12345",
+            "region": "Open Sub-Account",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 109.6875,
+              "height": 29
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#1"
+          },
+          {
+            "role": "combobox",
+            "name": "",
+            "value": "Holiday Savings",
+            "proximityLabel": "Account Type",
+            "text": "Holiday SavingsVacation ClubEmergency Fund",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 54,
+              "width": 124,
+              "height": 19
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 78,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#3"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Opening Deposit",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 83,
+              "width": 97,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Nickname",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 109,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#5"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Nickname",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 114,
+              "width": 181,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#6"
+          },
+          {
+            "role": "button",
+            "name": "Open Account",
+            "value": "Open Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 169,
+              "width": 111.796875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "",
+            "region": "Open Sub-Account",
+            "ref": "content#7"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Open Sub-Account — 12345\nAccount Type \nHoliday Savings\nVacation Club\nEmergency Fund\nOpening Deposit \nNickname \n \nOpening deposit must be at least $25.00. This action cannot be undone."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "select",
+        "value": {
+          "kind": "const",
+          "value": "Holiday Savings"
+        }
+      }
+    },
+    {
+      "intent": "Enter the opening deposit amount",
+      "element": {
+        "role": "textbox",
+        "name": "",
+        "value": "",
+        "proximityLabel": "Opening Deposit",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 305.6875,
+          "y": 83,
+          "width": 97,
+          "height": 21
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Opening Deposit",
+        "region": "Open Sub-Account",
+        "ref": "content#4"
+      },
+      "before": {
+        "observedAt": "2026-09-12T01:22:07.824Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Open Sub-Account — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Open Sub-Account — 12345",
+            "region": "Open Sub-Account",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 109.6875,
+              "height": 29
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#1"
+          },
+          {
+            "role": "combobox",
+            "name": "",
+            "value": "Holiday Savings",
+            "proximityLabel": "Account Type",
+            "text": "Holiday SavingsVacation ClubEmergency Fund",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 54,
+              "width": 124,
+              "height": 19
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 78,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#3"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Opening Deposit",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 83,
+              "width": 97,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Nickname",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 109,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#5"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Nickname",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 114,
+              "width": 181,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#6"
+          },
+          {
+            "role": "button",
+            "name": "Open Account",
+            "value": "Open Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 169,
+              "width": 111.796875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "",
+            "region": "Open Sub-Account",
+            "ref": "content#7"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Open Sub-Account — 12345\nAccount Type \nHoliday Savings\nVacation Club\nEmergency Fund\nOpening Deposit \nNickname \n \nOpening deposit must be at least $25.00. This action cannot be undone."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T01:22:08.047Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Open Sub-Account — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Open Sub-Account — 12345",
+            "region": "Open Sub-Account",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 109.6875,
+              "height": 29
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#1"
+          },
+          {
+            "role": "combobox",
+            "name": "",
+            "value": "Holiday Savings",
+            "proximityLabel": "Account Type",
+            "text": "Holiday SavingsVacation ClubEmergency Fund",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 54,
+              "width": 124,
+              "height": 19
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 78,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#3"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "250.00",
+            "proximityLabel": "Opening Deposit",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 83,
+              "width": 97,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Nickname",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 109,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#5"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Nickname",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 114,
+              "width": 181,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#6"
+          },
+          {
+            "role": "button",
+            "name": "Open Account",
+            "value": "Open Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 169,
+              "width": 111.796875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "",
+            "region": "Open Sub-Account",
+            "ref": "content#7"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Open Sub-Account — 12345\nAccount Type \nHoliday Savings\nVacation Club\nEmergency Fund\nOpening Deposit \nNickname \n \nOpening deposit must be at least $25.00. This action cannot be undone."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "type",
+        "value": {
+          "kind": "const",
+          "value": "250.00"
+        },
+        "clearFirst": true
+      }
+    },
+    {
+      "intent": "Submit the sub-account opening",
+      "element": {
+        "role": "button",
+        "name": "Open Account",
+        "value": "Open Account",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 305.6875,
+          "y": 169,
+          "width": 111.796875,
+          "height": 25
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "",
+        "region": "Open Sub-Account",
+        "ref": "content#7"
+      },
+      "before": {
+        "observedAt": "2026-09-12T01:22:08.189Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Open Sub-Account — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Open Sub-Account — 12345",
+            "region": "Open Sub-Account",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 109.6875,
+              "height": 29
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#1"
+          },
+          {
+            "role": "combobox",
+            "name": "",
+            "value": "Holiday Savings",
+            "proximityLabel": "Account Type",
+            "text": "Holiday SavingsVacation ClubEmergency Fund",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 54,
+              "width": 124,
+              "height": 19
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday SavingsVacation ClubEmergency Fund",
+            "region": "Open Sub-Account",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 78,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#3"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "250.00",
+            "proximityLabel": "Opening Deposit",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 83,
+              "width": 97,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit",
+            "region": "Open Sub-Account",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Nickname",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 109,
+              "width": 109.6875,
+              "height": 31
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#5"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Nickname",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 114,
+              "width": 181,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Nickname",
+            "region": "Open Sub-Account",
+            "ref": "content#6"
+          },
+          {
+            "role": "button",
+            "name": "Open Account",
+            "value": "Open Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 305.6875,
+              "y": 169,
+              "width": 111.796875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "",
+            "region": "Open Sub-Account",
+            "ref": "content#7"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Open Sub-Account — 12345\nAccount Type \nHoliday Savings\nVacation Club\nEmergency Fund\nOpening Deposit \nNickname \n \nOpening deposit must be at least $25.00. This action cannot be undone."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T01:22:08.450Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation",
+            "region": "Sub-Account Opened",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation Number",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 79,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | CNF-8845",
+            "region": "Sub-Account Opened",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Confirmation Number",
+            "text": "CNF-8845",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 79,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | CNF-8845",
+            "region": "Sub-Account Opened",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 104,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | 12345 — J. Whitfield",
+            "region": "Sub-Account Opened",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member",
+            "text": "12345 — J. Whitfield",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 104,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | 12345 — J. Whitfield",
+            "region": "Sub-Account Opened",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 129,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Account Type",
+            "text": "Holiday Savings",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 129,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 154,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Opening Deposit",
+            "text": "$250.00",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 154,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#8"
+          },
+          {
+            "role": "link",
+            "name": "Back to Member",
+            "text": "Back to Member",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 201,
+              "width": 97.921875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Sub-Account Opened",
+            "ref": "content#9"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number CNF-8845\nMember 12345 — J. Whitfield\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "click"
+      }
+    },
+    {
+      "intent": "Read the confirmation number from the confirmation screen",
+      "element": {
+        "role": "cell",
+        "name": "",
+        "proximityLabel": "Confirmation Number",
+        "text": "CNF-8845",
+        "disabled": false,
+        "focusable": false,
+        "bounds": {
+          "x": 361,
+          "y": 79,
+          "width": 135.421875,
+          "height": 25
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Confirmation Number | CNF-8845",
+        "region": "Sub-Account Opened",
+        "ref": "content#2"
+      },
+      "before": {
+        "observedAt": "2026-09-12T01:22:08.588Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation",
+            "region": "Sub-Account Opened",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation Number",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 79,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | CNF-8845",
+            "region": "Sub-Account Opened",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Confirmation Number",
+            "text": "CNF-8845",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 79,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | CNF-8845",
+            "region": "Sub-Account Opened",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 104,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | 12345 — J. Whitfield",
+            "region": "Sub-Account Opened",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member",
+            "text": "12345 — J. Whitfield",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 104,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | 12345 — J. Whitfield",
+            "region": "Sub-Account Opened",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 129,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Account Type",
+            "text": "Holiday Savings",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 129,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 154,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Opening Deposit",
+            "text": "$250.00",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 154,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#8"
+          },
+          {
+            "role": "link",
+            "name": "Back to Member",
+            "text": "Back to Member",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 201,
+              "width": 97.921875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Sub-Account Opened",
+            "ref": "content#9"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number CNF-8845\nMember 12345 — J. Whitfield\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T01:22:08.727Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation",
+            "region": "Sub-Account Opened",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation Number",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 79,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | CNF-8845",
+            "region": "Sub-Account Opened",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Confirmation Number",
+            "text": "CNF-8845",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 79,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | CNF-8845",
+            "region": "Sub-Account Opened",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 104,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | 12345 — J. Whitfield",
+            "region": "Sub-Account Opened",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member",
+            "text": "12345 — J. Whitfield",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 104,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | 12345 — J. Whitfield",
+            "region": "Sub-Account Opened",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 129,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Account Type",
+            "text": "Holiday Savings",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 129,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 154,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Opening Deposit",
+            "text": "$250.00",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 154,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#8"
+          },
+          {
+            "role": "link",
+            "name": "Back to Member",
+            "text": "Back to Member",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 201,
+              "width": 97.921875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Sub-Account Opened",
+            "ref": "content#9"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number CNF-8845\nMember 12345 — J. Whitfield\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "confirmation_number",
+            "from": "text",
+            "transform": "trim"
+          }
+        ]
+      }
+    }
+  ],
+  "declaredOutcomes": [
+    {
+      "code": "DEPOSIT_BELOW_MINIMUM",
+      "description": "The opening deposit is below the product minimum, so no account was opened.",
+      "whenTextPresent": "Validation error"
+    },
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "description": "No member record matches the supplied identifier.",
+      "whenTextPresent": "No member found"
+    }
+  ],
+  "successText": "Sub-account opened successfully",
+  "summary": "Scripted fixture recording of the sub-account opening flow.",
+  "turns": 0
+}

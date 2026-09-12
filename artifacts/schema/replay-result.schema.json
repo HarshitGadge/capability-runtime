@@ -1,0 +1,317 @@
+{
+  "$ref": "#/definitions/ReplayResult",
+  "definitions": {
+    "ReplayResult": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "success"
+            },
+            "capabilityId": {
+              "type": "string"
+            },
+            "capabilityVersion": {
+              "type": "string"
+            },
+            "runId": {
+              "type": "string"
+            },
+            "tenantId": {
+              "type": "string"
+            },
+            "startedAt": {
+              "type": "string"
+            },
+            "durationMs": {
+              "type": "number"
+            },
+            "evidenceDir": {
+              "type": "string"
+            },
+            "trace": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "stepId": {
+                    "type": "string"
+                  },
+                  "intent": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "ok",
+                      "recovered",
+                      "skipped",
+                      "failed"
+                    ]
+                  },
+                  "locatorStrategyUsed": {
+                    "type": "string"
+                  },
+                  "locatorCandidates": {
+                    "type": "integer"
+                  },
+                  "attempts": {
+                    "type": "integer"
+                  },
+                  "durationMs": {
+                    "type": "number"
+                  },
+                  "recoveriesApplied": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "default": []
+                  }
+                },
+                "required": [
+                  "stepId",
+                  "intent",
+                  "status",
+                  "attempts",
+                  "durationMs"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "outputs": {
+              "type": "object",
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "status",
+            "capabilityId",
+            "capabilityVersion",
+            "runId",
+            "tenantId",
+            "startedAt",
+            "durationMs",
+            "evidenceDir",
+            "trace",
+            "outputs"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "business_outcome"
+            },
+            "capabilityId": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/capabilityId"
+            },
+            "capabilityVersion": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/capabilityVersion"
+            },
+            "runId": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/runId"
+            },
+            "tenantId": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/tenantId"
+            },
+            "startedAt": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/startedAt"
+            },
+            "durationMs": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/durationMs"
+            },
+            "evidenceDir": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/evidenceDir"
+            },
+            "trace": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/trace"
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "atStepId": {
+              "type": "string"
+            },
+            "outputs": {
+              "type": "object",
+              "additionalProperties": {},
+              "default": {}
+            }
+          },
+          "required": [
+            "status",
+            "capabilityId",
+            "capabilityVersion",
+            "runId",
+            "tenantId",
+            "startedAt",
+            "durationMs",
+            "evidenceDir",
+            "trace",
+            "code",
+            "message",
+            "atStepId"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "failure"
+            },
+            "capabilityId": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/capabilityId"
+            },
+            "capabilityVersion": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/capabilityVersion"
+            },
+            "runId": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/runId"
+            },
+            "tenantId": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/tenantId"
+            },
+            "startedAt": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/startedAt"
+            },
+            "durationMs": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/durationMs"
+            },
+            "evidenceDir": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/evidenceDir"
+            },
+            "trace": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/trace"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "precondition_unmet",
+                "postcondition_unmet",
+                "locator_not_found",
+                "locator_ambiguous",
+                "timeout",
+                "policy_denied",
+                "invalid_input",
+                "surface_error",
+                "success_condition_unmet",
+                "missing_required_output",
+                "recovery_exhausted"
+              ]
+            },
+            "atStepId": {
+              "type": "string"
+            },
+            "expected": {
+              "type": "string"
+            },
+            "observed": {
+              "type": "string"
+            },
+            "screenshotPath": {
+              "type": "string"
+            },
+            "observationPath": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string",
+              "description": "What a human should check first."
+            }
+          },
+          "required": [
+            "status",
+            "capabilityId",
+            "capabilityVersion",
+            "runId",
+            "tenantId",
+            "startedAt",
+            "durationMs",
+            "evidenceDir",
+            "trace",
+            "kind",
+            "expected",
+            "observed"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "escalated"
+            },
+            "capabilityId": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/capabilityId"
+            },
+            "capabilityVersion": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/capabilityVersion"
+            },
+            "runId": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/runId"
+            },
+            "tenantId": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/tenantId"
+            },
+            "startedAt": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/startedAt"
+            },
+            "durationMs": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/durationMs"
+            },
+            "evidenceDir": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/evidenceDir"
+            },
+            "trace": {
+              "$ref": "#/definitions/ReplayResult/anyOf/0/properties/trace"
+            },
+            "interventionId": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "atStepId": {
+              "type": "string"
+            },
+            "resumable": {
+              "type": "boolean"
+            },
+            "resumeToken": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "capabilityId",
+            "capabilityVersion",
+            "runId",
+            "tenantId",
+            "startedAt",
+            "durationMs",
+            "evidenceDir",
+            "trace",
+            "interventionId",
+            "reason",
+            "atStepId",
+            "resumable",
+            "resumeToken"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

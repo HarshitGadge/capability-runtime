@@ -1,0 +1,1059 @@
+{
+  "$ref": "#/definitions/CapabilityArtifact",
+  "definitions": {
+    "CapabilityArtifact": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "capability": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Stable slug, e.g. member.read_savings_balance."
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          },
+          "required": [
+            "id",
+            "version",
+            "name",
+            "description"
+          ],
+          "additionalProperties": false
+        },
+        "target": {
+          "type": "object",
+          "properties": {
+            "appId": {
+              "type": "string",
+              "description": "The vendor product, not the tenant. Artifacts are keyed to products."
+            },
+            "appVersion": {
+              "type": "string"
+            },
+            "surface": {
+              "type": "string",
+              "enum": [
+                "web",
+                "desktop",
+                "terminal"
+              ]
+            },
+            "entryPoint": {
+              "type": "string",
+              "description": "URL template; {baseUrl} is supplied per tenant at replay time."
+            },
+            "allowlist": {
+              "type": "object",
+              "properties": {
+                "origins": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                },
+                "pathPrefixes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [
+                    "/"
+                  ]
+                },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "navigate",
+                      "click",
+                      "type",
+                      "press",
+                      "select",
+                      "extract",
+                      "assert"
+                    ]
+                  }
+                },
+                "maxUnattendedRisk": {
+                  "type": "string",
+                  "enum": [
+                    "safe",
+                    "elevated",
+                    "irreversible"
+                  ],
+                  "default": "elevated"
+                }
+              },
+              "required": [
+                "origins",
+                "actions"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "appId",
+            "appVersion",
+            "surface",
+            "entryPoint",
+            "allowlist"
+          ],
+          "additionalProperties": false
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "currency",
+                  "date"
+                ]
+              },
+              "required": {
+                "type": "boolean",
+                "default": true
+              },
+              "description": {
+                "type": "string"
+              },
+              "sensitivity": {
+                "type": "string",
+                "enum": [
+                  "public",
+                  "internal",
+                  "regulated",
+                  "secret"
+                ],
+                "default": "internal"
+              },
+              "pattern": {
+                "type": "string",
+                "description": "RegExp source the supplied value must match."
+              },
+              "example": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "type",
+              "description"
+            ],
+            "additionalProperties": false
+          },
+          "default": []
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "$ref": "#/definitions/CapabilityArtifact/properties/inputs/items/properties/type"
+              },
+              "description": {
+                "type": "string"
+              },
+              "sensitivity": {
+                "$ref": "#/definitions/CapabilityArtifact/properties/inputs/items/properties/sensitivity",
+                "default": "regulated"
+              },
+              "required": {
+                "type": "boolean",
+                "default": true,
+                "description": "If true, absence at the end of a successful run is a failure, not a partial success."
+              }
+            },
+            "required": [
+              "name",
+              "type",
+              "description"
+            ],
+            "additionalProperties": false
+          },
+          "default": []
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "intent": {
+                "type": "string"
+              },
+              "action": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "navigate"
+                      },
+                      "url": {
+                        "type": "string",
+                        "description": "May contain {input.name} placeholders."
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "url"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "click"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "type"
+                      },
+                      "value": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "const"
+                              },
+                              "value": {
+                                "type": [
+                                  "string",
+                                  "number",
+                                  "boolean"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "value"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "input"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "extracted"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "secret"
+                              },
+                              "envVar": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "envVar"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "clearFirst": {
+                        "type": "boolean",
+                        "default": true
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "value"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "press"
+                      },
+                      "key": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "key"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "select"
+                      },
+                      "value": {
+                        "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/action/anyOf/2/properties/value"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "value"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "extract"
+                      },
+                      "extracts": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "from": {
+                              "type": "string",
+                              "enum": [
+                                "text",
+                                "value",
+                                "attribute"
+                              ],
+                              "default": "text"
+                            },
+                            "attribute": {
+                              "type": "string"
+                            },
+                            "transform": {
+                              "type": "string",
+                              "enum": [
+                                "none",
+                                "trim",
+                                "currency_to_number",
+                                "digits_only"
+                              ],
+                              "default": "trim"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "extracts"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "assert"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "target": {
+                "type": "object",
+                "properties": {
+                  "semanticId": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Human-readable, for review and for operator context on escalation."
+                  },
+                  "strategies": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "role_name"
+                            },
+                            "role": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "match": {
+                              "type": "string",
+                              "enum": [
+                                "exact",
+                                "contains",
+                                "regex",
+                                "normalized"
+                              ],
+                              "default": "normalized"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "role",
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "proximity_label"
+                            },
+                            "role": {
+                              "type": "string"
+                            },
+                            "label": {
+                              "type": "string"
+                            },
+                            "match": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/target/properties/strategies/items/anyOf/0/properties/match",
+                              "default": "normalized"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "role",
+                            "label"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "placeholder"
+                            },
+                            "placeholder": {
+                              "type": "string"
+                            },
+                            "match": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/target/properties/strategies/items/anyOf/0/properties/match",
+                              "default": "normalized"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "placeholder"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "text"
+                            },
+                            "text": {
+                              "type": "string"
+                            },
+                            "role": {
+                              "type": "string"
+                            },
+                            "match": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/target/properties/strategies/items/anyOf/0/properties/match",
+                              "default": "normalized"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "test_id"
+                            },
+                            "attribute": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "attribute",
+                            "value"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "ordinal"
+                            },
+                            "role": {
+                              "type": "string"
+                            },
+                            "index": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "role",
+                            "index"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "coordinates"
+                            },
+                            "x": {
+                              "type": "number"
+                            },
+                            "y": {
+                              "type": "number"
+                            },
+                            "viewport": {
+                              "type": "object",
+                              "properties": {
+                                "width": {
+                                  "type": "number"
+                                },
+                                "height": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "x",
+                            "y",
+                            "viewport"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "minItems": 1
+                  },
+                  "scope": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "row_containing"
+                          },
+                          "text": {
+                            "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/action/anyOf/2/properties/value"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "text"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "region"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "role",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "near_text"
+                          },
+                          "text": {
+                            "type": "string"
+                          },
+                          "withinPx": {
+                            "type": "number",
+                            "default": 240
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "text"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "frame": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "default": []
+                  },
+                  "ambiguity": {
+                    "type": "string",
+                    "enum": [
+                      "require_unique",
+                      "first",
+                      "escalate"
+                    ],
+                    "default": "require_unique"
+                  }
+                },
+                "required": [
+                  "semanticId",
+                  "description",
+                  "strategies"
+                ],
+                "additionalProperties": false
+              },
+              "risk": {
+                "type": "string",
+                "enum": [
+                  "safe",
+                  "elevated",
+                  "irreversible"
+                ],
+                "default": "safe"
+              },
+              "precondition": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "all": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "url_matches"
+                            },
+                            "pattern": {
+                              "type": "string",
+                              "description": "RegExp source, matched against the active frame URL."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "pattern"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "element_present"
+                            },
+                            "target": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/target"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "element_absent"
+                            },
+                            "target": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/target"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "text_present"
+                            },
+                            "text": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/action/anyOf/2/properties/value"
+                            },
+                            "match": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/target/properties/strategies/items/anyOf/0/properties/match",
+                              "default": "contains"
+                            },
+                            "scope": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/target/properties/scope"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "text_absent"
+                            },
+                            "text": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/action/anyOf/2/properties/value"
+                            },
+                            "match": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/target/properties/strategies/items/anyOf/0/properties/match",
+                              "default": "contains"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "element_count"
+                            },
+                            "target": {
+                              "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/target"
+                            },
+                            "min": {
+                              "type": "integer"
+                            },
+                            "max": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "minItems": 1
+                  },
+                  "timeoutMs": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "default": 10000
+                  },
+                  "pollMs": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "default": 250
+                  }
+                },
+                "required": [
+                  "description",
+                  "all"
+                ],
+                "additionalProperties": false
+              },
+              "postcondition": {
+                "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/precondition"
+              },
+              "timeoutMs": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "default": 15000
+              },
+              "maxAttempts": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "default": 2
+              }
+            },
+            "required": [
+              "id",
+              "intent",
+              "action"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "success": {
+          "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/precondition"
+        },
+        "businessOutcomes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Stable machine code, e.g. MEMBER_NOT_FOUND."
+              },
+              "description": {
+                "type": "string"
+              },
+              "detect": {
+                "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/precondition"
+              },
+              "terminal": {
+                "type": "boolean",
+                "const": true,
+                "default": true
+              },
+              "partialOutputs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              }
+            },
+            "required": [
+              "code",
+              "description",
+              "detect"
+            ],
+            "additionalProperties": false
+          },
+          "default": []
+        },
+        "recoveries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "e.g. MAINTENANCE_INTERSTITIAL, SESSION_EXPIRED."
+              },
+              "description": {
+                "type": "string"
+              },
+              "detect": {
+                "$ref": "#/definitions/CapabilityArtifact/properties/steps/items/properties/precondition"
+              },
+              "actions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/CapabilityArtifact/properties/steps/items"
+                },
+                "minItems": 1
+              },
+              "maxAttempts": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "default": 2
+              },
+              "then": {
+                "type": "string",
+                "enum": [
+                  "retry_step",
+                  "continue",
+                  "restart_flow"
+                ],
+                "default": "retry_step"
+              },
+              "escalateOnExhaustion": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": [
+              "code",
+              "description",
+              "detect",
+              "actions"
+            ],
+            "additionalProperties": false
+          },
+          "default": []
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "recordedAt": {
+              "type": "string"
+            },
+            "discoveryModel": {
+              "type": "string"
+            },
+            "discoveryRunId": {
+              "type": "string"
+            },
+            "recordedAgainstTenant": {
+              "type": "string"
+            },
+            "evidenceDir": {
+              "type": "string"
+            },
+            "surfaceFingerprint": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "recordedAt",
+            "discoveryModel",
+            "discoveryRunId",
+            "recordedAgainstTenant",
+            "evidenceDir",
+            "surfaceFingerprint"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "capability",
+        "target",
+        "steps",
+        "success",
+        "provenance"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

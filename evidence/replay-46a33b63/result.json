@@ -1,0 +1,55 @@
+{
+  "status": "success",
+  "capabilityId": "member.read_savings_balance",
+  "capabilityVersion": "1.0.0",
+  "runId": "46a33b63",
+  "tenantId": "tenant-a",
+  "startedAt": "2026-09-12T01:22:40.370Z",
+  "durationMs": 3321,
+  "evidenceDir": "evidence/replay-46a33b63",
+  "trace": [
+    {
+      "stepId": "enter_the_member_identifier_in_the_looku",
+      "intent": "Enter the member identifier in the lookup form",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 478,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 541,
+      "locatorStrategyUsed": "role_name(button, \"Search\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "open_the_matching_member_record_from_the",
+      "intent": "Open the matching member record from the results",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 538,
+      "locatorStrategyUsed": "role_name(link, \"View\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "read_the_current_savings_balance_from_th",
+      "intent": "Read the current savings balance from the member record",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 424,
+      "locatorStrategyUsed": "proximity_label(cell, \"Savings Balance\")",
+      "locatorCandidates": 1
+    }
+  ],
+  "outputs": {
+    "savings_balance": 18204.37
+  }
+}

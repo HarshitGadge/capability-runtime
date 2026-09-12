@@ -1,0 +1,829 @@
+{
+  "$ref": "#/definitions/TenantOverlay",
+  "definitions": {
+    "TenantOverlay": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "tenantId": {
+          "type": "string"
+        },
+        "capabilityId": {
+          "type": "string"
+        },
+        "appliesToVersion": {
+          "type": "string"
+        },
+        "baseUrl": {
+          "type": "string"
+        },
+        "targetOverrides": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "semanticId": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "Human-readable, for review and for operator context on escalation."
+              },
+              "strategies": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "role_name"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "match": {
+                          "type": "string",
+                          "enum": [
+                            "exact",
+                            "contains",
+                            "regex",
+                            "normalized"
+                          ],
+                          "default": "normalized"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "role",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "proximity_label"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "match": {
+                          "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/strategies/items/anyOf/0/properties/match",
+                          "default": "normalized"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "role",
+                        "label"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "placeholder"
+                        },
+                        "placeholder": {
+                          "type": "string"
+                        },
+                        "match": {
+                          "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/strategies/items/anyOf/0/properties/match",
+                          "default": "normalized"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "placeholder"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "text"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "match": {
+                          "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/strategies/items/anyOf/0/properties/match",
+                          "default": "normalized"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "text"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "test_id"
+                        },
+                        "attribute": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "attribute",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "ordinal"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "index": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "role",
+                        "index"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "coordinates"
+                        },
+                        "x": {
+                          "type": "number"
+                        },
+                        "y": {
+                          "type": "number"
+                        },
+                        "viewport": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "width",
+                            "height"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "x",
+                        "y",
+                        "viewport"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "minItems": 1
+              },
+              "scope": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "row_containing"
+                      },
+                      "text": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "const"
+                              },
+                              "value": {
+                                "type": [
+                                  "string",
+                                  "number",
+                                  "boolean"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "value"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "input"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "extracted"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "secret"
+                              },
+                              "envVar": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "envVar"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "region"
+                      },
+                      "role": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "role",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "near_text"
+                      },
+                      "text": {
+                        "type": "string"
+                      },
+                      "withinPx": {
+                        "type": "number",
+                        "default": 240
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "frame": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              },
+              "ambiguity": {
+                "type": "string",
+                "enum": [
+                  "require_unique",
+                  "first",
+                  "escalate"
+                ],
+                "default": "require_unique"
+              }
+            },
+            "required": [
+              "strategies"
+            ],
+            "additionalProperties": false
+          },
+          "default": {}
+        },
+        "checkpointTextOverrides": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {}
+        },
+        "extraRecoveries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "e.g. MAINTENANCE_INTERSTITIAL, SESSION_EXPIRED."
+              },
+              "description": {
+                "type": "string"
+              },
+              "detect": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "all": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "url_matches"
+                            },
+                            "pattern": {
+                              "type": "string",
+                              "description": "RegExp source, matched against the active frame URL."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "pattern"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "element_present"
+                            },
+                            "target": {
+                              "type": "object",
+                              "properties": {
+                                "semanticId": {
+                                  "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/semanticId"
+                                },
+                                "description": {
+                                  "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/description"
+                                },
+                                "strategies": {
+                                  "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/strategies"
+                                },
+                                "scope": {
+                                  "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/scope"
+                                },
+                                "frame": {
+                                  "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/frame"
+                                },
+                                "ambiguity": {
+                                  "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/ambiguity"
+                                }
+                              },
+                              "required": [
+                                "semanticId",
+                                "description",
+                                "strategies"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "element_absent"
+                            },
+                            "target": {
+                              "$ref": "#/definitions/TenantOverlay/properties/extraRecoveries/items/properties/detect/properties/all/items/anyOf/1/properties/target"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "text_present"
+                            },
+                            "text": {
+                              "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/scope/anyOf/0/properties/text"
+                            },
+                            "match": {
+                              "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/strategies/items/anyOf/0/properties/match",
+                              "default": "contains"
+                            },
+                            "scope": {
+                              "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/scope"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "text_absent"
+                            },
+                            "text": {
+                              "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/scope/anyOf/0/properties/text"
+                            },
+                            "match": {
+                              "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/strategies/items/anyOf/0/properties/match",
+                              "default": "contains"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "element_count"
+                            },
+                            "target": {
+                              "$ref": "#/definitions/TenantOverlay/properties/extraRecoveries/items/properties/detect/properties/all/items/anyOf/1/properties/target"
+                            },
+                            "min": {
+                              "type": "integer"
+                            },
+                            "max": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "minItems": 1
+                  },
+                  "timeoutMs": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "default": 10000
+                  },
+                  "pollMs": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "default": 250
+                  }
+                },
+                "required": [
+                  "description",
+                  "all"
+                ],
+                "additionalProperties": false
+              },
+              "actions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "intent": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "navigate"
+                            },
+                            "url": {
+                              "type": "string",
+                              "description": "May contain {input.name} placeholders."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "click"
+                            }
+                          },
+                          "required": [
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "type"
+                            },
+                            "value": {
+                              "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/scope/anyOf/0/properties/text"
+                            },
+                            "clearFirst": {
+                              "type": "boolean",
+                              "default": true
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "value"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "press"
+                            },
+                            "key": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "key"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "select"
+                            },
+                            "value": {
+                              "$ref": "#/definitions/TenantOverlay/properties/targetOverrides/additionalProperties/properties/scope/anyOf/0/properties/text"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "value"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "extract"
+                            },
+                            "extracts": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "from": {
+                                    "type": "string",
+                                    "enum": [
+                                      "text",
+                                      "value",
+                                      "attribute"
+                                    ],
+                                    "default": "text"
+                                  },
+                                  "attribute": {
+                                    "type": "string"
+                                  },
+                                  "transform": {
+                                    "type": "string",
+                                    "enum": [
+                                      "none",
+                                      "trim",
+                                      "currency_to_number",
+                                      "digits_only"
+                                    ],
+                                    "default": "trim"
+                                  }
+                                },
+                                "required": [
+                                  "name"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 1
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "extracts"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "assert"
+                            }
+                          },
+                          "required": [
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "target": {
+                      "$ref": "#/definitions/TenantOverlay/properties/extraRecoveries/items/properties/detect/properties/all/items/anyOf/1/properties/target"
+                    },
+                    "risk": {
+                      "type": "string",
+                      "enum": [
+                        "safe",
+                        "elevated",
+                        "irreversible"
+                      ],
+                      "default": "safe"
+                    },
+                    "precondition": {
+                      "$ref": "#/definitions/TenantOverlay/properties/extraRecoveries/items/properties/detect"
+                    },
+                    "postcondition": {
+                      "$ref": "#/definitions/TenantOverlay/properties/extraRecoveries/items/properties/detect"
+                    },
+                    "timeoutMs": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "default": 15000
+                    },
+                    "maxAttempts": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "default": 2
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "intent",
+                    "action"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1
+              },
+              "maxAttempts": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "default": 2
+              },
+              "then": {
+                "type": "string",
+                "enum": [
+                  "retry_step",
+                  "continue",
+                  "restart_flow"
+                ],
+                "default": "retry_step"
+              },
+              "escalateOnExhaustion": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": [
+              "code",
+              "description",
+              "detect",
+              "actions"
+            ],
+            "additionalProperties": false
+          },
+          "default": []
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "tenantId",
+        "capabilityId",
+        "appliesToVersion",
+        "baseUrl"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

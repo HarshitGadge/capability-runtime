@@ -1,0 +1,203 @@
+{
+  "appId": "acme-core/member-services",
+  "appVersion": "7.2",
+  "description": "App profile for the stand-in member-services portal. Authored once per vendor product and shared by every capability recorded against it. Capabilities are discovered; app-level knowledge like 'this product shows a maintenance interstitial' is not rediscovered per capability, and not re-recorded per tenant.",
+  "allowlist": {
+    "origins": [
+      "http://localhost:5173"
+    ],
+    "pathPrefixes": [
+      "/t/"
+    ],
+    "actions": [
+      "navigate",
+      "click",
+      "type",
+      "press",
+      "select",
+      "extract",
+      "assert"
+    ],
+    "maxUnattendedRisk": "elevated"
+  },
+  "recoveries": [
+    {
+      "code": "MAINTENANCE_INTERSTITIAL",
+      "description": "Product-wide maintenance banner covering the working area. Acknowledging it is safe and idempotent.",
+      "detect": {
+        "description": "maintenance notice is on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Scheduled Maintenance Notice"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 1500,
+        "pollMs": 200
+      },
+      "actions": [
+        {
+          "id": "ack_maintenance",
+          "intent": "Acknowledge the maintenance notice so the working area is usable",
+          "action": {
+            "kind": "click"
+          },
+          "risk": "safe",
+          "timeoutMs": 8000,
+          "maxAttempts": 1,
+          "target": {
+            "semanticId": "interstitial.acknowledge",
+            "description": "Acknowledge button on the maintenance banner",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Acknowledge",
+                "match": "normalized"
+              },
+              {
+                "kind": "text",
+                "text": "Acknowledge",
+                "role": "button",
+                "match": "contains"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          }
+        }
+      ],
+      "maxAttempts": 2,
+      "then": "retry_step",
+      "escalateOnExhaustion": false
+    },
+    {
+      "code": "SIGNED_OUT",
+      "description": "No authenticated operator session: the portal is showing its sign-on screen, either because the run started cold or because the session was dropped mid-flow. Re-authenticate with the service credential and retry the step. Detected by the presence of the sign-on control rather than by the expiry banner, so the same rule covers both cases.",
+      "detect": {
+        "description": "the portal is showing its sign-on screen",
+        "all": [
+          {
+            "kind": "element_present",
+            "target": {
+              "semanticId": "signon.submit",
+              "description": "Sign On button, present only on the sign-on screen",
+              "strategies": [
+                {
+                  "kind": "role_name",
+                  "role": "button",
+                  "name": "Sign On",
+                  "match": "normalized"
+                }
+              ],
+              "frame": [],
+              "ambiguity": "first"
+            }
+          }
+        ],
+        "timeoutMs": 1500,
+        "pollMs": 200
+      },
+      "actions": [
+        {
+          "id": "relogin_user",
+          "intent": "Re-enter the service operator ID",
+          "action": {
+            "kind": "type",
+            "value": {
+              "kind": "secret",
+              "envVar": "PORTAL_USER"
+            },
+            "clearFirst": true
+          },
+          "risk": "safe",
+          "timeoutMs": 8000,
+          "maxAttempts": 1,
+          "target": {
+            "semanticId": "signon.operator_id",
+            "description": "Operator ID field on the sign-on screen",
+            "strategies": [
+              {
+                "kind": "proximity_label",
+                "role": "textbox",
+                "label": "Operator ID",
+                "match": "normalized"
+              },
+              {
+                "kind": "role_name",
+                "role": "textbox",
+                "name": "Operator ID",
+                "match": "normalized"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          }
+        },
+        {
+          "id": "relogin_pass",
+          "intent": "Re-enter the service credential",
+          "action": {
+            "kind": "type",
+            "value": {
+              "kind": "secret",
+              "envVar": "PORTAL_PASS"
+            },
+            "clearFirst": true
+          },
+          "risk": "safe",
+          "timeoutMs": 8000,
+          "maxAttempts": 1,
+          "target": {
+            "semanticId": "signon.password",
+            "description": "Password field on the sign-on screen",
+            "strategies": [
+              {
+                "kind": "proximity_label",
+                "role": "textbox",
+                "label": "Password",
+                "match": "normalized"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          }
+        },
+        {
+          "id": "relogin_submit",
+          "intent": "Sign back on",
+          "action": {
+            "kind": "click"
+          },
+          "risk": "safe",
+          "timeoutMs": 10000,
+          "maxAttempts": 1,
+          "target": {
+            "semanticId": "signon.submit",
+            "description": "Sign On button",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Sign On",
+                "match": "normalized"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          }
+        }
+      ],
+      "maxAttempts": 2,
+      "then": "restart_flow",
+      "escalateOnExhaustion": true
+    }
+  ],
+  "session": {
+    "note": "Authentication is a property of the session, not of a capability. Recording sign-on into every capability would make each one unrepeatable the moment a session already exists, and would bake one institution's credentials into a document meant to be shared across all of them. The SIGNED_OUT recovery below is the single place it lives, used as a preflight before a run and again if the session drops mid-flow."
+  }
+}

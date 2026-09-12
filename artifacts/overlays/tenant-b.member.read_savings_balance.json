@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "tenantId": "tenant-b",
+  "capabilityId": "member.read_savings_balance",
+  "appliesToVersion": "1.0.0",
+  "baseUrl": "http://localhost:5173/t/tenant-b",
+  "notes": "Vale Mutual runs the same vendor product as the tenant this capability was recorded against, with its own skin. Three lines of specialization: two controls it renames, one screen title it words differently. The step sequence, the checkpoints, the business outcomes, the recoveries and the extraction are all reused unchanged -- this file is the entire cost of onboarding a second institution onto an existing capability.",
+  "targetOverrides": {
+    "member_lookup.member_id": {
+      "strategies": [
+        {
+          "kind": "proximity_label",
+          "role": "textbox",
+          "label": "Member Number",
+          "match": "normalized"
+        },
+        {
+          "kind": "ordinal",
+          "role": "textbox",
+          "index": 0
+        }
+      ]
+    },
+    "member_lookup.search": {
+      "strategies": [
+        {
+          "kind": "role_name",
+          "role": "button",
+          "name": "Find Member",
+          "match": "normalized"
+        },
+        {
+          "kind": "ordinal",
+          "role": "button",
+          "index": 0
+        }
+      ]
+    }
+  },
+  "checkpointTextOverrides": {
+    "Member Lookup": "Find a Member"
+  },
+  "extraRecoveries": []
+}

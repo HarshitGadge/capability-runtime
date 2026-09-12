@@ -1,0 +1,36 @@
+{
+  "status": "business_outcome",
+  "capabilityId": "member.read_savings_balance",
+  "capabilityVersion": "1.0.0",
+  "runId": "c7d27190",
+  "tenantId": "tenant-a",
+  "startedAt": "2026-09-12T01:22:44.307Z",
+  "durationMs": 2166,
+  "evidenceDir": "evidence/replay-c7d27190",
+  "trace": [
+    {
+      "stepId": "enter_the_member_identifier_in_the_looku",
+      "intent": "Enter the member identifier in the lookup form",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 481,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 544,
+      "locatorStrategyUsed": "role_name(button, \"Search\")",
+      "locatorCandidates": 1
+    }
+  ],
+  "code": "MEMBER_NOT_FOUND",
+  "message": "No member record matches the supplied identifier.",
+  "atStepId": "submit_the_member_search",
+  "outputs": {}
+}

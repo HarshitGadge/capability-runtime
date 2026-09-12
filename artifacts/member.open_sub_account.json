@@ -1,0 +1,1056 @@
+{
+  "schemaVersion": "1.0.0",
+  "capability": {
+    "id": "member.open_sub_account",
+    "version": "1.0.0",
+    "name": "Open member sub-account",
+    "description": "Open a new savings sub-account for an existing member and return the confirmation number. The final step submits the account opening, which cannot be undone from within the application.",
+    "tags": [
+      "discovered"
+    ]
+  },
+  "target": {
+    "appId": "acme-core/member-services",
+    "appVersion": "7.2",
+    "surface": "web",
+    "entryPoint": "{baseUrl}/",
+    "allowlist": {
+      "origins": [
+        "http://localhost:5173"
+      ],
+      "pathPrefixes": [
+        "/t/"
+      ],
+      "actions": [
+        "navigate",
+        "click",
+        "type",
+        "press",
+        "select",
+        "extract",
+        "assert"
+      ],
+      "maxUnattendedRisk": "elevated"
+    }
+  },
+  "inputs": [
+    {
+      "name": "memberId",
+      "type": "string",
+      "required": true,
+      "description": "The member identifier to open the sub-account for.",
+      "sensitivity": "internal",
+      "pattern": "^\\d{4,10}$",
+      "example": "12345"
+    },
+    {
+      "name": "accountType",
+      "type": "string",
+      "required": true,
+      "description": "Sub-account product type, exactly as listed in the product dropdown.",
+      "sensitivity": "public",
+      "example": "Holiday Savings"
+    },
+    {
+      "name": "openingDeposit",
+      "type": "string",
+      "required": true,
+      "description": "Opening deposit amount. The product enforces a $25.00 minimum.",
+      "sensitivity": "internal",
+      "example": "250.00"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "confirmation_number",
+      "type": "string",
+      "description": "Confirmation reference for the opened sub-account.",
+      "sensitivity": "regulated",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "enter_the_member_identifier_in_the_looku",
+      "intent": "Enter the member identifier in the lookup form",
+      "action": {
+        "kind": "type",
+        "value": {
+          "kind": "input",
+          "name": "memberId"
+        },
+        "clearFirst": true
+      },
+      "target": {
+        "semanticId": "member_lookup.member_id",
+        "description": "textbox \"Member ID\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "textbox",
+            "label": "Member ID",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "textbox",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 335.703125,
+            "y": 66.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "elevated",
+      "precondition": {
+        "description": "entry screen",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Lookup"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after enter_the_member_identifier_in_the_looku",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Lookup"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "action": {
+        "kind": "click"
+      },
+      "target": {
+        "semanticId": "member_lookup.search",
+        "description": "button \"Search\"",
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "button",
+            "name": "Search",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "button",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 442.96875,
+            "y": 66.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after enter_the_member_identifier_in_the_looku",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Lookup"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after submit_the_member_search",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Search Results"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "open_the_matching_member_record_from_the",
+      "intent": "Open the matching member record from the results",
+      "action": {
+        "kind": "click"
+      },
+      "target": {
+        "semanticId": "search_results.view",
+        "description": "link \"View\"",
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "link",
+            "name": "View",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "link",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 685.5,
+            "y": 84.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "scope": {
+          "kind": "row_containing",
+          "text": {
+            "kind": "input",
+            "name": "memberId"
+          }
+        },
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after submit_the_member_search",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Search Results"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after open_the_matching_member_record_from_the",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/member(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Name"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "open_the_new_sub_account_form_for_this_m",
+      "intent": "Open the new sub-account form for this member",
+      "action": {
+        "kind": "click"
+      },
+      "target": {
+        "semanticId": "member.open_sub_account",
+        "description": "link \"Open Sub-Account\"",
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "link",
+            "name": "Open Sub-Account",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "link",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 236.109375,
+            "y": 228.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after open_the_matching_member_record_from_the",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/member(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Name"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after open_the_new_sub_account_form_for_this_m",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/subaccount(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Account Type"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "choose_the_sub_account_product_type",
+      "intent": "Choose the sub-account product type",
+      "action": {
+        "kind": "select",
+        "value": {
+          "kind": "input",
+          "name": "accountType"
+        }
+      },
+      "target": {
+        "semanticId": "open_sub_account.account_type",
+        "description": "combobox \"Account Type\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "combobox",
+            "label": "Account Type",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "combobox",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 367.6875,
+            "y": 63.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "scope": {
+          "kind": "row_containing",
+          "text": {
+            "kind": "input",
+            "name": "accountType"
+          }
+        },
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "elevated",
+      "precondition": {
+        "description": "screen after open_the_new_sub_account_form_for_this_m",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/subaccount(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Account Type"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after choose_the_sub_account_product_type",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/subaccount(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Account Type"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "enter_the_opening_deposit_amount",
+      "intent": "Enter the opening deposit amount",
+      "action": {
+        "kind": "type",
+        "value": {
+          "kind": "input",
+          "name": "openingDeposit"
+        },
+        "clearFirst": true
+      },
+      "target": {
+        "semanticId": "open_sub_account.opening_deposit",
+        "description": "textbox \"Opening Deposit\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "textbox",
+            "label": "Opening Deposit",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "textbox",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 354.1875,
+            "y": 93.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "elevated",
+      "precondition": {
+        "description": "screen after choose_the_sub_account_product_type",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/subaccount(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Account Type"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after enter_the_opening_deposit_amount",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/subaccount(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Account Type"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "submit_the_sub_account_opening",
+      "intent": "Submit the sub-account opening",
+      "action": {
+        "kind": "click"
+      },
+      "target": {
+        "semanticId": "open_sub_account.open_account",
+        "description": "button \"Open Account\"",
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "button",
+            "name": "Open Account",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "button",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 361.5859375,
+            "y": 181.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "irreversible",
+      "precondition": {
+        "description": "screen after enter_the_opening_deposit_amount",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/subaccount(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Account Type"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after submit_the_sub_account_opening",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/subaccount(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Confirmation"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 1
+    },
+    {
+      "id": "read_the_confirmation_number_from_the_co",
+      "intent": "Read the confirmation number from the confirmation screen",
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "confirmation_number",
+            "from": "text",
+            "transform": "trim"
+          }
+        ]
+      },
+      "target": {
+        "semanticId": "sub_account_opened.confirmation_number",
+        "description": "cell \"Confirmation Number\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "cell",
+            "label": "Confirmation Number",
+            "match": "normalized"
+          },
+          {
+            "kind": "text",
+            "text": "CNF-8845",
+            "role": "cell",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "cell",
+            "index": 2
+          },
+          {
+            "kind": "coordinates",
+            "x": 428.7109375,
+            "y": 91.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after submit_the_sub_account_opening",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/subaccount(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Confirmation"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after read_the_confirmation_number_from_the_co",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/subaccount(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Confirmation"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    }
+  ],
+  "success": {
+    "description": "Goal reached: \"Sub-account opened successfully\" is visible",
+    "all": [
+      {
+        "kind": "text_present",
+        "text": {
+          "kind": "const",
+          "value": "Sub-account opened successfully"
+        },
+        "match": "contains"
+      },
+      {
+        "kind": "text_present",
+        "text": {
+          "kind": "const",
+          "value": "Confirmation"
+        },
+        "match": "contains"
+      }
+    ],
+    "timeoutMs": 15000,
+    "pollMs": 250
+  },
+  "businessOutcomes": [
+    {
+      "code": "DEPOSIT_BELOW_MINIMUM",
+      "description": "The opening deposit is below the product minimum, so no account was opened.",
+      "detect": {
+        "description": "DEPOSIT_BELOW_MINIMUM: \"Validation error\" on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Validation error"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 2000,
+        "pollMs": 250
+      },
+      "terminal": true,
+      "partialOutputs": []
+    },
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "description": "No member record matches the supplied identifier.",
+      "detect": {
+        "description": "MEMBER_NOT_FOUND: \"No member found\" on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "No member found"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 2000,
+        "pollMs": 250
+      },
+      "terminal": true,
+      "partialOutputs": []
+    }
+  ],
+  "recoveries": [
+    {
+      "code": "MAINTENANCE_INTERSTITIAL",
+      "description": "Product-wide maintenance banner covering the working area. Acknowledging it is safe and idempotent.",
+      "detect": {
+        "description": "maintenance notice is on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Scheduled Maintenance Notice"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 1500,
+        "pollMs": 200
+      },
+      "actions": [
+        {
+          "id": "ack_maintenance",
+          "intent": "Acknowledge the maintenance notice so the working area is usable",
+          "action": {
+            "kind": "click"
+          },
+          "target": {
+            "semanticId": "interstitial.acknowledge",
+            "description": "Acknowledge button on the maintenance banner",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Acknowledge",
+                "match": "normalized"
+              },
+              {
+                "kind": "text",
+                "text": "Acknowledge",
+                "role": "button",
+                "match": "contains"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "safe",
+          "timeoutMs": 8000,
+          "maxAttempts": 1
+        }
+      ],
+      "maxAttempts": 2,
+      "then": "retry_step",
+      "escalateOnExhaustion": false
+    },
+    {
+      "code": "SIGNED_OUT",
+      "description": "No authenticated operator session: the portal is showing its sign-on screen, either because the run started cold or because the session was dropped mid-flow. Re-authenticate with the service credential and retry the step. Detected by the presence of the sign-on control rather than by the expiry banner, so the same rule covers both cases.",
+      "detect": {
+        "description": "the portal is showing its sign-on screen",
+        "all": [
+          {
+            "kind": "element_present",
+            "target": {
+              "semanticId": "signon.submit",
+              "description": "Sign On button, present only on the sign-on screen",
+              "strategies": [
+                {
+                  "kind": "role_name",
+                  "role": "button",
+                  "name": "Sign On",
+                  "match": "normalized"
+                }
+              ],
+              "frame": [],
+              "ambiguity": "first"
+            }
+          }
+        ],
+        "timeoutMs": 1500,
+        "pollMs": 200
+      },
+      "actions": [
+        {
+          "id": "relogin_user",
+          "intent": "Re-enter the service operator ID",
+          "action": {
+            "kind": "type",
+            "value": {
+              "kind": "secret",
+              "envVar": "PORTAL_USER"
+            },
+            "clearFirst": true
+          },
+          "target": {
+            "semanticId": "signon.operator_id",
+            "description": "Operator ID field on the sign-on screen",
+            "strategies": [
+              {
+                "kind": "proximity_label",
+                "role": "textbox",
+                "label": "Operator ID",
+                "match": "normalized"
+              },
+              {
+                "kind": "role_name",
+                "role": "textbox",
+                "name": "Operator ID",
+                "match": "normalized"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "safe",
+          "timeoutMs": 8000,
+          "maxAttempts": 1
+        },
+        {
+          "id": "relogin_pass",
+          "intent": "Re-enter the service credential",
+          "action": {
+            "kind": "type",
+            "value": {
+              "kind": "secret",
+              "envVar": "PORTAL_PASS"
+            },
+            "clearFirst": true
+          },
+          "target": {
+            "semanticId": "signon.password",
+            "description": "Password field on the sign-on screen",
+            "strategies": [
+              {
+                "kind": "proximity_label",
+                "role": "textbox",
+                "label": "Password",
+                "match": "normalized"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "safe",
+          "timeoutMs": 8000,
+          "maxAttempts": 1
+        },
+        {
+          "id": "relogin_submit",
+          "intent": "Sign back on",
+          "action": {
+            "kind": "click"
+          },
+          "target": {
+            "semanticId": "signon.submit",
+            "description": "Sign On button",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Sign On",
+                "match": "normalized"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "safe",
+          "timeoutMs": 10000,
+          "maxAttempts": 1
+        }
+      ],
+      "maxAttempts": 2,
+      "then": "restart_flow",
+      "escalateOnExhaustion": true
+    }
+  ],
+  "provenance": {
+    "recordedAt": "2026-09-12T01:22:09.678Z",
+    "discoveryModel": "fixture/scripted",
+    "discoveryRunId": "fixture-open-subaccount",
+    "recordedAgainstTenant": "tenant-a",
+    "evidenceDir": "evidence/fixture-open-subaccount",
+    "surfaceFingerprint": "89987045e5c01bac",
+    "notes": "Steps recorded from a live LLM-driven run; locators computed and uniqueness-verified by the runtime."
+  }
+}
