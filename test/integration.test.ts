@@ -46,14 +46,14 @@ afterAll(async () => {
   app?.kill();
 });
 
-async function replay(opts: { inputs: Record<string, string>; tenant?: string; overlay?: TenantOverlay }): Promise<ReplayResult> {
+async function replay(opts: { inputs: Record<string, string>; tenant?: string; overlay?: TenantOverlay; providerId?: string }): Promise<ReplayResult> {
   const tenant = opts.tenant ?? 'tenant-a';
   const baseUrl = `${HOST}/t/${tenant}`;
   const redactor = new Redactor();
   const recorder = new EvidenceRecorder(crypto.randomUUID().slice(0, 8), 'replay', redactor, 'evidence/.test');
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await context.newPage();
-  const surface = await BrowserSurface.attach(browser, page, 'dom-scan', false);
+  const surface = await BrowserSurface.attach(browser, page, opts.providerId ?? 'dom-scan', false);
   const gate = new PolicyGate(surface, { ...artifact.target.allowlist, origins: [HOST] }, redactor);
   try {
     return await new ReplayEngine({
@@ -138,6 +138,23 @@ describe('recovering from anticipated interruptions', () => {
     await arm('slow', '/member');
     const r = await replay({ inputs: { memberId: '12345' } });
     expect(r.status).toBe('success');
+  }, 60_000);
+});
+
+describe('perception is swappable beneath the artifact', () => {
+  it('replays the same artifact through the browser accessibility tree instead of the in-page scanner', async () => {
+    await reset();
+    const r = await replay({ inputs: { memberId: '12345' }, providerId: 'cdp' });
+    expect(r.status).toBe('success');
+    if (r.status !== 'success') return;
+    expect(r.outputs.savings_balance).toBe(18204.37);
+    // Same rungs as the default provider: the legacy inputs were labelled from AX table
+    // structure, not from the DOM, and the surface fingerprint agrees across providers.
+    expect(r.trace.map(t => t.locatorStrategyUsed)).toEqual([
+      'proximity_label(textbox, "Member ID")', 'role_name(button, "Search")',
+      'role_name(link, "View")', 'proximity_label(cell, "Savings Balance")',
+    ]);
+    expect(r.surfaceDrift.drifted).toBe(false);
   }, 60_000);
 });
 

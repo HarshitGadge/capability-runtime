@@ -110,6 +110,10 @@ export function printResultSummary(result: any): void {
     line('intervention', result.interventionId); line('reason', result.reason);
     line('at step', result.atStepId); line('resumable', result.resumable);
   }
+  const drift = result.surfaceDrift;
+  if (drift?.drifted) {
+    line('drift', `surface fingerprint changed (recorded ${drift.recorded.slice(0, 6)}…, observed ${drift.observed.slice(0, 6)}…) — re-review this capability for this tenant`);
+  }
   console.log('');
   for (const t of result.trace ?? []) {
     console.log(`  ${t.status === 'ok' ? '✓' : t.status === 'recovered' ? '↻' : t.status === 'skipped' ? '⤼' : '✗'} ${String(t.stepId).padEnd(28)} ${t.locatorStrategyUsed ?? ''} ${t.recoveriesApplied?.length ? `[recovered: ${t.recoveriesApplied.join(',')}]` : ''}`);

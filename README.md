@@ -69,10 +69,15 @@ npm run discover -- --goal "Look up member 12345 and read their current savings 
 ```
 
 The agent explores the portal, then records the flow cleanly, and the run is compiled into
-`artifacts/member.read_savings_balance.json`. Add `--headless` to run without a visible browser,
-`--provider cdp` to perceive through the browser's real accessibility tree instead of the in-page
-projection, and `--allow-risk irreversible` for a supervised recording of a flow that submits
-something irreversible.
+`artifacts/member.read_savings_balance.json`. Options: `--entry <url>` for a different entry
+point, `--headless`, `--provider cdp` to perceive through the browser's real accessibility tree
+instead of the in-page projection, `--max-steps` / `--timeout-ms` (also `DISCOVERY_MAX_STEPS`,
+`DISCOVERY_TIMEOUT_MS` in `.env`), and `--allow-risk irreversible` for a supervised recording of
+a flow that submits something irreversible.
+
+The run stops on one of five reasons — `goal_reached`, `max_steps`, `timeout`, `dead_end` (the
+same action repeated, or the screen unchanged across several actions), or `model_declined` — and
+exits non-zero for anything but the first.
 
 Everything from the run lands in `evidence/discovery-<id>/` — the structured log, the full model
 transcript, per-turn screenshots, and `recording.json`.
@@ -94,7 +99,15 @@ RESULT: SUCCESS
 ```
 
 No API key is used. The rightmost column is which rung of the locator cascade actually matched —
-targeting degradation is reported, never silent.
+targeting degradation is reported, never silent. Every result also carries a **surface
+fingerprint** comparison; a `drift` line appears when the screens the flow passed through have
+changed shape since the recording.
+
+```bash
+# Same artifact, perceived through the browser's accessibility tree instead of the in-page scanner
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=12345 --provider cdp
+#   RESULT: SUCCESS — same four rungs, same fingerprint. Nothing above `Surface` knows which one ran.
+```
 
 Exit codes let a caller branch without parsing output: **0** success · **3** business outcome ·
 **4** escalated · **1** failure.
@@ -148,8 +161,9 @@ npm run replay -- --artifact artifacts/member.read_savings_balance.json --input 
 ```
 
 The overlay is `artifacts/overlays/tenant-b.member.read_savings_balance.json`. It renames two
-controls and one screen title. The step sequence, checkpoints, business outcomes, recoveries and
-extraction are reused unchanged.
+controls and one screen title, and binds the tenant's origin — the run header shows
+`origin ... (bound from overlay tenant-b)`. The step sequence, checkpoints, business outcomes,
+recoveries and extraction are reused unchanged.
 
 ### 5. Human handoff on an irreversible step
 
@@ -179,7 +193,7 @@ the same window the automation was in, and the policy gate now blocks automation
 either **Authorize this step** (automation performs it once) or **I did it myself** (automation
 skips it). Control returns, the engine re-verifies the step's precondition, and the run completes.
 
-### 6. Contracts
+### 6. Invoking a capability from an agent
 
 ```bash
 npm run schema                                              # JSON Schema for artifact, overlay, result
@@ -188,23 +202,43 @@ npm run schema -- --tool artifacts/member.read_savings_balance.json
 
 The second renders a capability as a tool definition another agent can be handed: declared inputs
 become the parameter schema, declared outputs and business-outcome codes go in the description.
+The programmatic half is `src/index.ts`:
+
+```ts
+import { toolDefinition, invoke } from './src/index.js';
+
+const tool = toolDefinition(artifact);          // what the agent is shown
+const result = await invoke({                   // what runs when it calls the tool
+  artifact, inputs: { memberId: '12345' }, tenantId: 'tenant-b', baseUrl, overlay,
+});
+switch (result.status) {                        // what it gets back
+  case 'success':          /* result.outputs.savings_balance */ break;
+  case 'business_outcome': /* result.code === 'MEMBER_NOT_FOUND' */ break;
+  case 'escalated':        /* result.interventionId, result.resumeToken */ break;
+  case 'failure':          /* result.kind, expected, observed, screenshotPath */ break;
+}
+```
 
 ---
 
 ## Tests
 
 ```bash
-npm test           # 53 tests; boots the app itself, no API key, no network
+npm test           # 79 tests; boots the app itself, no API key, no network
 npm run test:unit  # the fast ones only (~0.3s)
 npm run typecheck
 ```
 
 Unit tests cover the locator cascade, redaction and the artifact leak guard, the policy gate, risk
-classification, overlay merging and the checkpoint language. The integration suite spawns the
-portal and a real browser and asserts the behaviour the demo path shows: success and repeatability,
-both business outcomes, input rejection, all three recovery paths, drift detection and overlay
-reuse, and that regulated values are absent from the on-disk log while still being returned to the
-caller.
+classification, overlay merging, the checkpoint language, and the engine's handling of ambiguity,
+recovery exhaustion, step timeouts and fingerprint drift. Browser-backed suites spawn the portal
+and assert the behaviour the demo path shows — success and repeatability, both business outcomes,
+input rejection, all three recovery paths, both perception providers, drift detection and overlay
+reuse, human-action capture across frames and navigations during a handoff, and that regulated
+values are absent from disk while still being returned to the caller. `test/discovery.test.ts`
+drives the real discovery loop with a scripted fake model against the real portal — explore,
+declare an outcome, record, compile, and replay the result to both success and `MEMBER_NOT_FOUND`
+— so the core loop is tested end to end without an API key.
 
 ---
 

@@ -22,14 +22,33 @@ if (!artifactPath) {
 
 const artifact = CapabilityArtifact.parse(loadArtifact(artifactPath));
 const tenant = str(args, 'tenant', 'tenant-a');
-const host = str(args, 'host', 'http://localhost:5173');
-const baseUrl = baseUrlFor(tenant, host);
 const inputs = inputPairs(args);
 // --no-overlay forces the unspecialized capability against a tenant, which is how the
 // drift story is demonstrated rather than asserted.
 const overlay = flag(args, 'no-overlay')
   ? undefined
   : loadOverlay(tenant, artifact.capability.id, typeof args.overlay === 'string' ? args.overlay : undefined);
+
+// Which origin this run may touch is a tenant binding, and a tenant binding belongs in a
+// reviewed document, not a command-line flag. With an overlay, its baseUrl is the
+// authority and --host may only agree with it. Without one, --host binds the origin and
+// the run header says so, because that is the less-controlled path.
+const hostArg = typeof args.host === 'string' ? (args.host as string) : undefined;
+const DEFAULT_HOST = 'http://localhost:5173';
+let baseUrl: string;
+let originSource: string;
+if (overlay) {
+  if (hostArg && new URL(hostArg).origin !== new URL(overlay.baseUrl).origin) {
+    console.error(`--host ${hostArg} disagrees with the ${overlay.tenantId} overlay, which binds ${new URL(overlay.baseUrl).origin}. The overlay is the reviewed binding; drop --host or fix the overlay.`);
+    process.exit(2);
+  }
+  baseUrl = overlay.baseUrl.replace(/\/$/, '');
+  originSource = `bound from overlay ${overlay.tenantId}`;
+} else {
+  baseUrl = baseUrlFor(tenant, hostArg ?? DEFAULT_HOST);
+  originSource = hostArg ? 'bound from --host; no overlay for this tenant' : 'default; no overlay for this tenant';
+}
+const host = new URL(baseUrl).origin;
 
 // Service credentials are injected from the environment at run time and never live in
 // the artifact. The defaults here are the stand-in portal's throwaway demo values.
@@ -49,6 +68,7 @@ claimForAutomation();
 
 console.log(`replay ${rt.runId}: ${artifact.capability.id}@${artifact.capability.version}`);
 console.log(`  tenant    ${tenant}${overlay ? ` (overlay: ${Object.keys(overlay.targetOverrides).length} target override(s))` : ' (no overlay)'}`);
+console.log(`  origin    ${host} (${originSource})`);
 console.log(`  inputs    ${JSON.stringify(inputs)}`);
 console.log(`  provider  ${rt.gate.providerId}`);
 console.log(`  session   ${sessionIsShared() ? 'shared (human handoff available)' : 'private (auto-launched; not handoff-capable)'}`);

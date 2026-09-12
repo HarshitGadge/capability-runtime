@@ -2,11 +2,11 @@
   "status": "success",
   "capabilityId": "member.read_savings_balance",
   "capabilityVersion": "1.0.0",
-  "runId": "38fbf4a3",
+  "runId": "1b7e2b0a",
   "tenantId": "tenant-a",
-  "startedAt": "2026-09-12T01:23:01.704Z",
-  "durationMs": 15923,
-  "evidenceDir": "evidence/replay-38fbf4a3",
+  "startedAt": "2026-09-12T02:25:29.812Z",
+  "durationMs": 3359,
+  "evidenceDir": "evidence/replay-1b7e2b0a",
   "trace": [
     {
       "stepId": "enter_the_member_identifier_in_the_looku",
@@ -14,7 +14,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 473,
+      "durationMs": 489,
       "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
       "locatorCandidates": 1
     },
@@ -24,39 +24,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 549,
-      "locatorStrategyUsed": "role_name(button, \"Search\")",
-      "locatorCandidates": 1
-    },
-    {
-      "stepId": "open_the_matching_member_record_from_the",
-      "intent": "Open the matching member record from the results",
-      "recoveriesApplied": [
-        "SIGNED_OUT"
-      ],
-      "status": "recovered",
-      "attempts": 1,
-      "durationMs": 11360,
-      "locatorStrategyUsed": "role_name(link, \"View\")",
-      "locatorCandidates": 1
-    },
-    {
-      "stepId": "enter_the_member_identifier_in_the_looku",
-      "intent": "Enter the member identifier in the lookup form",
-      "recoveriesApplied": [],
-      "status": "ok",
-      "attempts": 1,
-      "durationMs": 484,
-      "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
-      "locatorCandidates": 1
-    },
-    {
-      "stepId": "submit_the_member_search",
-      "intent": "Submit the member search",
-      "recoveriesApplied": [],
-      "status": "ok",
-      "attempts": 1,
-      "durationMs": 528,
+      "durationMs": 542,
       "locatorStrategyUsed": "role_name(button, \"Search\")",
       "locatorCandidates": 1
     },
@@ -66,7 +34,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 548,
+      "durationMs": 550,
       "locatorStrategyUsed": "role_name(link, \"View\")",
       "locatorCandidates": 1
     },
@@ -76,11 +44,18 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 403,
+      "durationMs": 415,
       "locatorStrategyUsed": "proximity_label(cell, \"Savings Balance\")",
       "locatorCandidates": 1
     }
   ],
+  "surfaceDrift": {
+    "recorded": "2501b5ce4041649f",
+    "observed": "2501b5ce4041649f",
+    "comparedSteps": 4,
+    "totalSteps": 4,
+    "drifted": false
+  },
   "outputs": {
     "savings_balance": 18204.37
   }

@@ -2,11 +2,11 @@
   "status": "success",
   "capabilityId": "member.open_sub_account",
   "capabilityVersion": "1.0.0",
-  "runId": "62043343",
+  "runId": "0a1d00c2",
   "tenantId": "tenant-a",
-  "startedAt": "2026-09-12T01:23:36.843Z",
-  "durationMs": 8170,
-  "evidenceDir": "evidence/replay-62043343",
+  "startedAt": "2026-09-12T02:26:30.346Z",
+  "durationMs": 8259,
+  "evidenceDir": "evidence/replay-0a1d00c2",
   "trace": [
     {
       "stepId": "enter_the_member_identifier_in_the_looku",
@@ -14,7 +14,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 495,
+      "durationMs": 486,
       "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
       "locatorCandidates": 1
     },
@@ -24,7 +24,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 545,
+      "durationMs": 559,
       "locatorStrategyUsed": "role_name(button, \"Search\")",
       "locatorCandidates": 1
     },
@@ -34,7 +34,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 545,
+      "durationMs": 555,
       "locatorStrategyUsed": "role_name(link, \"View\")",
       "locatorCandidates": 1
     },
@@ -44,7 +44,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 532,
+      "durationMs": 559,
       "locatorStrategyUsed": "role_name(link, \"Open Sub-Account\")",
       "locatorCandidates": 1
     },
@@ -54,7 +54,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 545,
+      "durationMs": 540,
       "locatorStrategyUsed": "proximity_label(combobox, \"Account Type\")",
       "locatorCandidates": 1
     },
@@ -64,7 +64,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 505,
+      "durationMs": 528,
       "locatorStrategyUsed": "proximity_label(textbox, \"Opening Deposit\")",
       "locatorCandidates": 1
     },
@@ -74,7 +74,7 @@
       "recoveriesApplied": [],
       "status": "skipped",
       "attempts": 1,
-      "durationMs": 275
+      "durationMs": 268
     },
     {
       "stepId": "submit_the_sub_account_opening",
@@ -82,7 +82,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 556,
+      "durationMs": 553,
       "locatorStrategyUsed": "role_name(button, \"Open Account\")",
       "locatorCandidates": 1
     },
@@ -92,12 +92,19 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 399,
+      "durationMs": 426,
       "locatorStrategyUsed": "proximity_label(cell, \"Confirmation Number\")",
       "locatorCandidates": 1
     }
   ],
+  "surfaceDrift": {
+    "recorded": "6dc98486458fdea4",
+    "observed": "6dc98486458fdea4",
+    "comparedSteps": 8,
+    "totalSteps": 8,
+    "drifted": false
+  },
   "outputs": {
-    "confirmation_number": "CNF-8846"
+    "confirmation_number": "CNF-8847"
   }
 }

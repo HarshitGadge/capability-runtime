@@ -2,11 +2,11 @@
   "status": "success",
   "capabilityId": "member.read_savings_balance",
   "capabilityVersion": "1.0.0",
-  "runId": "fa9b3cbb",
+  "runId": "cabb1b0a",
   "tenantId": "tenant-b",
-  "startedAt": "2026-09-12T01:23:30.796Z",
-  "durationMs": 3295,
-  "evidenceDir": "evidence/replay-fa9b3cbb",
+  "startedAt": "2026-09-12T02:26:20.937Z",
+  "durationMs": 3315,
+  "evidenceDir": "evidence/replay-cabb1b0a",
   "trace": [
     {
       "stepId": "enter_the_member_identifier_in_the_looku",
@@ -14,7 +14,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 486,
+      "durationMs": 482,
       "locatorStrategyUsed": "proximity_label(textbox, \"Member Number\")",
       "locatorCandidates": 1
     },
@@ -24,7 +24,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 552,
+      "durationMs": 550,
       "locatorStrategyUsed": "role_name(button, \"Find Member\")",
       "locatorCandidates": 1
     },
@@ -34,7 +34,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 555,
+      "durationMs": 540,
       "locatorStrategyUsed": "role_name(link, \"View\")",
       "locatorCandidates": 1
     },
@@ -44,11 +44,18 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 429,
+      "durationMs": 423,
       "locatorStrategyUsed": "proximity_label(cell, \"Savings Balance\")",
       "locatorCandidates": 1
     }
   ],
+  "surfaceDrift": {
+    "recorded": "2501b5ce4041649f",
+    "observed": "2501b5ce4041649f",
+    "comparedSteps": 4,
+    "totalSteps": 4,
+    "drifted": false
+  },
   "outputs": {
     "savings_balance": 18204.37
   }

@@ -3,6 +3,7 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 import { CapabilityArtifact, TenantOverlay } from '../schema/artifact.js';
 import { ReplayResult } from '../schema/result.js';
 import { parseArgs, str, loadArtifact } from './common.js';
+import { toolDefinition } from '../index.js';
 
 /**
  * Emit the machine-readable contracts.
@@ -18,25 +19,7 @@ fs.mkdirSync('artifacts/schema', { recursive: true });
 
 const toolFor = str(args, 'tool', '');
 if (toolFor) {
-  const a = loadArtifact(toolFor);
-  const tool = {
-    name: a.capability.id.replace(/\./g, '_'),
-    description: [
-      a.capability.description,
-      `Returns: ${a.outputs.map(o => `${o.name} (${o.type}) — ${o.description.replace(/\.$/, '')}`).join('; ') || 'no outputs'}.`,
-      a.businessOutcomes.length
-        ? `May instead return one of these business outcomes, which are results and not errors: ${a.businessOutcomes.map(b => `${b.code} (${b.description})`).join('; ')}.`
-        : '',
-      `Executes deterministically against ${a.target.appId} with no model in the loop.`,
-    ].filter(Boolean).join(' '),
-    input_schema: {
-      type: 'object',
-      properties: Object.fromEntries(a.inputs.map(i => [i.name, { type: i.type === 'number' ? 'number' : 'string', description: i.description, ...(i.pattern ? { pattern: i.pattern } : {}) }])),
-      required: a.inputs.filter(i => i.required).map(i => i.name),
-      additionalProperties: false,
-    },
-  };
-  console.log(JSON.stringify(tool, null, 2));
+  console.log(JSON.stringify(toolDefinition(loadArtifact(toolFor)), null, 2));
 } else {
   const write = (name: string, schema: unknown) => {
     const p = `artifacts/schema/${name}.schema.json`;

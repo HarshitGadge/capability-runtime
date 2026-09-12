@@ -1,0 +1,39 @@
+{"seq":1,"at":"2026-09-12T02:25:51.634Z","kind":"run_started","capability":"member.read_savings_balance","version":"1.0.0","tenant":"tenant-a","provider":"web/dom-scan","inputs":{"memberId":"12345"}}
+{"seq":2,"at":"2026-09-12T02:25:51.906Z","kind":"recovery_triggered","code":"SIGNED_OUT","phase":"preflight","round":0}
+{"seq":3,"at":"2026-09-12T02:25:52.658Z","kind":"recovery_applied","code":"SIGNED_OUT","phase":"preflight"}
+{"seq":4,"at":"2026-09-12T02:25:52.817Z","kind":"note","message":"preflight applied SIGNED_OUT"}
+{"seq":5,"at":"2026-09-12T02:25:52.817Z","kind":"step_started","stepId":"enter_the_member_identifier_in_the_looku","intent":"Enter the member identifier in the lookup form","action":"type","risk":"elevated"}
+{"seq":6,"at":"2026-09-12T02:25:53.097Z","kind":"locator_resolved","stepId":"enter_the_member_identifier_in_the_looku","semanticId":"member_lookup.member_id","used":"proximity_label(textbox, \"Member ID\")","candidates":1,"attempts":[{"strategy":"proximity_label(textbox, \"Member ID\")","matched":1}]}
+{"seq":7,"at":"2026-09-12T02:25:53.316Z","kind":"checkpoint_passed","stepId":"enter_the_member_identifier_in_the_looku","phase":"postcondition"}
+{"seq":8,"at":"2026-09-12T02:25:53.316Z","kind":"step_succeeded","stepId":"enter_the_member_identifier_in_the_looku","locatorStrategyUsed":"proximity_label(textbox, \"Member ID\")","locatorCandidates":1}
+{"seq":9,"at":"2026-09-12T02:25:53.316Z","kind":"step_started","stepId":"submit_the_member_search","intent":"Submit the member search","action":"click","risk":"safe"}
+{"seq":10,"at":"2026-09-12T02:25:53.585Z","kind":"locator_resolved","stepId":"submit_the_member_search","semanticId":"member_lookup.search","used":"role_name(button, \"Search\")","candidates":1,"attempts":[{"strategy":"role_name(button, \"Search\")","matched":1}]}
+{"seq":11,"at":"2026-09-12T02:25:53.855Z","kind":"checkpoint_passed","stepId":"submit_the_member_search","phase":"postcondition"}
+{"seq":12,"at":"2026-09-12T02:25:53.855Z","kind":"step_succeeded","stepId":"submit_the_member_search","locatorStrategyUsed":"role_name(button, \"Search\")","locatorCandidates":1}
+{"seq":13,"at":"2026-09-12T02:25:53.855Z","kind":"step_started","stepId":"open_the_matching_member_record_from_the","intent":"Open the matching member record from the results","action":"click","risk":"safe"}
+{"seq":14,"at":"2026-09-12T02:25:54.140Z","kind":"locator_resolved","stepId":"open_the_matching_member_record_from_the","semanticId":"search_results.view","used":"role_name(link, \"View\")","candidates":1,"attempts":[{"strategy":"role_name(link, \"View\")","matched":1}]}
+{"seq":15,"at":"2026-09-12T02:26:04.550Z","kind":"recovery_triggered","code":"SIGNED_OUT","atStep":"open_the_matching_member_record_from_the","attempt":1}
+{"seq":16,"at":"2026-09-12T02:26:04.689Z","kind":"locator_resolved","stepId":"relogin_user","semanticId":"signon.operator_id","used":"proximity_label(textbox, \"Operator ID\")","candidates":1,"attempts":[{"strategy":"proximity_label(textbox, \"Operator ID\")","matched":1}]}
+{"seq":17,"at":"2026-09-12T02:26:04.961Z","kind":"locator_resolved","stepId":"relogin_pass","semanticId":"signon.password","used":"proximity_label(textbox, \"Password\")","candidates":1,"attempts":[{"strategy":"proximity_label(textbox, \"Password\")","matched":1}]}
+{"seq":18,"at":"2026-09-12T02:26:05.157Z","kind":"locator_resolved","stepId":"relogin_submit","semanticId":"signon.submit","used":"role_name(button, \"Sign On\")","candidates":1,"attempts":[{"strategy":"role_name(button, \"Sign On\")","matched":1}]}
+{"seq":19,"at":"2026-09-12T02:26:05.282Z","kind":"recovery_applied","code":"SIGNED_OUT","then":"restart_flow"}
+{"seq":20,"at":"2026-09-12T02:26:05.282Z","kind":"note","message":"restarting flow after recovery SIGNED_OUT"}
+{"seq":21,"at":"2026-09-12T02:26:05.576Z","kind":"step_started","stepId":"enter_the_member_identifier_in_the_looku","intent":"Enter the member identifier in the lookup form","action":"type","risk":"elevated"}
+{"seq":22,"at":"2026-09-12T02:26:05.853Z","kind":"locator_resolved","stepId":"enter_the_member_identifier_in_the_looku","semanticId":"member_lookup.member_id","used":"proximity_label(textbox, \"Member ID\")","candidates":1,"attempts":[{"strategy":"proximity_label(textbox, \"Member ID\")","matched":1}]}
+{"seq":23,"at":"2026-09-12T02:26:06.069Z","kind":"checkpoint_passed","stepId":"enter_the_member_identifier_in_the_looku","phase":"postcondition"}
+{"seq":24,"at":"2026-09-12T02:26:06.069Z","kind":"step_succeeded","stepId":"enter_the_member_identifier_in_the_looku","locatorStrategyUsed":"proximity_label(textbox, \"Member ID\")","locatorCandidates":1}
+{"seq":25,"at":"2026-09-12T02:26:06.069Z","kind":"step_started","stepId":"submit_the_member_search","intent":"Submit the member search","action":"click","risk":"safe"}
+{"seq":26,"at":"2026-09-12T02:26:06.337Z","kind":"locator_resolved","stepId":"submit_the_member_search","semanticId":"member_lookup.search","used":"role_name(button, \"Search\")","candidates":1,"attempts":[{"strategy":"role_name(button, \"Search\")","matched":1}]}
+{"seq":27,"at":"2026-09-12T02:26:06.603Z","kind":"checkpoint_passed","stepId":"submit_the_member_search","phase":"postcondition"}
+{"seq":28,"at":"2026-09-12T02:26:06.603Z","kind":"step_succeeded","stepId":"submit_the_member_search","locatorStrategyUsed":"role_name(button, \"Search\")","locatorCandidates":1}
+{"seq":29,"at":"2026-09-12T02:26:06.603Z","kind":"step_started","stepId":"open_the_matching_member_record_from_the","intent":"Open the matching member record from the results","action":"click","risk":"safe"}
+{"seq":30,"at":"2026-09-12T02:26:06.886Z","kind":"locator_resolved","stepId":"open_the_matching_member_record_from_the","semanticId":"search_results.view","used":"role_name(link, \"View\")","candidates":1,"attempts":[{"strategy":"role_name(link, \"View\")","matched":1}]}
+{"seq":31,"at":"2026-09-12T02:26:07.153Z","kind":"checkpoint_passed","stepId":"open_the_matching_member_record_from_the","phase":"postcondition"}
+{"seq":32,"at":"2026-09-12T02:26:07.154Z","kind":"step_succeeded","stepId":"open_the_matching_member_record_from_the","locatorStrategyUsed":"role_name(link, \"View\")","locatorCandidates":1}
+{"seq":33,"at":"2026-09-12T02:26:07.154Z","kind":"step_started","stepId":"read_the_current_savings_balance_from_th","intent":"Read the current savings balance from the member record","action":"extract","risk":"safe"}
+{"seq":34,"at":"2026-09-12T02:26:07.436Z","kind":"locator_resolved","stepId":"read_the_current_savings_balance_from_th","semanticId":"member.savings_balance","used":"proximity_label(cell, \"Savings Balance\")","candidates":1,"attempts":[{"strategy":"proximity_label(cell, \"Savings Balance\")","matched":1}]}
+{"seq":35,"at":"2026-09-12T02:26:07.437Z","kind":"note","message":"extracted savings_balance","sensitivity":"regulated","value":"«withheld:currency»"}
+{"seq":36,"at":"2026-09-12T02:26:07.580Z","kind":"checkpoint_passed","stepId":"read_the_current_savings_balance_from_th","phase":"postcondition"}
+{"seq":37,"at":"2026-09-12T02:26:07.580Z","kind":"step_succeeded","stepId":"read_the_current_savings_balance_from_th","locatorStrategyUsed":"proximity_label(cell, \"Savings Balance\")","locatorCandidates":1}
+{"seq":38,"at":"2026-09-12T02:26:07.721Z","kind":"checkpoint_passed","phase":"success","description":"Goal reached: \"Member Detail\" is visible"}
+{"seq":39,"at":"2026-09-12T02:26:07.721Z","kind":"run_finished","status":"success","outputs":{"savings_balance":"«withheld:currency»"}}

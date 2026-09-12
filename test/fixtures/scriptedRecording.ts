@@ -96,6 +96,7 @@ export async function recordScripted(opts: { baseUrl: string; memberId: string; 
     successText: 'Member Detail',
     summary: 'Scripted fixture recording of the member savings balance lookup.',
     turns: 0,
+    stopReason: 'goal_reached',
   };
 }
 
@@ -211,6 +212,7 @@ export async function recordSubAccount(opts: { baseUrl: string; memberId: string
     successText: 'Sub-account opened successfully',
     summary: 'Scripted fixture recording of the sub-account opening flow.',
     turns: 0,
+    stopReason: 'goal_reached',
   };
 }
 

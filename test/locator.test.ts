@@ -56,6 +56,21 @@ describe('locator cascade', () => {
     expect(r.candidates).toHaveLength(1);
   });
 
+  it('never lets a label cell match a proximity lookup for the value beside it', () => {
+    // On a provider where a cell's accessible name is its text, the label cell itself
+    // would otherwise satisfy proximity_label(cell, "Savings Balance") and the extraction
+    // would return the label instead of the balance.
+    const r = resolveTarget(
+      target([{ kind: 'proximity_label', role: 'cell', label: 'Savings Balance', match: 'normalized' }]),
+      obs([
+        el({ ref: 'label', role: 'cell', name: 'Savings Balance', text: 'Savings Balance' }),
+        el({ ref: 'value', role: 'cell', name: '$1.00', text: '$1.00', proximityLabel: 'Savings Balance' }),
+      ]),
+      {},
+    );
+    expect(r.candidates.map(c => c.ref)).toEqual(['value']);
+  });
+
   it('scopes to the row carrying a caller-supplied value rather than picking the first match', () => {
     const rows = [
       el({ ref: 'a', role: 'link', text: 'View', rowText: '10001 | A. Rivera | active | View' }),

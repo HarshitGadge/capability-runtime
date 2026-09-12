@@ -132,6 +132,11 @@
                 "role": "textbox",
                 "name": "Operator ID",
                 "match": "normalized"
+              },
+              {
+                "kind": "ordinal",
+                "role": "textbox",
+                "index": 0
               }
             ],
             "frame": [],
@@ -161,6 +166,11 @@
                 "role": "textbox",
                 "label": "Password",
                 "match": "normalized"
+              },
+              {
+                "kind": "ordinal",
+                "role": "textbox",
+                "index": 1
               }
             ],
             "frame": [],

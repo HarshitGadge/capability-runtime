@@ -2,11 +2,11 @@
   "status": "business_outcome",
   "capabilityId": "member.read_savings_balance",
   "capabilityVersion": "1.0.0",
-  "runId": "c7d27190",
+  "runId": "751a1bf4",
   "tenantId": "tenant-a",
-  "startedAt": "2026-09-12T01:22:44.307Z",
-  "durationMs": 2166,
-  "evidenceDir": "evidence/replay-c7d27190",
+  "startedAt": "2026-09-12T02:25:33.869Z",
+  "durationMs": 2256,
+  "evidenceDir": "evidence/replay-751a1bf4",
   "trace": [
     {
       "stepId": "enter_the_member_identifier_in_the_looku",
@@ -14,7 +14,7 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 481,
+      "durationMs": 503,
       "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
       "locatorCandidates": 1
     },
@@ -24,11 +24,18 @@
       "recoveriesApplied": [],
       "status": "ok",
       "attempts": 1,
-      "durationMs": 544,
+      "durationMs": 556,
       "locatorStrategyUsed": "role_name(button, \"Search\")",
       "locatorCandidates": 1
     }
   ],
+  "surfaceDrift": {
+    "recorded": "2501b5ce4041649f",
+    "observed": "",
+    "comparedSteps": 1,
+    "totalSteps": 4,
+    "drifted": null
+  },
   "code": "MEMBER_NOT_FOUND",
   "message": "No member record matches the supplied identifier.",
   "atStepId": "submit_the_member_search",

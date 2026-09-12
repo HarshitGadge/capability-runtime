@@ -149,7 +149,7 @@ export function compile(input: CompileInput): CapabilityArtifact {
       discoveryRunId: input.provenance.discoveryRunId,
       recordedAgainstTenant: input.provenance.tenantId,
       evidenceDir: input.provenance.evidenceDir,
-      surfaceFingerprint: fingerprint(input.actions),
+      surfaceFingerprint: fingerprint(input.actions, basePath),
       notes: 'Steps recorded from a live LLM-driven run; locators computed and uniqueness-verified by the runtime.',
     },
   };
@@ -371,14 +371,30 @@ function uniqueId(used: Set<string>, base: string): string {
 }
 
 /**
- * Fingerprint of the recorded surface: the shape of the screens the flow passed through.
- * Replay compares it and warns on mismatch — the cheapest possible drift detector, and
- * the signal that says "re-review this capability for this tenant".
+ * The shape of one screen: which product routes are showing (tenant prefix stripped,
+ * frames included) and how many interactive controls are on it.
+ *
+ * Deliberately coarse. A fingerprint that tracked every label would change with each
+ * tenant skin and tell you nothing; one that tracks structure changes when the vendor
+ * ships a release that adds a field or splits a screen — which is the event a fleet
+ * operator actually needs to hear about. Used at record time to stamp the artifact and
+ * at replay time to compare against what was actually observed.
  */
-function fingerprint(actions: RecordedAction[]): string {
-  const shape = actions.map(a => {
-    const o = a.after;
-    return `${new URL(o.url).pathname}:${o.elements.filter(e => e.role === 'button' || e.role === 'link' || e.role === 'textbox').length}`;
-  }).join('|');
-  return crypto.createHash('sha256').update(shape).digest('hex').slice(0, 16);
+export function screenShape(obs: Observation, basePath: string): string {
+  const frameUrls = Object.entries(obs.urlByFrame ?? {}).filter(([k]) => k !== '(top)').map(([, v]) => v);
+  const routes = (frameUrls.length ? frameUrls : [obs.url]).map(u => {
+    const p = new URL(u).pathname;
+    return p.startsWith(basePath) ? p.slice(basePath.length) || '/' : p;
+  });
+  const controls = obs.elements.filter(e => e.role === 'button' || e.role === 'link' || e.role === 'textbox' || e.role === 'combobox').length;
+  return `${[...new Set(routes)].sort().join('+')}:${controls}`;
+}
+
+export function fingerprintOf(shapes: string[]): string {
+  return crypto.createHash('sha256').update(shapes.join('|')).digest('hex').slice(0, 16);
+}
+
+/** Fingerprint of the recorded surface: the shapes of the screens each step produced. */
+function fingerprint(actions: RecordedAction[], basePath: string): string {
+  return fingerprintOf(actions.map(a => screenShape(a.after, basePath)));
 }

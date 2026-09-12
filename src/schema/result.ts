@@ -31,8 +31,27 @@ export const FailureKind = z.enum([
   'success_condition_unmet',
   'missing_required_output',
   'recovery_exhausted',
+  'attempts_exhausted',
 ]);
 export type FailureKind = z.infer<typeof FailureKind>;
+
+/**
+ * Did the surface still look the way it did when the capability was recorded?
+ *
+ * Compares the structural fingerprint stamped into the artifact's provenance against
+ * the same fingerprint computed from the screens this run actually observed. It is
+ * only assessable when every step's screen was seen, so a run that stopped early
+ * reports `drifted: null` rather than a guess. Drift is a signal, never a failure: the
+ * run's own checkpoints decide whether it worked; this says whether to re-review it.
+ */
+export const SurfaceDrift = z.object({
+  recorded: z.string(),
+  observed: z.string(),
+  comparedSteps: z.number().int(),
+  totalSteps: z.number().int(),
+  drifted: z.boolean().nullable(),
+});
+export type SurfaceDrift = z.infer<typeof SurfaceDrift>;
 
 const Base = {
   capabilityId: z.string(),
@@ -43,6 +62,7 @@ const Base = {
   durationMs: z.number(),
   evidenceDir: z.string(),
   trace: z.array(StepTrace),
+  surfaceDrift: SurfaceDrift,
 };
 
 export const ReplayResult = z.discriminatedUnion('status', [

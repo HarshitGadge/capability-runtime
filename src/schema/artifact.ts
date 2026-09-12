@@ -66,8 +66,13 @@ export const RecoveryRule = z.object({
   /** Remediation steps, run with the same policy gate as any other step. */
   actions: z.array(Step).min(1),
   maxAttempts: z.number().int().positive().default(2),
-  /** What to do once remediation succeeds. */
-  then: z.enum(['retry_step', 'continue', 'restart_flow']).default('retry_step'),
+  /**
+   * What to do once remediation succeeds. Either way the engine re-verifies the step's
+   * postcondition first and only redoes the action if the screen is still wrong;
+   * `restart_flow` re-opens the entry point and re-runs the business steps, and is
+   * refused once an irreversible step has executed.
+   */
+  then: z.enum(['retry_step', 'restart_flow']).default('retry_step'),
   /** If remediation is exhausted, escalate to a human instead of failing outright. */
   escalateOnExhaustion: z.boolean().default(false),
 });

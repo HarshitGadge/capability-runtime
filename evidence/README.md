@@ -1,8 +1,9 @@
 # Evidence
 
 One directory per run. Each contains `run.jsonl` (append-only structured log), `result.json`
-(the exact contract returned to the caller), `screenshots/`, and `observations/` — structured
-snapshots of the perceived screen, which are the surface-agnostic equivalent of a DOM dump.
+(the exact contract returned to the caller, including the locator rung per step and the surface
+fingerprint comparison), `screenshots/`, and `observations/` — structured snapshots of the
+perceived screen, which are the surface-agnostic equivalent of a DOM dump.
 
 Everything written here passes through the redactor first. Regulated values appear in the logs as
 stable tokens (`«currency:…»`, `«account:…»`) even though the same run returns the real value to
@@ -18,17 +19,18 @@ real number; `run.jsonl` never does.
 
 | Directory | Command | Result |
 | --- | --- | --- |
-| `replay-46a33b63` | `--input memberId=12345` | **SUCCESS** — the declared `savings_balance` output, every step resolved at the top rung of its locator cascade |
-| `replay-c7d27190` | `--input memberId=99999` | **BUSINESS_OUTCOME** `MEMBER_NOT_FOUND` — the app answered, and the answer is a result the caller asked for, not a crash |
-| `replay-99f05f15` | `--input memberId=12345 --inject interstitial` | **SUCCESS** with `↻ [recovered: MAINTENANCE_INTERSTITIAL]` — a blocking notice appeared mid-flow, was dismissed, and the postcondition was re-verified rather than the action repeated |
-| `replay-38fbf4a3` | `--input memberId=12345 --inject session_timeout` | **SUCCESS** with `↻ [recovered: SIGNED_OUT]` — the session was dropped mid-run; the engine re-authenticated and restarted the flow, with the repeated steps visible in the trace |
-| `replay-fe819b66` | `--tenant tenant-b --no-overlay` | **FAILURE** `precondition_unmet` — the unspecialized capability meets a second institution's skin and reports the exact literal that drifted, plus the remediation |
-| `replay-fa9b3cbb` | `--tenant tenant-b` | **SUCCESS** — the same artifact on the second institution via a three-line overlay; the trace shows `proximity_label(textbox, "Member Number")` and `role_name(button, "Find Member")` |
-| `replay-62043343` | `npm run demo:handoff` | **SUCCESS** after human escalation — see below |
+| `replay-1b7e2b0a` | `--input memberId=12345` | **SUCCESS** — the declared `savings_balance` output, every step resolved at the top rung of its locator cascade |
+| `replay-751a1bf4` | `--input memberId=99999` | **BUSINESS_OUTCOME** `MEMBER_NOT_FOUND` — the app answered, and the answer is a result the caller asked for, not a crash |
+| `replay-65c8bd90` | `--input memberId=12345 --inject interstitial` | **SUCCESS** with `↻ [recovered: MAINTENANCE_INTERSTITIAL]` — a blocking notice appeared mid-flow, was dismissed, and the postcondition was re-verified rather than the action repeated |
+| `replay-7e6583e0` | `--input memberId=12345 --inject session_timeout` | **SUCCESS** with `↻ [recovered: SIGNED_OUT]` — the session was dropped mid-run; the engine re-authenticated and restarted the flow, with the repeated steps visible in the trace |
+| `replay-60652909` | `--tenant tenant-b --no-overlay` | **FAILURE** `precondition_unmet` — the unspecialized capability meets a second institution's skin and reports the exact literal that drifted, plus the remediation |
+| `replay-cabb1b0a` | `--tenant tenant-b` | **SUCCESS** — the same artifact on the second institution via a three-line overlay; the trace shows `proximity_label(textbox, "Member Number")` and `role_name(button, "Find Member")` |
+| `replay-15b06d97` | `--input memberId=12345 --provider cdp` | **SUCCESS** through the browser's real accessibility tree instead of the in-page scanner — same four locator rungs, same surface fingerprint; nothing above `Surface` knows which provider ran |
+| `replay-0a1d00c2` | `npm run demo:handoff` | **SUCCESS** after human escalation — see below |
 
 ## The escalation run
 
-`replay-62043343` is the full human-handoff loop, produced by `npm run demo:handoff`. Reading
+`replay-0a1d00c2` is the full human-handoff loop, produced by `npm run demo:handoff`. Reading
 `run.jsonl` in order:
 
 ```

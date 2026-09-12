@@ -19,6 +19,77 @@ export interface PerceptionProvider {
 
 const AX_ROLES = new Set(['link', 'button', 'textbox', 'combobox', 'checkbox', 'radio', 'cell', 'columnheader', 'heading']);
 
+interface AxNode {
+  nodeId: string; parentId?: string; childIds?: string[]; ignored?: boolean; backendDOMNodeId?: number;
+  role?: { value?: string }; name?: { value?: string }; value?: { value?: unknown }; properties?: any[];
+}
+
+/** Roles whose presence inside a cell marks it as a container rather than a value. */
+const CONTAINER_ROLES = new Set(['cell', 'columnheader', 'table', 'textbox', 'combobox', 'button', 'link']);
+
+/**
+ * Structural queries over one frame's accessibility tree.
+ *
+ * Chrome names layout tables `LayoutTable`/`LayoutTableRow`/`LayoutTableCell` and data
+ * tables `table`/`row`/`cell`; legacy portals use both, often nested, so the two
+ * vocabularies are folded together before anything reasons about rows.
+ */
+class AxIndex {
+  private readonly byId = new Map<string, AxNode>();
+  constructor(nodes: AxNode[]) { for (const n of nodes) this.byId.set(n.nodeId, n); }
+
+  role(n: AxNode): string | undefined {
+    const r = n.role?.value;
+    if (!r) return undefined;
+    if (r === 'LayoutTableCell' || r === 'gridcell') return 'cell';
+    if (r === 'LayoutTableRow') return 'row';
+    if (r === 'LayoutTable') return 'table';
+    return r;
+  }
+  name(n: AxNode): string { return (n.name?.value ?? '').replace(/\s+/g, ' ').trim(); }
+
+  private parent(n: AxNode): AxNode | undefined { return n.parentId ? this.byId.get(n.parentId) : undefined; }
+  private ancestor(n: AxNode, role: string): AxNode | undefined {
+    for (let p = this.parent(n); p; p = this.parent(p)) if (this.role(p) === role) return p;
+    return undefined;
+  }
+  private children(n: AxNode): AxNode[] { return (n.childIds ?? []).map(id => this.byId.get(id)).filter((c): c is AxNode => !!c); }
+
+  hasDescendant(n: AxNode, pred: (d: AxNode) => boolean): boolean {
+    return this.children(n).some(c => pred(c) || this.hasDescendant(c, pred));
+  }
+
+  /** Visible text under a node, from its leaf names, in document order. */
+  private textOf(n: AxNode): string {
+    const own = this.name(n);
+    const kids = this.children(n).map(c => this.textOf(c)).filter(Boolean).join(' ');
+    return (own && !kids ? own : kids || own).replace(/\s+/g, ' ').trim();
+  }
+
+  private cellsOfRow(row: AxNode): AxNode[] { return this.children(row).filter(c => this.role(c) === 'cell' || this.role(c) === 'columnheader'); }
+
+  /** Text of the row containing a node, cell by cell — the basis of `row_containing` scoping. */
+  rowText(n: AxNode): string | undefined {
+    const row = this.role(n) === 'row' ? n : this.ancestor(n, 'row');
+    if (!row) return undefined;
+    const text = this.cellsOfRow(row).map(c => this.textOf(c)).filter(Boolean).join(' | ');
+    return text || undefined;
+  }
+
+  /** Text of the nearest preceding cell in the same row — the legacy label heuristic. */
+  proximityLabel(n: AxNode): string | undefined {
+    const cell = (this.role(n) === 'cell' || this.role(n) === 'columnheader') ? n : this.ancestor(n, 'cell');
+    const row = cell && this.ancestor(cell, 'row');
+    if (!cell || !row) return undefined;
+    const cells = this.cellsOfRow(row);
+    for (let i = cells.indexOf(cell) - 1; i >= 0; i--) {
+      const t = this.textOf(cells[i]!);
+      if (t) return t;
+    }
+    return undefined;
+  }
+}
+
 const NAME_SHIM = 'window.__name = window.__name || (f => f)';
 
 /** Frame position within the top-level viewport, so all geometry lands in one space. */
@@ -121,10 +192,14 @@ export class CdpAxProvider implements PerceptionProvider {
 
         const tree = await client.send('Accessibility.getFullAXTree', { frameId: cdpFrame.id } as any).catch(() => null) as any;
         if (!tree?.nodes) continue;
+        const ax = new AxIndex(tree.nodes as AxNode[]);
 
-        for (const n of tree.nodes as any[]) {
-          const role = n.role?.value;
+        for (const n of tree.nodes as AxNode[]) {
+          const role = ax.role(n);
           if (!role || n.ignored || !AX_ROLES.has(role) || !n.backendDOMNodeId) continue;
+          // Same rule as the in-page scanner: a cell that contains other cells or controls
+          // is layout, not information. Only leaf cells are reported.
+          if ((role === 'cell' || role === 'columnheader') && (!ax.name(n) || ax.hasDescendant(n, d => CONTAINER_ROLES.has(ax.role(d) ?? '')))) continue;
 
           const box = await client.send('DOM.getBoxModel', { backendNodeId: n.backendDOMNodeId }).catch(() => null) as any;
           const quad = box?.model?.border as number[] | undefined;
@@ -136,8 +211,7 @@ export class CdpAxProvider implements PerceptionProvider {
           if (width <= 0 || height <= 0) continue;
 
           const prop = (name: string) => (n.properties ?? []).find((p: any) => p.name === name)?.value?.value;
-          const name = n.name?.value ?? '';
-          if ((role === 'cell' || role === 'columnheader') && !name) continue;
+          const name = ax.name(n);
 
           elements.push({
             ref: `ax#${i++}`,
@@ -145,24 +219,25 @@ export class CdpAxProvider implements PerceptionProvider {
             name,
             value: n.value?.value != null ? String(n.value.value) : undefined,
             text: name || undefined,
-            // The gap versus the DOM-scan provider, stated plainly: a raw accessibility
-            // tree has no notion of "the label in the cell to the left", so a legacy
-            // control with no accessible name arrives anonymous and nothing above the
-            // ordinal rung of the cascade can find it. That is a real property of
-            // accessibility APIs — the same is true of UIA on a badly built desktop app
-            // — and it is the reason the cascade has lower rungs at all.
-            proximityLabel: undefined,
+            // An accessibility tree has no accessible name for a bare legacy input, but it
+            // does carry table structure — the same row/cell relationships the in-page
+            // scanner walks in the DOM. Deriving "the label in the cell to the left" from
+            // AX rows is what UIA's Table/Grid patterns would give a desktop provider, so
+            // it belongs here rather than being a DOM-only trick.
+            // A cell's accessible name is its own content, so for cells the label beside
+            // it is computed regardless — that is what makes a value cell addressable as
+            // "the one labelled Savings Balance" rather than by its position.
+            proximityLabel: name && role !== 'cell' ? undefined : ax.proximityLabel(n),
             disabled: prop('disabled') === true,
             focusable: prop('focusable') === true,
             checked: typeof prop('checked') === 'boolean' ? prop('checked') : undefined,
-            // Verified against Playwright's own element geometry: for same-process
-            // frames CDP reports box-model quads already in main-frame coordinates, so
-            // unlike the in-page scanner (whose getBoundingClientRect is frame-local)
-            // this provider must not add the frame offset. Both therefore hand the rest
-            // of the system geometry in one coordinate space, which is what `Surface`
-            // promises its callers.
+            // Verified against Playwright's own element geometry: for same-process frames
+            // CDP reports box-model quads already in main-frame coordinates, so unlike
+            // the in-page scanner (whose getBoundingClientRect is frame-local) this
+            // provider must not add the frame offset.
             bounds: { x, y, width, height },
             frame: path,
+            rowText: ax.rowText(n),
           });
         }
       }

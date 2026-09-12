@@ -1,4 +1,4 @@
-import type { Page } from 'playwright';
+import type { Frame, Page } from 'playwright';
 
 /**
  * Capture what the human does while they hold the session.
@@ -12,37 +12,52 @@ import type { Page } from 'playwright';
  * The listeners are attached to every existing frame and re-attached on navigation, and
  * they are passive: they observe, they never block or alter the interaction.
  */
+
+const BINDING = '__capabilityRuntimeHumanAction';
+
+/**
+ * A page can expose a binding only once, but a page can be handed to a human more than
+ * once in its life. So the binding is installed once and forwards to whichever handler
+ * is current; `stop()` clears it, and a later watch replaces it. Without this, the first
+ * watcher would keep receiving events from every subsequent handoff.
+ */
+const handlers = new WeakMap<Page, ((kind: string, detail: string) => void) | null>();
+
+const ATTACH = `(() => {
+  if (window.__crAttached) return; window.__crAttached = true;
+  const describe = (el) => {
+    if (!el || !el.tagName) return 'unknown';
+    const tag = el.tagName.toLowerCase();
+    const type = el.getAttribute?.('type');
+    const label = el.value || el.textContent || el.getAttribute?.('aria-label') || el.getAttribute?.('name') || '';
+    return tag + (type ? '[' + type + ']' : '') + ' "' + String(label).replace(/\\s+/g, ' ').trim().slice(0, 60) + '"';
+  };
+  const send = (kind, target) => { try { window.${BINDING}({ kind, detail: describe(target) }); } catch {} };
+  document.addEventListener('click',  e => send('click',  e.target), true);
+  document.addEventListener('change', e => send('change', e.target), true);
+  document.addEventListener('submit', e => send('submit', e.target), true);
+})()`;
+
 export async function watchHumanActions(page: Page, onAction: (kind: string, detail: string) => void): Promise<() => Promise<void>> {
-  const BINDING = '__capabilityRuntimeHumanAction';
+  const first = !handlers.has(page);
+  handlers.set(page, onAction);
 
-  await page.exposeBinding(BINDING, (_src, payload: { kind: string; detail: string }) => {
-    onAction(payload.kind, payload.detail);
-  }).catch(() => { /* already exposed on this page */ });
+  if (first) {
+    await page.exposeBinding(BINDING, (_src, payload: { kind: string; detail: string }) => {
+      handlers.get(page)?.(payload.kind, payload.detail);
+    });
+    // Future documents, in every frame, get the listeners before their own scripts run.
+    await page.addInitScript(ATTACH);
+  }
+  // Documents that are already loaded need them injected now.
+  for (const frame of page.frames()) await frame.evaluate(ATTACH).catch(() => {});
 
-  const attach = `(() => {
-    if (window.__crAttached) return; window.__crAttached = true;
-    const describe = (el) => {
-      if (!el || !el.tagName) return 'unknown';
-      const tag = el.tagName.toLowerCase();
-      const label = el.value || el.textContent || el.getAttribute?.('aria-label') || '';
-      return tag + ' "' + String(label).replace(/\\s+/g, ' ').trim().slice(0, 60) + '"';
-    };
-    document.addEventListener('click', e => window.${BINDING}({ kind: 'click', detail: describe(e.target) }), true);
-    document.addEventListener('change', e => window.${BINDING}({ kind: 'change', detail: describe(e.target) }), true);
-    document.addEventListener('submit', e => window.${BINDING}({ kind: 'submit', detail: describe(e.target) }), true);
-  })()`;
-
-  await page.addInitScript(attach).catch(() => {});
-  for (const frame of page.frames()) await frame.evaluate(attach).catch(() => {});
-
-  const onFrameNav = (frame: any) => { frame.evaluate(attach).catch(() => {}); };
+  // Belt and braces for frames whose init script raced the navigation.
+  const onFrameNav = (frame: Frame) => { frame.evaluate(ATTACH).catch(() => {}); };
   page.on('framenavigated', onFrameNav);
-
-  const onNav = () => { for (const f of page.frames()) f.evaluate(attach).catch(() => {}); };
-  page.on('load', onNav);
 
   return async () => {
     page.off('framenavigated', onFrameNav);
-    page.off('load', onNav);
+    handlers.set(page, null);
   };
 }

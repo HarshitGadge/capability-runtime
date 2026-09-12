@@ -594,6 +594,11 @@
                 "role": "textbox",
                 "name": "Operator ID",
                 "match": "normalized"
+              },
+              {
+                "kind": "ordinal",
+                "role": "textbox",
+                "index": 0
               }
             ],
             "frame": [],
@@ -623,6 +628,11 @@
                 "role": "textbox",
                 "label": "Password",
                 "match": "normalized"
+              },
+              {
+                "kind": "ordinal",
+                "role": "textbox",
+                "index": 1
               }
             ],
             "frame": [],
@@ -663,12 +673,12 @@
     }
   ],
   "provenance": {
-    "recordedAt": "2026-09-12T01:22:09.229Z",
+    "recordedAt": "2026-09-12T02:22:42.814Z",
     "discoveryModel": "fixture/scripted",
     "discoveryRunId": "fixture-read-balance",
     "recordedAgainstTenant": "tenant-a",
     "evidenceDir": "evidence/fixture-read-balance",
-    "surfaceFingerprint": "d6ba0e5ecbf46e88",
+    "surfaceFingerprint": "2501b5ce4041649f",
     "notes": "Steps recorded from a live LLM-driven run; locators computed and uniqueness-verified by the runtime."
   }
 }

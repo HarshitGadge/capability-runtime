@@ -17,7 +17,7 @@ import { parseArgs, str, flag, loadProfile, baseUrlFor, buildRuntime, resetFault
 const args = parseArgs();
 const goal = str(args, 'goal', '');
 if (!goal) {
-  console.error('usage: npm run discover -- --goal "..." [--tenant tenant-a] [--provider dom-scan|cdp] [--headless]');
+  console.error('usage: npm run discover -- --goal "..." [--tenant tenant-a] [--entry <url>] [--max-steps N] [--timeout-ms N] [--provider dom-scan|cdp] [--allow-risk safe|elevated|irreversible] [--headless]');
   process.exit(2);
 }
 
@@ -25,8 +25,12 @@ const tenant = str(args, 'tenant', 'tenant-a');
 const host = str(args, 'host', 'http://localhost:5173');
 const model = str(args, 'model', process.env.DISCOVERY_MODEL ?? 'claude-opus-5');
 const maxSteps = Number(str(args, 'max-steps', process.env.DISCOVERY_MAX_STEPS ?? '40'));
+const timeoutMs = Number(str(args, 'timeout-ms', process.env.DISCOVERY_TIMEOUT_MS ?? String(10 * 60_000)));
 const profile = loadProfile(str(args, 'profile', 'profiles/portal.json'));
 const baseUrl = baseUrlFor(tenant, host);
+// The target is goal + entry point. The entry point defaults to the tenant's root but can
+// be any allowlisted URL, so a capability can be discovered from deep inside an app.
+const entryPoint = str(args, 'entry', `${baseUrl}/`);
 
 /**
  * A discovery run is a supervised activity — an engineer is watching it — so raising the
@@ -58,6 +62,8 @@ const rt = await buildRuntime({
 console.log(`discovery run ${rt.runId}`);
 console.log(`  goal      ${goal}`);
 console.log(`  tenant    ${tenant} (${baseUrl})`);
+console.log(`  entry     ${entryPoint}`);
+console.log(`  budget    ${maxSteps} turns / ${Math.round(timeoutMs / 1000)}s`);
 console.log(`  model     ${model}`);
 console.log(`  provider  ${rt.gate.providerId}`);
 console.log(`  risk ceiling ${allowRisk}${allowRisk !== profile.allowlist.maxUnattendedRisk ? '  (raised for this supervised run; replay keeps ' + profile.allowlist.maxUnattendedRisk + ')' : ''}`);
@@ -65,12 +71,18 @@ console.log(`  evidence  ${rt.recorder.relDir()}\n`);
 
 try {
   const recording = await discover({
-    goal, entryPoint: `${baseUrl}/`, gate: rt.gate, recorder: rt.recorder, model, maxSteps,
+    goal, entryPoint, gate: rt.gate, recorder: rt.recorder, model, maxSteps, timeoutMs,
     onEntry: async () => { await stabilize(rt.gate, profile.recoveries, { baseUrl }, rt.recorder); },
   });
 
+  // A run that stopped for any reason other than reaching the goal is not a capability,
+  // whatever it recorded on the way. Say why it stopped, keep the transcript, exit non-zero.
+  if (recording.stopReason !== 'goal_reached') {
+    console.error(`\nDiscovery stopped: ${recording.stopReason} after ${recording.turns} turns. Transcript: ${rt.recorder.relDir()}/transcript.json`);
+    process.exit(recording.stopReason === 'model_declined' ? 5 : 1);
+  }
   if (!recording.capability || !recording.actions.length) {
-    console.error(`\nThe agent finished without recording a flow (${recording.turns} turns). Transcript: ${rt.recorder.relDir()}/transcript.json`);
+    console.error(`\nThe agent reported success without recording a flow (${recording.turns} turns). Transcript: ${rt.recorder.relDir()}/transcript.json`);
     process.exit(1);
   }
 
@@ -102,7 +114,7 @@ try {
   fs.writeFileSync(out, JSON.stringify(parsed, null, 2));
   rt.recorder.writeJson('artifact.json', parsed, false);
 
-  console.log(`\n✓ discovered "${parsed.capability.name}" in ${recording.turns} turns`);
+  console.log(`\n✓ discovered "${parsed.capability.name}" in ${recording.turns} turns (${recording.stopReason})`);
   console.log(`  steps     ${parsed.steps.length}`);
   console.log(`  inputs    ${parsed.inputs.map(i => `${i.name}:${i.type}`).join(', ') || '(none)'}`);
   console.log(`  outputs   ${parsed.outputs.map(o => `${o.name}:${o.type}`).join(', ') || '(none)'}`);

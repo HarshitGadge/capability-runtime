@@ -8,6 +8,17 @@ import { renderObservation } from './render.js';
 import { TOOLS, SYSTEM_PROMPT } from './tools.js';
 import type { RecordedAction } from './compiler.js';
 
+/**
+ * The slice of the Anthropic client the loop actually uses. Narrow on purpose: it is what
+ * lets a test drive the loop with a scripted stand-in and prove the mechanics — phase
+ * switching, ref resolution, recording, compilation — without a model or a key.
+ */
+export interface ModelClient {
+  messages: { create(params: Anthropic.MessageCreateParamsNonStreaming): Promise<Anthropic.Message> };
+}
+
+export type StopReason = 'goal_reached' | 'max_steps' | 'timeout' | 'dead_end' | 'model_declined';
+
 export interface DiscoveryOptions {
   goal: string;
   entryPoint: string;
@@ -15,6 +26,9 @@ export interface DiscoveryOptions {
   recorder: EvidenceRecorder;
   model: string;
   maxSteps: number;
+  /** Wall-clock budget for the whole run. A loop that cannot finish should say so, not hang. */
+  timeoutMs?: number;
+  client?: ModelClient;
   /**
    * Run after every navigation to the entry point, before the model sees anything.
    * This is where session establishment happens, so the recorded capability contains
@@ -34,6 +48,36 @@ export interface DiscoveryRecording {
   successText: string;
   summary: string;
   turns: number;
+  stopReason: StopReason;
+}
+
+/** One entry per action turn, for dead-end detection. */
+export interface TurnRecord {
+  tool: string;
+  input: unknown;
+  /** Rendered screen after the action. */
+  screen: string;
+}
+
+/**
+ * Dead-end detection, kept pure so it can be tested without a browser.
+ *
+ * Two shapes of stuck. The model re-issues the identical call — same tool, same input —
+ * which means it is not learning from the result. Or it keeps acting and the screen never
+ * changes, which means the surface is not responding to what it is doing. Either way, the
+ * next turn is very unlikely to be the one that works, and every turn costs money.
+ */
+export function detectDeadEnd(history: TurnRecord[], opts = { repeats: 3, stagnantTurns: 6 }): 'repeated_action' | 'stagnant_screen' | null {
+  if (history.length >= opts.repeats) {
+    const tail = history.slice(-opts.repeats);
+    const key = (t: TurnRecord) => `${t.tool}:${JSON.stringify(t.input)}`;
+    if (tail.every(t => key(t) === key(tail[0]!))) return 'repeated_action';
+  }
+  if (history.length >= opts.stagnantTurns) {
+    const tail = history.slice(-opts.stagnantTurns);
+    if (tail.every(t => t.screen === tail[0]!.screen)) return 'stagnant_screen';
+  }
+  return null;
 }
 
 /**
@@ -58,15 +102,18 @@ export interface DiscoveryRecording {
  */
 export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecording> {
   const { gate, recorder, goal, entryPoint } = opts;
-  const client = new Anthropic();
+  const client: ModelClient = opts.client ?? new Anthropic();
+  const deadline = Date.now() + (opts.timeoutMs ?? 10 * 60_000);
 
   const rec: DiscoveryRecording = {
     goal, model: opts.model, capability: null, inputs: [], outputs: [],
     actions: [], declaredOutcomes: [], successText: '', summary: '', turns: 0,
+    stopReason: 'max_steps',
   };
 
   let phase: 'explore' | 'record' = 'explore';
   let index = new Map<string, UiElement>();
+  const history: TurnRecord[] = [];
 
   await gate.withContext({ risk: 'safe', stepId: 'entry', intent: 'Open the application entry point' }).navigate(entryPoint);
   await opts.onEntry?.();
@@ -88,6 +135,18 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
   for (let turn = 0; turn < opts.maxSteps; turn++) {
     rec.turns = turn + 1;
 
+    if (Date.now() > deadline) {
+      rec.stopReason = 'timeout';
+      recorder.event('note', { message: `discovery stopped: wall-clock budget exhausted after ${turn} turns` });
+      break;
+    }
+    const deadEnd = detectDeadEnd(history);
+    if (deadEnd) {
+      rec.stopReason = 'dead_end';
+      recorder.event('note', { message: `discovery stopped: dead end (${deadEnd}) after ${turn} turns` });
+      break;
+    }
+
     const response = await client.messages.create({
       model: opts.model,
       // Thinking tokens count against this, so leave headroom rather than truncating a turn.
@@ -107,7 +166,9 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
     });
 
     if (response.stop_reason === 'refusal') {
-      throw new Error(`Model declined the task: ${JSON.stringify(response.stop_details)}`);
+      rec.stopReason = 'model_declined';
+      recorder.event('note', { message: `model declined the task: ${JSON.stringify(response.stop_details)}` });
+      break;
     }
 
     messages.push({ role: 'assistant', content: response.content });
@@ -130,6 +191,7 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
         if (call.name === 'finish') {
           rec.successText = input.success_text;
           rec.summary = input.summary;
+          rec.stopReason = 'goal_reached';
           results.push({ type: 'tool_result', tool_use_id: call.id, content: 'Recorded. Run complete.' });
           done = true;
           break;
@@ -196,11 +258,16 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
         await recorder.screenshot(gate, `t${turn}-${call.name}`);
         const rendered = renderObservation(await gate.observeForModel());
         index = rendered.index;
+        // Refs are per-observation, so the same screen renders identically turn to turn;
+        // that is what makes "the screen has not changed" detectable by string equality.
+        if (call.name !== 'observe') history.push({ tool: call.name, input, screen: rendered.text });
         results.push({ type: 'tool_result', tool_use_id: call.id, content: rendered.text });
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         recorder.event('note', { message: `tool ${call.name} failed: ${message}` });
-        results.push({ type: 'tool_result', tool_use_id: call.id, is_error: true, content: `${message}\n\n${await screen()}` });
+        const shown = await screen();
+        history.push({ tool: call.name, input, screen: shown });
+        results.push({ type: 'tool_result', tool_use_id: call.id, is_error: true, content: `${message}\n\n${shown}` });
       }
     }
 
@@ -209,6 +276,7 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
     if (done) break;
   }
 
+  recorder.event('run_finished', { status: rec.stopReason, turns: rec.turns, recordedActions: rec.actions.length });
   recorder.writeJson('recording.json', rec);
   return rec;
 }

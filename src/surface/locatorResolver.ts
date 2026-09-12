@@ -2,6 +2,8 @@ import type { Observation, UiElement } from '../schema/observation.js';
 import type { ElementTarget, LocatorStrategy, Scope, TextMatch, ValueRef } from '../schema/locator.js';
 import type { ResolveResult } from './surface.js';
 
+const INTERACTIVE = new Set(['textbox', 'combobox', 'checkbox', 'radio', 'button', 'link']);
+
 /** Whitespace- and case-insensitive comparison. Restyling changes spacing constantly. */
 const norm = (s: string | undefined) => (s ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
 
@@ -52,8 +54,13 @@ function matchStrategy(elements: UiElement[], s: LocatorStrategy): UiElement[] {
     case 'role_name':
       return elements.filter(e => e.role === s.role && textMatches(e.name, s.name, s.match));
     case 'proximity_label':
+      // A control that later gains a real accessible name should still match the label
+      // it was recorded under, so interactive roles also match on `name`. Cells never do:
+      // a cell's name *is* its content, and letting the label cell "Savings Balance" match
+      // a lookup for the value beside it returns the label instead of the balance.
       return elements.filter(e => e.role === s.role &&
-        (textMatches(e.proximityLabel, s.label, s.match) || textMatches(e.name, s.label, s.match)));
+        (textMatches(e.proximityLabel, s.label, s.match) ||
+         (INTERACTIVE.has(e.role) && textMatches(e.name, s.label, s.match))));
     case 'placeholder':
       return elements.filter(e => textMatches(e.placeholder, s.placeholder, s.match));
     case 'text':
