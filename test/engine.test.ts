@@ -84,7 +84,7 @@ function artifact(over: { steps?: Step[]; recoveries?: RecoveryRule[]; fingerpri
     success: cp('done', 'DONE'),
     businessOutcomes: [],
     recoveries: over.recoveries ?? [],
-    provenance: { recordedAt: '', discoveryModel: 'stub', discoveryRunId: 'r', recordedAgainstTenant: 'x', evidenceDir: '', surfaceFingerprint: over.fingerprint ?? 'unknown' },
+    provenance: { recordedAt: '', discoveryModel: 'stub', discoveryRunId: 'r', recordedAgainstTenant: 'x', evidenceDir: '', surfaceFingerprint: over.fingerprint ?? 'unknown' , stepShapes: {}},
   };
 }
 

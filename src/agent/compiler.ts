@@ -151,6 +151,7 @@ export function compile(input: CompileInput): CapabilityArtifact {
       recordedAgainstTenant: input.provenance.tenantId,
       evidenceDir: input.provenance.evidenceDir,
       surfaceFingerprint: fingerprint(input.actions, basePath),
+      stepShapes: Object.fromEntries(steps.map((s, i) => [s.id, screenShape(input.actions[i]!.after, basePath)])),
       notes: 'Steps recorded from a live LLM-driven run; locators computed and uniqueness-verified by the runtime.',
     },
   };
@@ -170,9 +171,12 @@ export function compile(input: CompileInput): CapabilityArtifact {
  * member's balance is a capability that needs rethinking rather than shipping.
  */
 export function assertNoRegulatedData(artifact: CapabilityArtifact): void {
-  // Provenance holds paths and hashes, not screen content, and the evidence directory
-  // name legitimately contains identifiers.
-  const { provenance, ...body } = artifact;
+  // Two parts of the artifact legitimately contain identifier-shaped strings that are not
+  // leaked record data: provenance (paths and hashes), and each input's `example` — a
+  // caller-supplied template value the compiler has already parameterized out of the
+  // steps. Scanning those would flag the parameter for looking like what it parameterizes.
+  const { provenance, inputs, ...rest } = artifact;
+  const body = { ...rest, inputs: inputs.map(({ example, ...i }) => i) };
   const serialized = JSON.stringify(body);
   const hits = [
     ...DEFAULT_RULES.flatMap(rule =>

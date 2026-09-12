@@ -100,6 +100,11 @@ export const Provenance = z.object({
   evidenceDir: z.string(),
   /** Fingerprint of the recorded surface; replay warns when the live surface has drifted. */
   surfaceFingerprint: z.string(),
+  /**
+   * The shape of the screen each step produced at record time, by step id. The hash above
+   * says *whether* the surface changed; this says *where*, which is what a reviewer needs.
+   */
+  stepShapes: z.record(z.string(), z.string()).default({}),
   notes: z.string().optional(),
 });
 

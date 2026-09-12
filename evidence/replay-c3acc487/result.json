@@ -1,0 +1,108 @@
+{
+  "status": "business_outcome",
+  "capabilityId": "member.open_sub_account",
+  "capabilityVersion": "1.0.0",
+  "runId": "c3acc487",
+  "tenantId": "tenant-a",
+  "startedAt": "2026-09-12T04:22:31.505Z",
+  "durationMs": 17845,
+  "evidenceDir": "evidence/replay-c3acc487",
+  "trace": [
+    {
+      "stepId": "enter_the_member_id_to_look_up",
+      "intent": "Enter the member ID to look up",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 506,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 543,
+      "locatorStrategyUsed": "role_name(button, \"Search\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "open_the_matching_member_record_from_the",
+      "intent": "Open the matching member record from the search results",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 560,
+      "locatorStrategyUsed": "role_name(link, \"View\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "start_the_open_sub_account_workflow_for_",
+      "intent": "Start the open sub-account workflow for the member",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 553,
+      "locatorStrategyUsed": "role_name(link, \"Open Sub-Account\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "select_the_requested_sub_account_type",
+      "intent": "Select the requested sub-account type",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 542,
+      "locatorStrategyUsed": "proximity_label(combobox, \"Account Type\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "enter_the_opening_deposit_amount",
+      "intent": "Enter the opening deposit amount",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 460,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Opening Deposit\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_sub_account_application_to_op",
+      "intent": "Submit the sub-account application to open the account",
+      "recoveriesApplied": [],
+      "status": "skipped",
+      "attempts": 1,
+      "durationMs": 293
+    },
+    {
+      "stepId": "submit_the_sub_account_application_to_op",
+      "intent": "Submit the sub-account application to open the account",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 10782,
+      "locatorStrategyUsed": "role_name(button, \"Open Account\")",
+      "locatorCandidates": 1
+    }
+  ],
+  "surfaceDrift": {
+    "recorded": "f0476ee829de65d2",
+    "observed": "",
+    "comparedSteps": 6,
+    "totalSteps": 11,
+    "drifted": null,
+    "changedSteps": [
+      {
+        "stepId": "open_the_matching_member_record_from_the",
+        "recorded": "/member+/nav:5",
+        "observed": "/member+/nav:6"
+      }
+    ]
+  },
+  "code": "DEPOSIT_BELOW_MINIMUM",
+  "message": "The opening deposit supplied is below the $25.00 minimum, so the sub-account was not opened.",
+  "atStepId": "submit_the_sub_account_application_to_op",
+  "outputs": {}
+}

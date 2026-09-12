@@ -1,0 +1,32 @@
+{"seq":1,"at":"2026-09-12T04:21:49.067Z","kind":"run_started","capability":"member.post_savings_transfer","version":"1.0.0","tenant":"tenant-a","provider":"web/dom-scan","inputs":{"member_id":"10002","to_account":"«account:7c351c»","amount":"99999.00"}}
+{"seq":2,"at":"2026-09-12T04:21:49.331Z","kind":"recovery_triggered","code":"SIGNED_OUT","phase":"preflight","round":0}
+{"seq":3,"at":"2026-09-12T04:21:50.074Z","kind":"recovery_applied","code":"SIGNED_OUT","phase":"preflight"}
+{"seq":4,"at":"2026-09-12T04:21:50.234Z","kind":"note","message":"preflight applied SIGNED_OUT"}
+{"seq":5,"at":"2026-09-12T04:21:50.235Z","kind":"step_started","stepId":"enter_the_member_id_to_look_up","intent":"Enter the member ID to look up","action":"type","risk":"elevated"}
+{"seq":6,"at":"2026-09-12T04:21:50.495Z","kind":"locator_resolved","stepId":"enter_the_member_id_to_look_up","semanticId":"member_lookup.member_id","used":"proximity_label(textbox, \"Member ID\")","candidates":1,"attempts":[{"strategy":"proximity_label(textbox, \"Member ID\")","matched":1}]}
+{"seq":7,"at":"2026-09-12T04:21:50.708Z","kind":"checkpoint_passed","stepId":"enter_the_member_id_to_look_up","phase":"postcondition"}
+{"seq":8,"at":"2026-09-12T04:21:50.708Z","kind":"step_succeeded","stepId":"enter_the_member_id_to_look_up","locatorStrategyUsed":"proximity_label(textbox, \"Member ID\")","locatorCandidates":1}
+{"seq":9,"at":"2026-09-12T04:21:50.708Z","kind":"step_started","stepId":"submit_the_member_search","intent":"Submit the member search","action":"click","risk":"safe"}
+{"seq":10,"at":"2026-09-12T04:21:50.989Z","kind":"locator_resolved","stepId":"submit_the_member_search","semanticId":"member_lookup.search","used":"role_name(button, \"Search\")","candidates":1,"attempts":[{"strategy":"role_name(button, \"Search\")","matched":1}]}
+{"seq":11,"at":"2026-09-12T04:21:51.247Z","kind":"checkpoint_passed","stepId":"submit_the_member_search","phase":"postcondition"}
+{"seq":12,"at":"2026-09-12T04:21:51.247Z","kind":"step_succeeded","stepId":"submit_the_member_search","locatorStrategyUsed":"role_name(button, \"Search\")","locatorCandidates":1}
+{"seq":13,"at":"2026-09-12T04:21:51.247Z","kind":"step_started","stepId":"open_the_member_record_from_the_search_r","intent":"Open the member record from the search results","action":"click","risk":"safe"}
+{"seq":14,"at":"2026-09-12T04:21:51.532Z","kind":"locator_resolved","stepId":"open_the_member_record_from_the_search_r","semanticId":"search_results.view","used":"role_name(link, \"View\")","candidates":1,"attempts":[{"strategy":"role_name(link, \"View\")","matched":1}]}
+{"seq":15,"at":"2026-09-12T04:21:51.803Z","kind":"checkpoint_passed","stepId":"open_the_member_record_from_the_search_r","phase":"postcondition"}
+{"seq":16,"at":"2026-09-12T04:21:51.803Z","kind":"step_succeeded","stepId":"open_the_member_record_from_the_search_r","locatorStrategyUsed":"role_name(link, \"View\")","locatorCandidates":1}
+{"seq":17,"at":"2026-09-12T04:21:51.803Z","kind":"step_started","stepId":"open_the_funds_transfer_form_for_the_mem","intent":"Open the funds transfer form for the member","action":"click","risk":"safe"}
+{"seq":18,"at":"2026-09-12T04:21:52.087Z","kind":"locator_resolved","stepId":"open_the_funds_transfer_form_for_the_mem","semanticId":"member.transfer_funds","used":"role_name(link, \"Transfer Funds\")","candidates":1,"attempts":[{"strategy":"role_name(link, \"Transfer Funds\")","matched":1}]}
+{"seq":19,"at":"2026-09-12T04:21:52.342Z","kind":"checkpoint_passed","stepId":"open_the_funds_transfer_form_for_the_mem","phase":"postcondition"}
+{"seq":20,"at":"2026-09-12T04:21:52.343Z","kind":"step_succeeded","stepId":"open_the_funds_transfer_form_for_the_mem","locatorStrategyUsed":"role_name(link, \"Transfer Funds\")","locatorCandidates":1}
+{"seq":21,"at":"2026-09-12T04:21:52.343Z","kind":"step_started","stepId":"enter_the_destination_account_number","intent":"Enter the destination account number","action":"type","risk":"elevated"}
+{"seq":22,"at":"2026-09-12T04:21:52.621Z","kind":"locator_resolved","stepId":"enter_the_destination_account_number","semanticId":"transfer_funds.to_account","used":"proximity_label(textbox, \"To Account\")","candidates":1,"attempts":[{"strategy":"proximity_label(textbox, \"To Account\")","matched":1}]}
+{"seq":23,"at":"2026-09-12T04:21:52.894Z","kind":"checkpoint_passed","stepId":"enter_the_destination_account_number","phase":"postcondition"}
+{"seq":24,"at":"2026-09-12T04:21:52.894Z","kind":"step_succeeded","stepId":"enter_the_destination_account_number","locatorStrategyUsed":"proximity_label(textbox, \"To Account\")","locatorCandidates":1}
+{"seq":25,"at":"2026-09-12T04:21:52.894Z","kind":"step_started","stepId":"enter_the_transfer_amount","intent":"Enter the transfer amount","action":"type","risk":"elevated"}
+{"seq":26,"at":"2026-09-12T04:21:53.164Z","kind":"locator_resolved","stepId":"enter_the_transfer_amount","semanticId":"transfer_funds.amount","used":"proximity_label(textbox, \"Amount\")","candidates":1,"attempts":[{"strategy":"proximity_label(textbox, \"Amount\")","matched":1}]}
+{"seq":27,"at":"2026-09-12T04:21:53.413Z","kind":"checkpoint_passed","stepId":"enter_the_transfer_amount","phase":"postcondition"}
+{"seq":28,"at":"2026-09-12T04:21:53.413Z","kind":"step_succeeded","stepId":"enter_the_transfer_amount","locatorStrategyUsed":"proximity_label(textbox, \"Amount\")","locatorCandidates":1}
+{"seq":29,"at":"2026-09-12T04:21:53.413Z","kind":"step_started","stepId":"submit_the_transfer_for_review","intent":"Submit the transfer for review","action":"click","risk":"safe"}
+{"seq":30,"at":"2026-09-12T04:21:53.692Z","kind":"locator_resolved","stepId":"submit_the_transfer_for_review","semanticId":"transfer_funds.review_transfer","used":"role_name(button, \"Review Transfer\")","candidates":1,"attempts":[{"strategy":"role_name(button, \"Review Transfer\")","matched":1}]}
+{"seq":31,"at":"2026-09-12T04:21:53.961Z","kind":"business_outcome","code":"INSUFFICIENT_FUNDS","atStep":"submit_the_transfer_for_review"}
+{"seq":32,"at":"2026-09-12T04:21:53.961Z","kind":"run_finished","status":"business_outcome","code":"INSUFFICIENT_FUNDS"}

@@ -19,8 +19,9 @@
     "test": "vitest run",
     "demo:handoff": "tsx scripts/demo-handoff.ts",
     "fixtures": "tsx test/fixtures/scriptedRecording.ts",
-    "test:unit": "vitest run test/locator.test.ts test/redaction.test.ts test/policy.test.ts test/contract.test.ts test/engine.test.ts",
-    "clean": "rm -rf .session evidence/replay-* evidence/discovery-*"
+    "test:unit": "vitest run test/locator.test.ts test/redaction.test.ts test/policy.test.ts test/contract.test.ts test/engine.test.ts test/agent.test.ts",
+    "clean": "rm -rf .session evidence/replay-* evidence/discovery-*",
+    "agent": "tsx src/cli/agent.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",

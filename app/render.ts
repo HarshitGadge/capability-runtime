@@ -155,6 +155,7 @@ export function memberFrame(skin: TenantSkin, base: string, m: Member, notice = 
 </td></tr></table>
 <br>
 <a href="${base}/subaccount?id=${esc(m.id)}">${esc(skin.labels.openSubAccount)}</a>
+&nbsp;|&nbsp;<a href="${base}/transfer?id=${esc(m.id)}">Transfer Funds</a>
 &nbsp;|&nbsp;<a href="${base}/search">New Search</a>`);
 }
 
@@ -200,4 +201,69 @@ export function reportsFrame(skin: TenantSkin): string {
 <table width="100%" class="hdr"><tr><td class="pad"><b>Reports</b></td></tr></table>
 <br><table class="box" cellpadding="0" cellspacing="0" width="480"><tr><td class="pad">
 No scheduled reports are available for this operator.</td></tr></table>`);
+}
+
+export function transferFrame(skin: TenantSkin, base: string, m: Member, error?: string): string {
+  return page(skin, 'Transfer Funds', `
+<table width="100%" class="hdr"><tr><td class="pad"><b>Transfer Funds &mdash; ${esc(m.id)}</b></td></tr></table>
+<br>
+<table class="box" cellpadding="0" cellspacing="0" width="560"><tr><td class="pad">
+${error ? `<table width="100%"><tr><td class="pad" style="background:#ffe0e0;color:#7a0000"><b>Validation error:</b> ${esc(error)}</td></tr></table><br>` : ''}
+<form method="POST" action="${base}/transfer">
+<input type="hidden" name="id" value="${esc(m.id)}">
+<table cellpadding="5">
+  <tr><td align="right">From Account</td><td>Savings &mdash; ${esc(m.savingsAccount)} (${money(m.savingsBalance)})</td></tr>
+  <tr><td align="right" nowrap>To Account</td><td><input type="text" name="to" size="18" placeholder="destination account"></td></tr>
+  <tr><td align="right">Amount</td><td><input type="text" name="amount" size="12"></td></tr>
+  <tr><td colspan="2"><hr></td></tr>
+  <tr><td></td><td><input type="submit" class="btn" value="Review Transfer"></td></tr>
+</table>
+</form>
+<font size="1" color="#666">Transfers post immediately and cannot be reversed once confirmed.</font>
+</td></tr></table>`);
+}
+
+export function transferReviewFrame(skin: TenantSkin, base: string, m: Member, to: string, amount: number, highValue: boolean): string {
+  return page(skin, 'Review Transfer', `
+${highValue ? `
+<table width="100%" cellpadding="10" style="background:#fff6d5;border:2px solid #c9a227"><tr><td>
+  <b>High-Value Transfer Confirmation</b><br>
+  Transfers of $1,000 or more require an extra acknowledgement before review.<br><br>
+  <form method="POST" action="${base}/transfer" style="display:inline">
+    <input type="hidden" name="id" value="${esc(m.id)}"><input type="hidden" name="to" value="${esc(to)}"><input type="hidden" name="amount" value="${amount}"><input type="hidden" name="ack" value="1">
+    <input type="submit" class="btn" value="Acknowledge and Continue">
+  </form>
+</td></tr></table>` : `
+<table width="100%" class="hdr"><tr><td class="pad"><b>Review Transfer &mdash; ${esc(m.id)}</b></td></tr></table>
+<br>
+<table class="box" cellpadding="0" cellspacing="0" width="560"><tr><td class="pad">
+<table cellpadding="5">
+  <tr><td align="right" width="150">From</td><td>Savings &mdash; ${esc(m.savingsAccount)}</td></tr>
+  <tr><td align="right">To</td><td>${esc(to)}</td></tr>
+  <tr><td align="right">Amount</td><td><b>${money(amount)}</b></td></tr>
+  <tr><td align="right">New Balance</td><td>${money(m.savingsBalance - amount)}</td></tr>
+  <tr><td colspan="2"><hr></td></tr>
+</table>
+<form method="POST" action="${base}/transfer/confirm">
+  <input type="hidden" name="id" value="${esc(m.id)}"><input type="hidden" name="to" value="${esc(to)}"><input type="hidden" name="amount" value="${amount}">
+  <input type="submit" class="btn" value="Confirm Transfer">
+</form>
+<font size="1" color="#666">This action cannot be undone.</font>
+</td></tr></table>`}`);
+}
+
+export function transferDoneFrame(skin: TenantSkin, base: string, m: Member, to: string, amount: number, ref: string): string {
+  return page(skin, 'Transfer Complete', `
+<table width="100%" class="hdr"><tr><td class="pad"><b>Transfer Complete</b></td></tr></table>
+<br>
+<table class="box" cellpadding="0" cellspacing="0" width="560"><tr><td class="pad">
+  <b>Transfer posted successfully.</b><br><br>
+  <table cellpadding="5">
+    <tr><td align="right" width="160">Reference</td><td><b>${esc(ref)}</b></td></tr>
+    <tr><td align="right">From Member</td><td>${esc(m.id)} &mdash; ${esc(m.name)}</td></tr>
+    <tr><td align="right">To Account</td><td>${esc(to)}</td></tr>
+    <tr><td align="right">Amount</td><td>${money(amount)}</td></tr>
+  </table>
+</td></tr></table>
+<br><a href="${base}/member?id=${esc(m.id)}">Back to Member</a>`);
 }

@@ -50,6 +50,8 @@ export const SurfaceDrift = z.object({
   comparedSteps: z.number().int(),
   totalSteps: z.number().int(),
   drifted: z.boolean().nullable(),
+  /** Which steps' screens changed shape, when the artifact recorded per-step shapes. */
+  changedSteps: z.array(z.object({ stepId: z.string(), recorded: z.string(), observed: z.string() })).default([]),
 });
 export type SurfaceDrift = z.infer<typeof SurfaceDrift>;
 

@@ -45,17 +45,15 @@ and neither holds the surface beneath it, so no code path can act while bypassin
 guardrail you have to remember to call is not a guardrail.
 
 **The model decides what to do; the runtime decides how to find it again.** The model picks
-controls by reference number from a rendered screen. The compiler derives targeting from the
-element it actually touched and keeps only strategies it can verify uniquely matched that element
-on the recorded screen. A locator that was already ambiguous at record time is discarded, not
-shipped as a latent flake.
+controls by reference number; the compiler derives targeting from the element actually touched and
+keeps only strategies verified to match it uniquely on the recorded screen. An ambiguous-at-record
+locator is discarded, not shipped as a latent flake.
 
-**Exploration and recording are separate phases.** The agent's first pass through an unfamiliar
-UI is full of back-tracking. It explores, then calls `start_recording`, the session resets, and it
-performs the flow once cleanly. Only the second pass becomes steps. In the real runs (`evidence/
-discovery-*`) the model did exactly this unprompted: reached the goal, went back to try an invalid
-member ID, declared `MEMBER_NOT_FOUND` from what it saw, then recorded — 14 turns and about $0.30
-for the balance lookup, more for the eleven-step account opening.
+**Exploration and recording are separate phases.** The first pass through an unfamiliar UI is
+full of back-tracking; the agent explores, calls `start_recording`, the session resets, and it
+performs the flow once cleanly. Only that pass becomes steps. In the three real runs the model did
+this unprompted — reached the goal, went back to probe an invalid ID, declared the outcome from
+what it saw, then recorded (14 turns, ~$0.30 for the balance lookup).
 
 **The real run found two compiler bugs, and the recording paid for neither fix.** The model
 nominated "Member Detail — 12345" as its success text, and the compiler shipped it verbatim — a
@@ -65,9 +63,15 @@ silently discarded every semantic rung on the regulated extractions, leaving coo
 were fixed and verified by recompiling the saved recording offline, which is the point of the
 artifact being a derived document.
 
+**The through-line is demonstrated, not asserted.** `npm run agent` gives a real LLM a
+natural-language task and the capabilities as tools; it decides which to call, and deterministic
+replay runs underneath — the model never sees the portal. For a missing member it relays
+`MEMBER_NOT_FOUND` as a plain answer, because the tool contract told it that outcome is a result,
+not an error. `src/index.ts` is the seam: `toolDefinition(artifact)` is what the agent is shown,
+`invoke(...)` is what runs.
+
 **Trade-off:** one process, files, no queue. The lease is three fields that would become a row
-with a TTL; the inbox a directory that would become a table. `src/index.ts` exposes what an agent
-host needs: `toolDefinition(artifact)` for what the agent is shown, `invoke(...)` for what runs.
+with a TTL; the inbox a directory that would become a table. None of that plumbing is built.
 
 ## 2. Artifact schema
 
@@ -109,12 +113,10 @@ probed; what it did not probe — a restricted record — replays as a hard fail
 text in `observed`, and a reviewer promotes it with `--outcome`, a three-field edit to a
 reviewable document rather than a re-record.
 
-**Values are typed references** — `input | extracted | const | secret` — so a reviewer sees which
-values the caller supplies and which come from the environment. Credentials are `secret`,
-resolved from env at run time, never in the document.
-
+**Values are typed references** — `input | extracted | const | secret` — so a reviewer sees what
+the caller supplies and what comes from the environment; credentials never enter the document.
 **Deliberately absent:** screenshot hashes, DOM-shape assertions, embedded code. Checkpoints are a
-small declarative language a non-programmer can review and the engine can evaluate without `eval`.
+small declarative language a non-programmer can review and the engine evaluates without `eval`.
 
 ## 3. Determinism & error handling
 
@@ -147,6 +149,13 @@ rung each step used and a **surface fingerprint** comparison: the sequence of sc
 flow passed through, `drifted: true|false`, or `null` when the run stopped before every screen
 was seen — a guess would be worse than an honest "not judged".
 
+**An unexpected confirmation dialog is handled as a recovery, not a step.** The transfer
+capability was recorded against a small amount, so its recording contains no dialog. High-value
+transfers raise an extra acknowledgement the flow never saw at record time; replay meets it as a
+runtime interruption, matches the app-level `HIGH_VALUE_CONFIRM` recovery, acknowledges it, and
+re-proves the step — the same machinery as the maintenance banner. That is the payoff of
+declarative, app-level recoveries: a new capability inherits them for free.
+
 **Recovery policy is per rule, and `then` matters.** A maintenance banner is `retry_step`. A
 dropped session is `restart_flow`, because the result set the blocked step expected died with the
 session. Restart is refused once an irreversible step has executed: replaying a transfer because
@@ -157,9 +166,8 @@ capability unrepeatable when a session already exists and bakes one institution'
 a shared document. It lives once, in the app profile; the same `SIGNED_OUT` rule is the preflight
 before a run and the handler mid-flow.
 
-**Discovery has its own stopping conditions:** max steps, wall-clock timeout, and dead-end
-detection (the same action repeated, or the screen unchanged across several actions), each
-reported as a distinct stop reason.
+Discovery stops on max steps, a wall-clock timeout, a detected dead-end (repeated action or
+unchanging screen), or a model refusal — each a distinct, reported stop reason.
 
 ## 4. Heterogeneity & multi-tenant
 
@@ -184,7 +192,12 @@ extraction are reused.
 
 **Drift detection**, cheapest first. Run the unspecialized artifact against a new tenant: the
 failure names the exact literal that moved and points at the overlay. The surface fingerprint in
-every result flags a capability for re-review when the screens it passed through changed shape.
+every result flags a capability for re-review when the screens it passed through changed shape —
+and names the step. This fired for real during the project: the balance capability was recorded
+before a "Transfer Funds" link was added to the member screen, and every replay since reports
+`/member:5 → 6` on exactly the steps that touch that screen, through both perception providers
+identically. The capability still succeeds; the reviewer knows precisely where to look. That is the
+release-shipped event the detector exists for, caught without anyone injecting it.
 And the locator rung in every trace is the leading indicator: a fleet-wide slide from `role_name`
 to `ordinal` on one capability means that product shipped a release, before anything breaks.
 
@@ -207,13 +220,12 @@ checks it before *every* action, so a person taking over mid-step is not fightin
 still clicking. Control returns with a new token, so a killed-and-restarted runner cannot
 resurrect itself into a session someone is now using.
 
-**The loop.** Escalate → file an `InterventionRequest` carrying capability, step and intent, the
-reason, a redacted screen summary, a screenshot, an observation snapshot and **the CDP endpoint of
-the live session** → lease flips to `human` → the operator claims it and works in the same window
-→ they **authorize one execution** of the blocked step, or say they did it themselves → lease
-returns → automation **re-observes and re-proves the step's precondition** before acting. If the
-operator left the session somewhere unexpected, that is a precondition failure, not a click on
-whatever now occupies those coordinates.
+**The loop.** Escalate → file an `InterventionRequest` (capability, step, reason, redacted screen
+summary, screenshot, observation snapshot, and **the CDP endpoint of the live session**) → lease
+flips to `human` → the operator works in the same window → they **authorize one execution** or
+say they did it themselves → lease returns → automation **re-proves the step's precondition**
+before acting. If the operator left the session elsewhere, that is a precondition failure, not a
+click on whatever now occupies those coordinates.
 
 Authorization is single-use and step-scoped: approving "open this sub-account now" is not
 approving every one for the rest of the run. While the human holds the lease, page listeners
@@ -234,11 +246,14 @@ action, because a click can navigate and an allowlist that only guards `navigate
 any link. Origins are a tenant binding, supplied by the overlay — a reviewed document — not a
 runtime flag.
 
-**Risk is a property of the step, not the verb.** Clicking "Search" and clicking "Confirm
-transfer" are the same verb. The recorder proposes a class from the control's semantics —
-conservatively, since a false positive costs one confirmation and a false negative moves money —
-writes it into the artifact where a reviewer can raise it, and policy decides what each class may
-do. Above the ceiling the default is to **route to a human, not block**; irreversible steps are
+**Risk is a property of the step, not the verb — and of commitment, not nouns.** Clicking
+"Search" and clicking "Confirm Transfer" are the same verb. The recorder proposes a class from the
+control's label and writes it into the artifact where a reviewer can raise it; policy decides what
+each class may do. The classifier keys on *committing* verbs (confirm, submit, post, authorize,
+open/close account), deliberately not on nouns: matching "transfer" made three steps of the
+transfer flow irreversible — opening the form, reviewing, confirming — when only the last moves
+money. Over-caution that escalates navigation trains operators to wave escalations through, which
+is its own safety failure. Above the ceiling the default is to **route to a human, not block**; irreversible steps are
 never retried.
 
 **Redaction happens on the read path.** The model never sees a balance or account number; it sees
@@ -253,14 +268,21 @@ to `18204.37`, and nothing about "J. Whitfield" says regulated. Outputs the arti
 its outputs, every value that ever appeared under one of their labels — including on screens the
 model only explored — is scrubbed from the transcript and recording. Labels themselves are never
 scrubbed, because the recording must still recompile. A reviewer can raise a sensitivity the model
-under-declared (`--raise`), never lower one, and the decision is written into provenance. Both
-were live leaks found by grepping the evidence directory; pattern redaction is the backstop, typed
-sensitivity is the control.
+under-declared (`--raise`), never lower one, and the decision is written into provenance. All three
+were live leaks found by grepping the evidence directory — the third being account numbers glued to
+a label in nested-table row text (`To999888777`), which a `\b`-anchored pattern silently skips;
+pattern redaction is the backstop, typed sensitivity is the control.
 
 **Artifacts are guarded twice.** The compiler will not build a locator or checkpoint from a
 literal that looks regulated, equals a caller-supplied value, or is a redaction token, and
 `assertNoRegulatedData` re-scans the finished document and fails the build. It caught the compiler
 emitting `text: "$18,204.37"` as a locator during development.
+
+**The model can decline.** The first transfer discovery ended in `stop_reason: refusal` — a funds
+transfer with no context read as potential fraud. The loop treats that as a distinct
+`model_declined` stop reason, and the fix was truthful context in the prompt (a sandboxed
+evaluation with synthetic data, an authorized operator task), not a workaround. A system that drives
+financial UIs with a model has to expect this and surface it, not retry it.
 
 **Limits.** The model still *sees* a member's name during discovery — the declaration scrub
 protects what is persisted, not what was sent — and only a classifier, not a regex, would stop
@@ -279,8 +301,8 @@ but no UIA code exists. A co-browsing console. Self-healing locators — when ta
 system says so rather than letting a model rewrite the artifact in production. Generalizing from a
 single recording. Auth on the operator console (localhost only).
 
-**Next, in order.** (1) Record the same flow against two tenants and diff: literals that differ
-are tenant-specific and belong in overlays automatically. (2) A registry keyed on the surface
-fingerprint, so "which capabilities on which tenants are degrading" is a query, not an incident.
-(3) Promote repeated interventions into recovery rules — the operator's actions are already in the
-evidence stream. (4) A UIA provider against a real desktop app, the honest test of §4.
+**Next, in order.** (1) Diff the same flow recorded against two tenants: differing literals are
+tenant-specific and belong in overlays automatically. (2) A registry keyed on the surface
+fingerprint, so degradation across tenants is a query, not an incident. (3) Promote repeated
+interventions into recovery rules — the operator's actions are already in the evidence stream.
+(4) A UIA provider against a real desktop app, the honest test of §4.

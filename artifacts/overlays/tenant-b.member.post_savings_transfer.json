@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "tenantId": "tenant-b",
+  "capabilityId": "member.post_savings_transfer",
+  "appliesToVersion": "1.0.0",
+  "baseUrl": "http://localhost:5173/t/tenant-b",
+  "notes": "Vale Mutual runs the same vendor product. The transfer flow reuses the shared member-lookup controls, which this tenant renames; its transfer screens are worded identically to the recorded tenant, so only the lookup overrides and the one screen title carry over from the balance overlay. Same three-line cost to onboard this capability onto the second institution.",
+  "targetOverrides": {
+    "member_lookup.member_id": {
+      "strategies": [
+        { "kind": "proximity_label", "role": "textbox", "label": "Member Number", "match": "normalized" },
+        { "kind": "ordinal", "role": "textbox", "index": 0 }
+      ]
+    },
+    "member_lookup.search": {
+      "strategies": [
+        { "kind": "role_name", "role": "button", "name": "Find Member", "match": "normalized" },
+        { "kind": "ordinal", "role": "button", "index": 0 }
+      ]
+    }
+  },
+  "checkpointTextOverrides": { "Member Lookup": "Find a Member" },
+  "extraRecoveries": []
+}

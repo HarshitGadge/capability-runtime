@@ -180,9 +180,21 @@ export class CdpAxProvider implements PerceptionProvider {
       const cdpFrames: Array<{ id: string; name?: string; url: string }> = [];
       const walk = (node: any) => { cdpFrames.push(node.frame); (node.childFrames ?? []).forEach(walk); };
       walk(tree.frameTree);
+      const rootFrameId: string = tree.frameTree.frame.id;
 
       for (const cdpFrame of cdpFrames) {
-        const pwFrame = page.frames().find(f => f.url() === cdpFrame.url && (f.name() || '') === (cdpFrame.name ?? ''));
+        // Join CDP frames to Playwright frames by NAME, not URL. Mid-navigation the two
+        // views can disagree on a frame's URL for a moment, and joining on it drops that
+        // frame's route from the observation — which made the surface fingerprint look
+        // different through this provider when the screens were in fact identical.
+        // Frame names are stable across navigation; URL is the fallback only for unnamed
+        // subframes, and the root is matched by identity.
+        const cdpName = cdpFrame.name ?? '';
+        const pwFrame = page.frames().find(f => {
+          if (cdpFrame.id === rootFrameId) return !f.parentFrame();
+          if (cdpName) return (f.name() || '') === cdpName;
+          return !!f.parentFrame() && f.url() === cdpFrame.url;
+        });
         const { path } = pwFrame ? await frameOffset(pwFrame) : { path: [] as string[] };
         const key = path.length ? path.join('/') : '(top)';
         urlByFrame[key] = cdpFrame.url;

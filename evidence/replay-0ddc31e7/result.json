@@ -1,0 +1,94 @@
+{
+  "status": "business_outcome",
+  "capabilityId": "member.post_savings_transfer",
+  "capabilityVersion": "1.0.0",
+  "runId": "0ddc31e7",
+  "tenantId": "tenant-a",
+  "startedAt": "2026-09-12T04:21:49.067Z",
+  "durationMs": 4894,
+  "evidenceDir": "evidence/replay-0ddc31e7",
+  "trace": [
+    {
+      "stepId": "enter_the_member_id_to_look_up",
+      "intent": "Enter the member ID to look up",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 473,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 539,
+      "locatorStrategyUsed": "role_name(button, \"Search\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "open_the_member_record_from_the_search_r",
+      "intent": "Open the member record from the search results",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 556,
+      "locatorStrategyUsed": "role_name(link, \"View\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "open_the_funds_transfer_form_for_the_mem",
+      "intent": "Open the funds transfer form for the member",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 540,
+      "locatorStrategyUsed": "role_name(link, \"Transfer Funds\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "enter_the_destination_account_number",
+      "intent": "Enter the destination account number",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 551,
+      "locatorStrategyUsed": "proximity_label(textbox, \"To Account\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "enter_the_transfer_amount",
+      "intent": "Enter the transfer amount",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 519,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Amount\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_transfer_for_review",
+      "intent": "Submit the transfer for review",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 548,
+      "locatorStrategyUsed": "role_name(button, \"Review Transfer\")",
+      "locatorCandidates": 1
+    }
+  ],
+  "surfaceDrift": {
+    "recorded": "57ed2402dc0f5a8d",
+    "observed": "",
+    "comparedSteps": 6,
+    "totalSteps": 12,
+    "drifted": null,
+    "changedSteps": []
+  },
+  "code": "INSUFFICIENT_FUNDS",
+  "message": "The requested amount exceeds the member's available savings balance; the transfer is rejected at review.",
+  "atStepId": "submit_the_transfer_for_review",
+  "outputs": {}
+}

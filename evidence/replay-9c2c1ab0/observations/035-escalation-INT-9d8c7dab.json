@@ -1,0 +1,298 @@
+{
+  "observedAt": "2026-09-12T04:22:16.481Z",
+  "url": "http://localhost:5173/t/tenant-b/",
+  "title": "Vale Mutual Savings - Member Services",
+  "elements": [
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "",
+      "text": "Menu",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 180,
+        "height": 26
+      },
+      "frame": [
+        "nav"
+      ],
+      "rowText": "Menu",
+      "region": "Navigation",
+      "ref": "nav#0"
+    },
+    {
+      "role": "link",
+      "name": "Find a Member",
+      "text": "Find a Member",
+      "disabled": false,
+      "focusable": true,
+      "bounds": {
+        "x": 6,
+        "y": 32,
+        "width": 79.046875,
+        "height": 14
+      },
+      "frame": [
+        "nav"
+      ],
+      "rowText": "Find a Member",
+      "region": "Navigation",
+      "ref": "nav#1"
+    },
+    {
+      "role": "link",
+      "name": "Reports",
+      "text": "Reports",
+      "disabled": false,
+      "focusable": true,
+      "bounds": {
+        "x": 6,
+        "y": 58,
+        "width": 40.390625,
+        "height": 14
+      },
+      "frame": [
+        "nav"
+      ],
+      "rowText": "Reports",
+      "region": "Navigation",
+      "ref": "nav#2"
+    },
+    {
+      "role": "link",
+      "name": "Sign Off",
+      "text": "Sign Off",
+      "disabled": false,
+      "focusable": true,
+      "bounds": {
+        "x": 6,
+        "y": 84,
+        "width": 42.5625,
+        "height": 14
+      },
+      "frame": [
+        "nav"
+      ],
+      "rowText": "Sign Off",
+      "region": "Navigation",
+      "ref": "nav#3"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "",
+      "text": "Review Transfer — 12345",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 180,
+        "y": 0,
+        "width": 1100,
+        "height": 26
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "Review Transfer — 12345",
+      "region": "Review Transfer",
+      "ref": "content#0"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "",
+      "text": "From",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 192,
+        "y": 48,
+        "width": 160,
+        "height": 24
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "From | Savings — «account:6c21bd»",
+      "region": "Review Transfer",
+      "ref": "content#1"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "From",
+      "text": "Savings — «account:6c21bd»",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 352,
+        "y": 48,
+        "width": 134.21875,
+        "height": 24
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "From | Savings — «account:6c21bd»",
+      "region": "Review Transfer",
+      "ref": "content#2"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "",
+      "text": "To",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 192,
+        "y": 72,
+        "width": 160,
+        "height": 24
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "To | «account:7c351c»",
+      "region": "Review Transfer",
+      "ref": "content#3"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "To",
+      "text": "«account:7c351c»",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 352,
+        "y": 72,
+        "width": 134.21875,
+        "height": 24
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "To | «account:7c351c»",
+      "region": "Review Transfer",
+      "ref": "content#4"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "",
+      "text": "Amount",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 192,
+        "y": 96,
+        "width": 160,
+        "height": 24
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "Amount | $50.00",
+      "region": "Review Transfer",
+      "ref": "content#5"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "Amount",
+      "text": "$50.00",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 352,
+        "y": 96,
+        "width": 134.21875,
+        "height": 24
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "Amount | $50.00",
+      "region": "Review Transfer",
+      "ref": "content#6"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "",
+      "text": "New Balance",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 192,
+        "y": 120,
+        "width": 160,
+        "height": 24
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "New Balance | «currency:1fea4a»",
+      "region": "Review Transfer",
+      "ref": "content#7"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "New Balance",
+      "text": "«currency:1fea4a»",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 352,
+        "y": 120,
+        "width": 134.21875,
+        "height": 24
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "New Balance | «currency:1fea4a»",
+      "region": "Review Transfer",
+      "ref": "content#8"
+    },
+    {
+      "role": "button",
+      "name": "Confirm Transfer",
+      "value": "Confirm Transfer",
+      "disabled": false,
+      "focusable": true,
+      "bounds": {
+        "x": 192,
+        "y": 168,
+        "width": 121.84375,
+        "height": 26
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "FromSavings — «account:6c21bd» To«account:7c351c» Amount$50.00 New Balance«currency:1fea4a» This action cannot be undone.",
+      "region": "Review Transfer",
+      "ref": "content#9"
+    }
+  ],
+  "textByFrame": {
+    "(top)": "",
+    "nav": "Menu\nFind a Member\nReports\nSign Off",
+    "content": "Review Transfer — 12345\nFrom Savings — «account:6c21bd»\nTo «account:7c351c»\nAmount $50.00\nNew Balance «currency:1fea4a»\nThis action cannot be undone."
+  },
+  "urlByFrame": {
+    "(top)": "http://localhost:5173/t/tenant-b/",
+    "nav": "http://localhost:5173/t/tenant-b/nav",
+    "content": "http://localhost:5173/t/tenant-b/transfer"
+  },
+  "provider": "web/dom-scan",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  }
+}

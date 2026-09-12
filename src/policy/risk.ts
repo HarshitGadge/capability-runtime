@@ -6,7 +6,13 @@ import type { UiElement } from '../schema/observation.js';
  * at discovery time is what it says. These patterns are conservative by design: a false
  * positive costs one human confirmation, a false negative moves someone's money.
  */
-const IRREVERSIBLE = /\b(transfer|wire|remit|disburse|delete|remove|close\s+account|open\s+account|authori[sz]e|submit\s+payment|pay\s+now|send\s+money|void|cancel\s+account)\b/i;
+// Keyed on commitment, not on nouns. A control is irreversible when its label says it
+// *commits* an action — confirm, submit, post, authorize, pay, wire, open/close an
+// account. Bare "transfer" is deliberately absent: "Transfer Funds" and "Review Transfer"
+// are navigation to a form and a review screen, not the posting itself ("Confirm
+// Transfer"). Matching the noun would escalate three steps of one flow instead of the one
+// that moves money — over-caution that trains reviewers to wave escalations through.
+const IRREVERSIBLE = /\b(confirm|submit|authori[sz]e|post|disburse|remit|wire|pay\s+now|send\s+money|open\s+account|close\s+account|delete|void|cancel\s+account)\b/i;
 const ELEVATED = /\b(submit|save|create|open|confirm|apply|update|add)\b/i;
 
 /**

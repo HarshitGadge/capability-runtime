@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import fs from 'node:fs';
+import path from 'node:path';
 import type { PolicyGate } from '../policy/gate.js';
 import type { EvidenceRecorder } from '../evidence/recorder.js';
 import type { Observation, UiElement } from '../schema/observation.js';
@@ -286,7 +287,21 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
   }
 
   recorder.event('run_finished', { status: rec.stopReason, turns: rec.turns, recordedActions: rec.actions.length });
-  recorder.writeJson('recording.json', rec);
+
+  // Write the recording redacted, then restore the caller-parameter values to the clear.
+  // An input's example — and the typed literal equal to it that the compiler parameterizes
+  // — is a template value the caller supplies, not data read from a member's record. The
+  // pattern redactor cannot tell an 8-digit destination account (a parameter) from an
+  // account number on screen (record data), so it tokenizes both; here we put back exactly
+  // the parameter values, by token, leaving everything else redacted. This keeps the
+  // documented example usable and lets the recording recompile offline to the same artifact.
+  const clearValues = [...new Set(rec.inputs.map(i => String(i.example ?? '')).filter(v => v.length >= 2))];
+  let json = JSON.stringify(gate.redactor.redactDeep(rec, 'evidence'), null, 2);
+  for (const v of clearValues) {
+    const token = gate.redactor.redact(v, 'evidence');
+    if (token !== v) json = json.split(token).join(v);
+  }
+  fs.writeFileSync(path.join(recorder.dir, 'recording.json'), json);
   return rec;
 }
 

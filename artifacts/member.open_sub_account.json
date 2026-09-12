@@ -1353,15 +1353,82 @@
       "maxAttempts": 2,
       "then": "restart_flow",
       "escalateOnExhaustion": true
+    },
+    {
+      "code": "HIGH_VALUE_CONFIRM",
+      "description": "An extra confirmation dialog the app raises for high-value transfers before the review screen. It appears only for some inputs, so it is a runtime interruption rather than a recorded step; acknowledging it is safe and returns to the flow.",
+      "detect": {
+        "description": "the high-value transfer confirmation dialog is on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "High-Value Transfer Confirmation"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 1500,
+        "pollMs": 200
+      },
+      "actions": [
+        {
+          "id": "ack_high_value",
+          "intent": "Acknowledge the high-value transfer confirmation to continue to review",
+          "action": {
+            "kind": "click"
+          },
+          "target": {
+            "semanticId": "high_value_dialog.acknowledge",
+            "description": "Acknowledge button on the high-value transfer dialog",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Acknowledge and Continue",
+                "match": "normalized"
+              },
+              {
+                "kind": "text",
+                "text": "Acknowledge and Continue",
+                "role": "button",
+                "match": "contains"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "elevated",
+          "timeoutMs": 8000,
+          "maxAttempts": 1
+        }
+      ],
+      "maxAttempts": 2,
+      "then": "retry_step",
+      "escalateOnExhaustion": false
     }
   ],
   "provenance": {
-    "recordedAt": "2026-09-12T03:17:13.103Z",
+    "recordedAt": "2026-09-12T04:16:41.861Z",
     "discoveryModel": "claude-opus-5",
     "discoveryRunId": "discovery-35f9938e",
     "recordedAgainstTenant": "tenant-a",
     "evidenceDir": "evidence/discovery-35f9938e",
     "surfaceFingerprint": "f0476ee829de65d2",
+    "stepShapes": {
+      "enter_the_member_id_to_look_up": "/nav+/search:5",
+      "submit_the_member_search": "/nav+/search:5",
+      "open_the_matching_member_record_from_the": "/member+/nav:5",
+      "start_the_open_sub_account_workflow_for_": "/nav+/subaccount:7",
+      "select_the_requested_sub_account_type": "/nav+/subaccount:7",
+      "enter_the_opening_deposit_amount": "/nav+/subaccount:7",
+      "submit_the_sub_account_application_to_op": "/nav+/subaccount:4",
+      "capture_the_confirmation_number_from_the": "/nav+/subaccount:4",
+      "capture_the_member_identifier_and_name_f": "/nav+/subaccount:4",
+      "capture_the_opened_sub_account_type_from": "/nav+/subaccount:4",
+      "capture_the_posted_opening_deposit_amoun": "/nav+/subaccount:4"
+    },
     "notes": "Steps recorded from a live LLM-driven run; locators computed and uniqueness-verified by the runtime."
   }
 }

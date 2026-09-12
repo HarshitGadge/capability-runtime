@@ -1,0 +1,103 @@
+{
+  "status": "escalated",
+  "capabilityId": "member.post_savings_transfer",
+  "capabilityVersion": "1.0.0",
+  "runId": "9c2c1ab0",
+  "tenantId": "tenant-b",
+  "startedAt": "2026-09-12T04:22:11.230Z",
+  "durationMs": 5288,
+  "evidenceDir": "evidence/replay-9c2c1ab0",
+  "trace": [
+    {
+      "stepId": "enter_the_member_id_to_look_up",
+      "intent": "Enter the member ID to look up",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 497,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Member Number\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 548,
+      "locatorStrategyUsed": "role_name(button, \"Find Member\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "open_the_member_record_from_the_search_r",
+      "intent": "Open the member record from the search results",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 548,
+      "locatorStrategyUsed": "role_name(link, \"View\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "open_the_funds_transfer_form_for_the_mem",
+      "intent": "Open the funds transfer form for the member",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 540,
+      "locatorStrategyUsed": "role_name(link, \"Transfer Funds\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "enter_the_destination_account_number",
+      "intent": "Enter the destination account number",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 548,
+      "locatorStrategyUsed": "proximity_label(textbox, \"To Account\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "enter_the_transfer_amount",
+      "intent": "Enter the transfer amount",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 477,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Amount\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_transfer_for_review",
+      "intent": "Submit the transfer for review",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 547,
+      "locatorStrategyUsed": "role_name(button, \"Review Transfer\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "confirm_and_post_the_transfer",
+      "intent": "Confirm and post the transfer",
+      "recoveriesApplied": [],
+      "status": "skipped",
+      "attempts": 1,
+      "durationMs": 269
+    }
+  ],
+  "surfaceDrift": {
+    "recorded": "57ed2402dc0f5a8d",
+    "observed": "",
+    "comparedSteps": 7,
+    "totalSteps": 12,
+    "drifted": null,
+    "changedSteps": []
+  },
+  "interventionId": "INT-9d8c7dab",
+  "reason": "Step confirm_and_post_the_transfer (\"Confirm and post the transfer\") is classified irreversible, above the unattended ceiling elevated",
+  "atStepId": "confirm_and_post_the_transfer",
+  "resumable": true,
+  "resumeToken": "8f78436b-4b4f-4711-a216-ff2832236459"
+}

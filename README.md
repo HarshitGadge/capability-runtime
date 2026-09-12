@@ -13,6 +13,45 @@ Design reasoning, trade-offs and cut lines: **[REPORT.md](./REPORT.md)**.
 
 ---
 
+## How it fits together
+
+```mermaid
+flowchart LR
+    subgraph discovery["Discovery — once, with a model"]
+        LLM["LLM agent<br/>observe → decide → act"]
+        REC["recording"]
+        LLM --> REC
+    end
+    REC --> COMP["compiler<br/>ranked locators,<br/>checkpoints, redaction"]
+    COMP --> ART["Capability artifact<br/>(typed · versioned · reviewable)"]
+
+    subgraph production["Production — many times, no model"]
+        AGENT["AI agent<br/>(agent-facing product)"]
+        REPLAY["replay engine<br/>observe → verify → act"]
+        AGENT -- "invoke(inputs)" --> REPLAY
+        REPLAY -- "Success · BusinessOutcome<br/>Failure · Escalated" --> AGENT
+    end
+    ART --> REPLAY
+
+    REPLAY -. "stuck / irreversible" .-> HUMAN["human operator<br/>(same live session)"]
+    HUMAN -. "authorize · resume" .-> REPLAY
+
+    subgraph surface["Surface (one interface, swappable)"]
+        S1["browser · DOM-scan"]
+        S2["browser · CDP a11y tree"]
+        S3["desktop · UIA / AX (design)"]
+    end
+    REPLAY --> surface
+    GATE["policy gate: allowlist · risk ceiling · redaction · control lease"]
+    REPLAY -.-> GATE
+```
+
+Everything above the Surface interface — the agent loop, the artifact, the replay engine, the
+policy gate — is written against a platform-independent `UiElement`, never a DOM or a selector.
+Two browser perception providers ship today; a desktop one is a design, not a build.
+
+---
+
 ## Setup
 
 Requires Node 20+.
@@ -80,9 +119,9 @@ same action repeated, or the screen unchanged across several actions), or `model
 exits non-zero for anything but the first.
 
 Everything from the run lands in `evidence/discovery-<id>/` — the structured log, the full model
-transcript, per-turn screenshots, and `recording.json`. Two real runs are committed:
-`evidence/discovery-10c45c2c` (the balance lookup, 14 turns, ~$0.32) and `evidence/discovery-35f9938e`
-(the sub-account opening, 27 turns, an irreversible step). See `evidence/README.md`.
+transcript, per-turn screenshots, and `recording.json`. Three real runs are committed — the balance lookup (14 turns, ~$0.32), the sub-account opening
+(27 turns, an irreversible step), and a funds transfer (32 turns, `INSUFFICIENT_FUNDS` discovered
+by probing). See `evidence/README.md`, including the run the model declined and how it was handled.
 
 ### 2. Replay it deterministically
 
@@ -107,6 +146,23 @@ The model chose to extract four outputs where the goal asked for one; the artifa
 each with a type and a sensitivity, and the three regulated ones are withheld from the on-disk
 log while being returned to the caller.
 
+You will also see this on the same run:
+
+```
+  drift     surface fingerprint changed (recorded 9677b7…, observed 5610be…) — re-review this capability for this tenant
+              open_the_matching_member_s_detail_record: /member+/nav:5 → /member+/nav:6
+              capture_the_savings_balance_from_the_mem: /member+/nav:5 → /member+/nav:6
+              ...
+```
+
+That is not a bug — it is the drift detector catching a real change. This capability was recorded
+*before* the "Transfer Funds" link was added to the member screen; every step on that screen now
+sees six controls where the recording saw five. The capability still succeeds, because targeting is
+semantic rather than positional, and the run tells a reviewer exactly which step to look at and
+what changed. Drift never fails a run — the checkpoints already decided that — it flags the
+capability for review. It reports identically through both perception providers, because it
+measures the app, not the lens.
+
 No API key is used. The rightmost column is which rung of the locator cascade actually matched —
 targeting degradation is reported, never silent. Every result also carries a **surface
 fingerprint** comparison; a `drift` line appears when the screens the flow passed through have
@@ -115,7 +171,7 @@ changed shape since the recording.
 ```bash
 # Same artifact, perceived through the browser's accessibility tree instead of the in-page scanner
 npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=12345 --provider cdp
-#   RESULT: SUCCESS — same four rungs, same fingerprint. Nothing above `Surface` knows which one ran.
+#   RESULT: SUCCESS — same rungs, and the same drift report. Nothing above `Surface` knows which one ran.
 ```
 
 Exit codes let a caller branch without parsing output: **0** success · **3** business outcome ·
@@ -151,6 +207,22 @@ npm run replay -- --artifact artifacts/member.read_savings_balance.json --input 
 `--inject` arms a fault in the stand-in portal. It is a test-harness control plane
 (`POST /__control`), not part of the modelled application.
 
+### 3b. A third capability: funds transfer, with an unexpected dialog
+
+```bash
+T=artifacts/member.post_savings_transfer.json
+npm run replay -- --artifact $T --input member_id=10002 --input to_account=999888777 --input amount=99999.00
+#   RESULT: BUSINESS_OUTCOME   code INSUFFICIENT_FUNDS
+npm run replay -- --artifact $T --input member_id=12345 --input to_account=999888777 --input amount=5000.00
+#   ↻ [recovered: HIGH_VALUE_CONFIRM]   ← a confirmation dialog the recording never saw
+#   RESULT: ESCALATED at confirm_and_post_the_transfer   ← the irreversible step routes to a human
+```
+
+The transfer was recorded against a $50 amount, so its recording contains no dialog. High-value
+transfers raise one at runtime; the app-level `HIGH_VALUE_CONFIRM` recovery handles it and the flow
+continues to the irreversible confirm, which escalates. Every capability inherits app-level
+recoveries without re-recording.
+
 ### 4. Run the same artifact against a second institution
 
 ```bash
@@ -175,6 +247,9 @@ controls and one screen title, and binds the tenant's origin — the run header 
 recoveries and extraction are reused unchanged.
 
 ### 5. Human handoff on an irreversible step
+
+![Operator console mid-escalation](docs/operator-console.png)
+
 
 ```bash
 npm run demo:handoff
@@ -202,7 +277,34 @@ the same window the automation was in, and the policy gate now blocks automation
 either **Authorize this step** (automation performs it once) or **I did it myself** (automation
 skips it). Control returns, the engine re-verifies the step's precondition, and the run completes.
 
-### 6. Invoking a capability from an agent
+### 6. Let an AI agent decide and call it
+
+```bash
+npm run agent -- --task "A member called in — what is the savings balance for member 12345?"
+npm run agent -- --task "Can you confirm whether member 99999 exists in our system?"
+```
+
+This is the production shape: an LLM is given the capabilities as tools and a natural-language
+task, and it decides which to call. The model never sees the portal — deterministic replay runs
+underneath each tool call, and the model reasons only about the task and the typed result.
+
+```
+TASK: A member called in — what is the savings balance for member 12345?
+  → agent calls member_read_savings_balance({"member_id":"12345"})
+  ← returned: success {"savings_balance":18204.37, ...}
+AGENT ANSWER: The current savings balance for member 12345 (J. Whitfield) is $18,204.37.
+
+TASK: Can you confirm whether member 99999 exists?
+  → agent calls member_read_savings_balance({"member_id":"99999"})
+  ← returned: business_outcome MEMBER_NOT_FOUND
+AGENT ANSWER: No — member 99999 does not exist. The lookup returned MEMBER_NOT_FOUND.
+```
+
+The agent relays the business outcome as a plain answer, not an error — because the tool contract
+told it that outcome is a legitimate result. Needs the model key (the agent decides); the
+capabilities it invokes do not.
+
+### 7. The tool contract, directly
 
 ```bash
 npm run schema                                              # JSON Schema for artifact, overlay, result
@@ -233,7 +335,7 @@ switch (result.status) {                        // what it gets back
 ## Tests
 
 ```bash
-npm test           # 79 tests; boots the app itself, no API key, no network
+npm test           # 84 tests; boots the app itself, no API key, no network
 npm run test:unit  # the fast ones only (~0.3s)
 npm run typecheck
 ```
@@ -288,11 +390,12 @@ src/schema/             the artifact, overlay, result and observation contracts 
 src/surface/            Surface interface, browser implementation, the two perception
                         providers, and the locator cascade
 src/policy/             redaction, risk classification, and the policy gate
-src/agent/              the LLM loop, its tools, and the recording → artifact compiler
+src/agent/              the LLM discovery loop, its tools, the recording → artifact compiler,
+                        and invokeAgent — an LLM calling capabilities as tools
 src/replay/             the deterministic engine, checkpoints, preflight, overlay merge
 src/escalation/         session lifetime, control lease, intervention inbox, action capture
 src/evidence/           structured run logs, screenshots, observation snapshots
-src/cli/                app · session · discover · replay · operator · compile · schema
+src/cli/                app · session · discover · replay · agent · operator · compile · schema
 artifacts/              capability artifacts, tenant overlays, generated JSON Schema
 evidence/               discovery and replay runs
 ```

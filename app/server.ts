@@ -142,6 +142,39 @@ const server = http.createServer(async (req, res) => {
     return send(res, 200, V.memberFrame(skin, base, m, armed('interstitial', route)));
   }
 
+  if (route === '/transfer' && req.method === 'POST') {
+    const b = await readBody(req);
+    const m = MEMBERS[b.get('id') ?? ''];
+    if (!m) return send(res, 200, V.notFoundFrame(skin, base, b.get('id') ?? ''));
+    const to = (b.get('to') ?? '').trim();
+    const amount = Number((b.get('amount') ?? '').replace(/[$,]/g, ''));
+    if (!to || !/^\d{6,}$/.test(to)) return send(res, 200, V.transferFrame(skin, base, m, 'Destination account must be a numeric account number.'));
+    if (!amount || Number.isNaN(amount) || amount <= 0) return send(res, 200, V.transferFrame(skin, base, m, 'Amount is required and must be positive.'));
+    // Insufficient funds is a legitimate business outcome, surfaced on the form.
+    if (amount > m.savingsBalance) return send(res, 200, V.transferFrame(skin, base, m, `Insufficient funds: the transfer amount exceeds the available savings balance.`));
+    // High-value transfers raise an extra confirmation dialog before review. Like most
+    // legacy handlers, the acknowledgement posts back to this same endpoint with a mode
+    // flag rather than to a route of its own — so the review screen always lives at
+    // /transfer, however it was reached.
+    const acknowledged = b.get('ack') === '1';
+    return send(res, 200, V.transferReviewFrame(skin, base, m, to, amount, amount >= 1000 && !acknowledged));
+  }
+  if (route === '/transfer/confirm' && req.method === 'POST') {
+    const b = await readBody(req);
+    const m = MEMBERS[b.get('id') ?? ''];
+    if (!m) return send(res, 200, V.notFoundFrame(skin, base, b.get('id') ?? ''));
+    const to = (b.get('to') ?? '').trim();
+    const amount = Number(b.get('amount') ?? 0);
+    if (amount > m.savingsBalance) return send(res, 200, V.transferFrame(skin, base, m, 'Insufficient funds: balance changed since review.'));
+    return send(res, 200, V.transferDoneFrame(skin, base, m, to, amount, 'TRN-' + ++confirmSeq));
+  }
+  if (route === '/transfer') {
+    const m = MEMBERS[url.searchParams.get('id') ?? ''];
+    if (!m) return send(res, 200, V.notFoundFrame(skin, base, url.searchParams.get('id') ?? ''));
+    if (m.status === 'restricted') return send(res, 200, V.deniedFrame(skin, base, m.id));
+    return send(res, 200, V.transferFrame(skin, base, m));
+  }
+
   if (route === '/subaccount' && req.method === 'POST') {
     const b = await readBody(req);
     const m = MEMBERS[b.get('id') ?? ''];

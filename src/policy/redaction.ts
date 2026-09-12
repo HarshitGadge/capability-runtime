@@ -19,7 +19,11 @@ export interface RedactionRule {
  */
 export const DEFAULT_RULES: RedactionRule[] = [
   { name: 'ssn',      pattern: /\b\d{3}-\d{2}-\d{4}\b/g },
-  { name: 'account',  pattern: /\b\d{8,19}\b/g },
+  // Lookarounds, not \b: nested legacy tables glue label to value ("To999888777"), and \b
+  // never fires between a letter and a digit, so a word-boundary pattern silently skips
+  // exactly the account numbers that appear in concatenated row text. Found by grepping
+  // the evidence directory, not by reasoning about it.
+  { name: 'account',  pattern: /(?<!\d)\d{8,19}(?!\d)/g },
   { name: 'currency', pattern: /\$\s?\d{1,3}(?:,\d{3})+(?:\.\d{2})?|\$\s?\d{4,}(?:\.\d{2})?/g },
   { name: 'email',    pattern: /\b[\w.+-]+@[\w-]+\.[\w.]{2,}\b/g },
   { name: 'phone',    pattern: /\b(?:\+1[ -]?)?\(?\d{3}\)?[ -]\d{3}[ -]\d{4}\b/g },

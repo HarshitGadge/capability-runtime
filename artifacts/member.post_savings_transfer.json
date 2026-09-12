@@ -1,0 +1,1528 @@
+{
+  "schemaVersion": "1.0.0",
+  "capability": {
+    "id": "member.post_savings_transfer",
+    "version": "1.0.0",
+    "name": "Post a transfer from a member's savings account",
+    "description": "Looks up a member by ID, opens their record, and posts a transfer of a given amount from their savings account to a specified destination account. Completes the review/confirm flow and returns the transfer reference and posted details. This posts real money movement immediately and cannot be reversed once confirmed.",
+    "tags": [
+      "discovered"
+    ]
+  },
+  "target": {
+    "appId": "acme-core/member-services",
+    "appVersion": "7.2",
+    "surface": "web",
+    "entryPoint": "{baseUrl}/",
+    "allowlist": {
+      "origins": [
+        "http://localhost:5173"
+      ],
+      "pathPrefixes": [
+        "/t/"
+      ],
+      "actions": [
+        "navigate",
+        "click",
+        "type",
+        "press",
+        "select",
+        "extract",
+        "assert"
+      ],
+      "maxUnattendedRisk": "elevated"
+    }
+  },
+  "inputs": [
+    {
+      "name": "member_id",
+      "type": "string",
+      "required": true,
+      "description": "Numeric member identifier of the sending member",
+      "sensitivity": "regulated",
+      "pattern": "^[0-9]+$",
+      "example": "12345"
+    },
+    {
+      "name": "to_account",
+      "type": "string",
+      "required": true,
+      "description": "Destination account number to receive the funds",
+      "sensitivity": "regulated",
+      "pattern": "^[0-9]+$",
+      "example": "999888777"
+    },
+    {
+      "name": "amount",
+      "type": "currency",
+      "required": true,
+      "description": "Transfer amount in dollars, e.g. 50.00",
+      "sensitivity": "regulated",
+      "example": "50.00"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "reference",
+      "type": "string",
+      "description": "Transfer reference number issued on the confirmation screen",
+      "sensitivity": "regulated",
+      "required": true
+    },
+    {
+      "name": "from_member",
+      "type": "string",
+      "description": "Sending member ID and name as shown on the confirmation",
+      "sensitivity": "regulated",
+      "required": true
+    },
+    {
+      "name": "to_account",
+      "type": "string",
+      "description": "Destination account number as posted",
+      "sensitivity": "regulated",
+      "required": true
+    },
+    {
+      "name": "amount",
+      "type": "currency",
+      "description": "Posted transfer amount",
+      "sensitivity": "regulated",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "enter_the_member_id_to_look_up",
+      "intent": "Enter the member ID to look up",
+      "action": {
+        "kind": "type",
+        "value": {
+          "kind": "input",
+          "name": "member_id"
+        },
+        "clearFirst": true
+      },
+      "target": {
+        "semanticId": "member_lookup.member_id",
+        "description": "textbox \"Member ID\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "textbox",
+            "label": "Member ID",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "textbox",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 335.703125,
+            "y": 66.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "elevated",
+      "precondition": {
+        "description": "entry screen",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Lookup"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after enter_the_member_id_to_look_up",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Lookup"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "action": {
+        "kind": "click"
+      },
+      "target": {
+        "semanticId": "member_lookup.search",
+        "description": "button \"Search\"",
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "button",
+            "name": "Search",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "button",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 442.96875,
+            "y": 66.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after enter_the_member_id_to_look_up",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Lookup"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after submit_the_member_search",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Search Results"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "open_the_member_record_from_the_search_r",
+      "intent": "Open the member record from the search results",
+      "action": {
+        "kind": "click"
+      },
+      "target": {
+        "semanticId": "search_results.view",
+        "description": "link \"View\"",
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "link",
+            "name": "View",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "link",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 685.5,
+            "y": 84.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "scope": {
+          "kind": "row_containing",
+          "text": {
+            "kind": "input",
+            "name": "member_id"
+          }
+        },
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after submit_the_member_search",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/search(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Search Results"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after open_the_member_record_from_the_search_r",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/member(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Name"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "open_the_funds_transfer_form_for_the_mem",
+      "intent": "Open the funds transfer form for the member",
+      "action": {
+        "kind": "click"
+      },
+      "target": {
+        "semanticId": "member.transfer_funds",
+        "description": "link \"Transfer Funds\"",
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "link",
+            "name": "Transfer Funds",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "link",
+            "index": 1
+          },
+          {
+            "kind": "coordinates",
+            "x": 354.6875,
+            "y": 228.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after open_the_member_record_from_the_search_r",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/member(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Member Name"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after open_the_funds_transfer_form_for_the_mem",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "From Account"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "enter_the_destination_account_number",
+      "intent": "Enter the destination account number",
+      "action": {
+        "kind": "type",
+        "value": {
+          "kind": "input",
+          "name": "to_account"
+        },
+        "clearFirst": true
+      },
+      "target": {
+        "semanticId": "transfer_funds.to_account",
+        "description": "textbox \"To Account\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "textbox",
+            "label": "To Account",
+            "match": "normalized"
+          },
+          {
+            "kind": "placeholder",
+            "placeholder": "destination account",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "textbox",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 358.609375,
+            "y": 89.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "elevated",
+      "precondition": {
+        "description": "screen after open_the_funds_transfer_form_for_the_mem",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "From Account"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after enter_the_destination_account_number",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "From Account"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "enter_the_transfer_amount",
+      "intent": "Enter the transfer amount",
+      "action": {
+        "kind": "type",
+        "value": {
+          "kind": "input",
+          "name": "amount"
+        },
+        "clearFirst": true
+      },
+      "target": {
+        "semanticId": "transfer_funds.amount",
+        "description": "textbox \"Amount\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "textbox",
+            "label": "Amount",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "textbox",
+            "index": 1
+          },
+          {
+            "kind": "coordinates",
+            "x": 337.609375,
+            "y": 120.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "elevated",
+      "precondition": {
+        "description": "screen after enter_the_destination_account_number",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "From Account"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after enter_the_transfer_amount",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "From Account"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "submit_the_transfer_for_review",
+      "intent": "Submit the transfer for review",
+      "action": {
+        "kind": "click"
+      },
+      "target": {
+        "semanticId": "transfer_funds.review_transfer",
+        "description": "button \"Review Transfer\"",
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "button",
+            "name": "Review Transfer",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "button",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 350.84375,
+            "y": 177.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after enter_the_transfer_amount",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "From Account"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after submit_the_transfer_for_review",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "From"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "confirm_and_post_the_transfer",
+      "intent": "Confirm and post the transfer",
+      "action": {
+        "kind": "click"
+      },
+      "target": {
+        "semanticId": "review_transfer.confirm_transfer",
+        "description": "button \"Confirm Transfer\"",
+        "strategies": [
+          {
+            "kind": "role_name",
+            "role": "button",
+            "name": "Confirm Transfer",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "button",
+            "index": 0
+          },
+          {
+            "kind": "coordinates",
+            "x": 255.2265625,
+            "y": 185.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "scope": {
+          "kind": "row_containing",
+          "text": {
+            "kind": "input",
+            "name": "to_account"
+          }
+        },
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "irreversible",
+      "precondition": {
+        "description": "screen after submit_the_transfer_for_review",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "From"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after confirm_and_post_the_transfer",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer/confirm(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Transfer Complete"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 1
+    },
+    {
+      "id": "capture_the_transfer_reference_from_the_",
+      "intent": "Capture the transfer reference from the confirmation screen",
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "reference",
+            "from": "text",
+            "transform": "trim"
+          }
+        ]
+      },
+      "target": {
+        "semanticId": "transfer_complete.reference",
+        "description": "cell \"Reference\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "cell",
+            "label": "Reference",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "cell",
+            "index": 2
+          },
+          {
+            "kind": "coordinates",
+            "x": 428.7109375,
+            "y": 91.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after confirm_and_post_the_transfer",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer/confirm(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Transfer Complete"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after capture_the_transfer_reference_from_the_",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer/confirm(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Transfer Complete"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "capture_the_sending_member_identificatio",
+      "intent": "Capture the sending member identification from the confirmation screen",
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "from_member",
+            "from": "text",
+            "transform": "trim"
+          }
+        ]
+      },
+      "target": {
+        "semanticId": "transfer_complete.from_member",
+        "description": "cell \"From Member\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "cell",
+            "label": "From Member",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "cell",
+            "index": 4
+          },
+          {
+            "kind": "coordinates",
+            "x": 428.7109375,
+            "y": 116.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after capture_the_transfer_reference_from_the_",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer/confirm(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Transfer Complete"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after capture_the_sending_member_identificatio",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer/confirm(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Transfer Complete"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "capture_the_destination_account_number_f",
+      "intent": "Capture the destination account number from the confirmation screen",
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "to_account",
+            "from": "text",
+            "transform": "trim"
+          }
+        ]
+      },
+      "target": {
+        "semanticId": "transfer_complete.to_account",
+        "description": "cell \"To Account\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "cell",
+            "label": "To Account",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "cell",
+            "index": 6
+          },
+          {
+            "kind": "coordinates",
+            "x": 428.7109375,
+            "y": 141.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "scope": {
+          "kind": "row_containing",
+          "text": {
+            "kind": "input",
+            "name": "to_account"
+          }
+        },
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after capture_the_sending_member_identificatio",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer/confirm(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Transfer Complete"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after capture_the_destination_account_number_f",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer/confirm(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Transfer Complete"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    },
+    {
+      "id": "capture_the_posted_transfer_amount_from_",
+      "intent": "Capture the posted transfer amount from the confirmation screen",
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "amount",
+            "from": "text",
+            "transform": "currency_to_number"
+          }
+        ]
+      },
+      "target": {
+        "semanticId": "transfer_complete.amount",
+        "description": "cell \"Amount\"",
+        "strategies": [
+          {
+            "kind": "proximity_label",
+            "role": "cell",
+            "label": "Amount",
+            "match": "normalized"
+          },
+          {
+            "kind": "ordinal",
+            "role": "cell",
+            "index": 8
+          },
+          {
+            "kind": "coordinates",
+            "x": 428.7109375,
+            "y": 166.5,
+            "viewport": {
+              "width": 1280,
+              "height": 900
+            }
+          }
+        ],
+        "frame": [
+          "content"
+        ],
+        "ambiguity": "require_unique"
+      },
+      "risk": "safe",
+      "precondition": {
+        "description": "screen after capture_the_destination_account_number_f",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer/confirm(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Transfer Complete"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "postcondition": {
+        "description": "screen after capture_the_posted_transfer_amount_from_",
+        "all": [
+          {
+            "kind": "url_matches",
+            "pattern": "/nav(\\?|$)"
+          },
+          {
+            "kind": "url_matches",
+            "pattern": "/transfer/confirm(\\?|$)"
+          },
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Transfer Complete"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 10000,
+        "pollMs": 250
+      },
+      "timeoutMs": 15000,
+      "maxAttempts": 2
+    }
+  ],
+  "success": {
+    "description": "Goal reached: \"Transfer posted successfully.\" is visible",
+    "all": [
+      {
+        "kind": "text_present",
+        "text": {
+          "kind": "const",
+          "value": "Transfer posted successfully."
+        },
+        "match": "contains"
+      },
+      {
+        "kind": "text_present",
+        "text": {
+          "kind": "const",
+          "value": "Transfer Complete"
+        },
+        "match": "contains"
+      }
+    ],
+    "timeoutMs": 15000,
+    "pollMs": 250
+  },
+  "businessOutcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "description": "No member record matches the supplied member ID, so no transfer can be posted.",
+      "detect": {
+        "description": "MEMBER_NOT_FOUND: \"No member found\" on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "No member found"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 2000,
+        "pollMs": 250
+      },
+      "terminal": true,
+      "partialOutputs": []
+    },
+    {
+      "code": "INSUFFICIENT_FUNDS",
+      "description": "The requested amount exceeds the member's available savings balance; the transfer is rejected at review.",
+      "detect": {
+        "description": "INSUFFICIENT_FUNDS: \"Insufficient funds: the transfer amount exceeds the available savings balance.\" on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Insufficient funds: the transfer amount exceeds the available savings balance."
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 2000,
+        "pollMs": 250
+      },
+      "terminal": true,
+      "partialOutputs": []
+    }
+  ],
+  "recoveries": [
+    {
+      "code": "MAINTENANCE_INTERSTITIAL",
+      "description": "Product-wide maintenance banner covering the working area. Acknowledging it is safe and idempotent.",
+      "detect": {
+        "description": "maintenance notice is on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "Scheduled Maintenance Notice"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 1500,
+        "pollMs": 200
+      },
+      "actions": [
+        {
+          "id": "ack_maintenance",
+          "intent": "Acknowledge the maintenance notice so the working area is usable",
+          "action": {
+            "kind": "click"
+          },
+          "target": {
+            "semanticId": "interstitial.acknowledge",
+            "description": "Acknowledge button on the maintenance banner",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Acknowledge",
+                "match": "normalized"
+              },
+              {
+                "kind": "text",
+                "text": "Acknowledge",
+                "role": "button",
+                "match": "contains"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "safe",
+          "timeoutMs": 8000,
+          "maxAttempts": 1
+        }
+      ],
+      "maxAttempts": 2,
+      "then": "retry_step",
+      "escalateOnExhaustion": false
+    },
+    {
+      "code": "SIGNED_OUT",
+      "description": "No authenticated operator session: the portal is showing its sign-on screen, either because the run started cold or because the session was dropped mid-flow. Re-authenticate with the service credential and retry the step. Detected by the presence of the sign-on control rather than by the expiry banner, so the same rule covers both cases.",
+      "detect": {
+        "description": "the portal is showing its sign-on screen",
+        "all": [
+          {
+            "kind": "element_present",
+            "target": {
+              "semanticId": "signon.submit",
+              "description": "Sign On button, present only on the sign-on screen",
+              "strategies": [
+                {
+                  "kind": "role_name",
+                  "role": "button",
+                  "name": "Sign On",
+                  "match": "normalized"
+                }
+              ],
+              "frame": [],
+              "ambiguity": "first"
+            }
+          }
+        ],
+        "timeoutMs": 1500,
+        "pollMs": 200
+      },
+      "actions": [
+        {
+          "id": "relogin_user",
+          "intent": "Re-enter the service operator ID",
+          "action": {
+            "kind": "type",
+            "value": {
+              "kind": "secret",
+              "envVar": "PORTAL_USER"
+            },
+            "clearFirst": true
+          },
+          "target": {
+            "semanticId": "signon.operator_id",
+            "description": "Operator ID field on the sign-on screen",
+            "strategies": [
+              {
+                "kind": "proximity_label",
+                "role": "textbox",
+                "label": "Operator ID",
+                "match": "normalized"
+              },
+              {
+                "kind": "role_name",
+                "role": "textbox",
+                "name": "Operator ID",
+                "match": "normalized"
+              },
+              {
+                "kind": "ordinal",
+                "role": "textbox",
+                "index": 0
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "safe",
+          "timeoutMs": 8000,
+          "maxAttempts": 1
+        },
+        {
+          "id": "relogin_pass",
+          "intent": "Re-enter the service credential",
+          "action": {
+            "kind": "type",
+            "value": {
+              "kind": "secret",
+              "envVar": "PORTAL_PASS"
+            },
+            "clearFirst": true
+          },
+          "target": {
+            "semanticId": "signon.password",
+            "description": "Password field on the sign-on screen",
+            "strategies": [
+              {
+                "kind": "proximity_label",
+                "role": "textbox",
+                "label": "Password",
+                "match": "normalized"
+              },
+              {
+                "kind": "ordinal",
+                "role": "textbox",
+                "index": 1
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "safe",
+          "timeoutMs": 8000,
+          "maxAttempts": 1
+        },
+        {
+          "id": "relogin_submit",
+          "intent": "Sign back on",
+          "action": {
+            "kind": "click"
+          },
+          "target": {
+            "semanticId": "signon.submit",
+            "description": "Sign On button",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Sign On",
+                "match": "normalized"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "safe",
+          "timeoutMs": 10000,
+          "maxAttempts": 1
+        }
+      ],
+      "maxAttempts": 2,
+      "then": "restart_flow",
+      "escalateOnExhaustion": true
+    },
+    {
+      "code": "HIGH_VALUE_CONFIRM",
+      "description": "An extra confirmation dialog the app raises for high-value transfers before the review screen. It appears only for some inputs, so it is a runtime interruption rather than a recorded step; acknowledging it is safe and returns to the flow.",
+      "detect": {
+        "description": "the high-value transfer confirmation dialog is on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "High-Value Transfer Confirmation"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 1500,
+        "pollMs": 200
+      },
+      "actions": [
+        {
+          "id": "ack_high_value",
+          "intent": "Acknowledge the high-value transfer confirmation to continue to review",
+          "action": {
+            "kind": "click"
+          },
+          "target": {
+            "semanticId": "high_value_dialog.acknowledge",
+            "description": "Acknowledge button on the high-value transfer dialog",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Acknowledge and Continue",
+                "match": "normalized"
+              },
+              {
+                "kind": "text",
+                "text": "Acknowledge and Continue",
+                "role": "button",
+                "match": "contains"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          },
+          "risk": "elevated",
+          "timeoutMs": 8000,
+          "maxAttempts": 1
+        }
+      ],
+      "maxAttempts": 2,
+      "then": "retry_step",
+      "escalateOnExhaustion": false
+    }
+  ],
+  "provenance": {
+    "recordedAt": "2026-09-12T04:16:42.322Z",
+    "discoveryModel": "claude-opus-5",
+    "discoveryRunId": "discovery-ac02212f",
+    "recordedAgainstTenant": "tenant-a",
+    "evidenceDir": "evidence/discovery-ac02212f",
+    "surfaceFingerprint": "57ed2402dc0f5a8d",
+    "stepShapes": {
+      "enter_the_member_id_to_look_up": "/nav+/search:5",
+      "submit_the_member_search": "/nav+/search:5",
+      "open_the_member_record_from_the_search_r": "/member+/nav:6",
+      "open_the_funds_transfer_form_for_the_mem": "/nav+/transfer:6",
+      "enter_the_destination_account_number": "/nav+/transfer:6",
+      "enter_the_transfer_amount": "/nav+/transfer:6",
+      "submit_the_transfer_for_review": "/nav+/transfer:4",
+      "confirm_and_post_the_transfer": "/nav+/transfer/confirm:4",
+      "capture_the_transfer_reference_from_the_": "/nav+/transfer/confirm:4",
+      "capture_the_sending_member_identificatio": "/nav+/transfer/confirm:4",
+      "capture_the_destination_account_number_f": "/nav+/transfer/confirm:4",
+      "capture_the_posted_transfer_amount_from_": "/nav+/transfer/confirm:4"
+    },
+    "notes": "Steps recorded from a live LLM-driven run; locators computed and uniqueness-verified by the runtime."
+  }
+}

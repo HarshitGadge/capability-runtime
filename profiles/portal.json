@@ -205,6 +205,60 @@
       "maxAttempts": 2,
       "then": "restart_flow",
       "escalateOnExhaustion": true
+    },
+    {
+      "code": "HIGH_VALUE_CONFIRM",
+      "description": "An extra confirmation dialog the app raises for high-value transfers before the review screen. It appears only for some inputs, so it is a runtime interruption rather than a recorded step; acknowledging it is safe and returns to the flow.",
+      "detect": {
+        "description": "the high-value transfer confirmation dialog is on screen",
+        "all": [
+          {
+            "kind": "text_present",
+            "text": {
+              "kind": "const",
+              "value": "High-Value Transfer Confirmation"
+            },
+            "match": "contains"
+          }
+        ],
+        "timeoutMs": 1500,
+        "pollMs": 200
+      },
+      "actions": [
+        {
+          "id": "ack_high_value",
+          "intent": "Acknowledge the high-value transfer confirmation to continue to review",
+          "action": {
+            "kind": "click"
+          },
+          "risk": "elevated",
+          "timeoutMs": 8000,
+          "maxAttempts": 1,
+          "target": {
+            "semanticId": "high_value_dialog.acknowledge",
+            "description": "Acknowledge button on the high-value transfer dialog",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Acknowledge and Continue",
+                "match": "normalized"
+              },
+              {
+                "kind": "text",
+                "text": "Acknowledge and Continue",
+                "role": "button",
+                "match": "contains"
+              }
+            ],
+            "frame": [],
+            "ambiguity": "require_unique"
+          }
+        }
+      ],
+      "maxAttempts": 2,
+      "then": "retry_step",
+      "escalateOnExhaustion": false
     }
   ],
   "session": {

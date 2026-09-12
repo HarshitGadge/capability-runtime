@@ -97,9 +97,14 @@ describe('policy gate', () => {
 });
 
 describe('risk classification', () => {
-  it('treats an account opening as irreversible from its label alone', () => {
+  it('classifies by commitment, not by nouns', () => {
+    // The committing controls are irreversible...
     expect(classifyRisk({ kind: 'click' }, el({ name: 'Open Account' }))).toBe('irreversible');
-    expect(classifyRisk({ kind: 'click' }, el({ name: 'Transfer Funds' }))).toBe('irreversible');
+    expect(classifyRisk({ kind: 'click' }, el({ name: 'Confirm Transfer' }))).toBe('irreversible');
+    expect(classifyRisk({ kind: 'click' }, el({ name: 'Authorize Payment' }))).toBe('irreversible');
+    // ...but navigating to a transfer form or a review screen is not.
+    expect(classifyRisk({ kind: 'click' }, el({ role: 'link', name: 'Transfer Funds' }))).toBe('safe');
+    expect(classifyRisk({ kind: 'click' }, el({ name: 'Review Transfer' }))).not.toBe('irreversible');
   });
   it('treats navigation and reads as safe', () => {
     expect(classifyRisk({ kind: 'click' }, el({ role: 'link', name: 'View' }))).toBe('safe');

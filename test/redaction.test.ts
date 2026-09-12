@@ -13,6 +13,13 @@ describe('redactor', () => {
     expect(out).toMatch(/«account:[0-9a-f]{6}»/);
   });
 
+  it('catches an account number glued to a label, as nested table row text renders it', () => {
+    // "To999888777" has no word boundary between the o and the 9; a \\b-anchored pattern misses it.
+    const out = new Redactor().redact('FromSavings To999888777 Amount');
+    expect(out).not.toContain('999888777');
+    expect(out).toMatch(/To«account:[0-9a-f]{6}»/);
+  });
+
   it('leaves instructional amounts below the threshold alone', () => {
     // "$25.00" in help text is not member data; a four-figure balance is. The line is a
     // configuration choice and this test pins where it currently sits.

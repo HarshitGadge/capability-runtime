@@ -560,11 +560,18 @@ export class ReplayEngine {
     const observed = complete ? fingerprintOf(shapes) : '';
     const recorded = this.artifact.provenance.surfaceFingerprint;
     const drifted = complete ? observed !== recorded : null;
+    // Name the steps whose screens changed, not just the hash. "Step 4's screen went from
+    // 6 controls to 7" is actionable; a differing digest is a shrug.
+    const recordedShapes = this.artifact.provenance.stepShapes ?? {};
+    const changedSteps = this.steps.flatMap(s => {
+      const o = this.observedShapes.get(s.id), r = recordedShapes[s.id];
+      return o !== undefined && r !== undefined && o !== r ? [{ stepId: s.id, recorded: r, observed: o }] : [];
+    });
     if (drifted && !this.driftNoted) {
       this.driftNoted = true;
-      this.opts.recorder.event('note', { message: 'surface fingerprint drifted from the recording; re-review this capability for this tenant', recorded, observed });
+      this.opts.recorder.event('note', { message: 'surface fingerprint drifted from the recording; re-review this capability for this tenant', recorded, observed, changedSteps });
     }
-    return { recorded, observed, comparedSteps: shapes.length, totalSteps: this.steps.length, drifted };
+    return { recorded, observed, comparedSteps: shapes.length, totalSteps: this.steps.length, drifted, changedSteps };
   }
 
   /**

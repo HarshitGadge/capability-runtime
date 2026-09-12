@@ -154,7 +154,15 @@ describe('perception is swappable beneath the artifact', () => {
     expect(rungs).toContain('proximity_label(textbox, "Member ID")');
     expect(rungs).toContain('proximity_label(cell, "Savings Balance")');
     expect(rungs.some(x => /ordinal|coordinates/.test(x))).toBe(false);
-    expect(r.surfaceDrift.drifted).toBe(false);
+
+    // The surface has genuinely drifted since this capability was recorded: a "Transfer
+    // Funds" link was added to the member screen afterwards (5 → 6 controls). The claim
+    // to test is not "no drift" but that BOTH providers see the SAME drift — the
+    // fingerprint measures the app, not the lens.
+    const viaDom = await replay({ inputs: { member_id: '12345' } });
+    expect(r.surfaceDrift.drifted).toBe(viaDom.surfaceDrift.drifted);
+    expect(r.surfaceDrift.changedSteps).toEqual(viaDom.surfaceDrift.changedSteps);
+    expect(r.surfaceDrift.observed).toBe(viaDom.surfaceDrift.observed);
   }, 60_000);
 });
 
