@@ -74,16 +74,27 @@ try {
     process.exit(1);
   }
 
-  const artifact = compile({
-    capability: recording.capability,
-    inputs: recording.inputs,
-    outputs: recording.outputs,
-    actions: recording.actions,
-    successText: recording.successText,
-    declaredOutcomes: recording.declaredOutcomes,
-    profile: { ...profile, baseUrl },
-    provenance: { discoveryModel: model, discoveryRunId: rt.runId, tenantId: tenant, evidenceDir: rt.recorder.relDir() },
-  });
+  // The recording is already on disk at this point. If compilation fails — an unlocatable
+  // control, or a literal the leak guard refuses — the run is not wasted: fix the compiler
+  // and rebuild from the recording with no further API calls.
+  let artifact;
+  try {
+    artifact = compile({
+      capability: recording.capability,
+      inputs: recording.inputs,
+      outputs: recording.outputs,
+      actions: recording.actions,
+      successText: recording.successText,
+      declaredOutcomes: recording.declaredOutcomes,
+      profile: { ...profile, baseUrl },
+      provenance: { discoveryModel: model, discoveryRunId: rt.runId, tenantId: tenant, evidenceDir: rt.recorder.relDir() },
+    });
+  } catch (err) {
+    console.error(`\nThe run succeeded but compilation failed: ${err instanceof Error ? err.message : err}`);
+    console.error(`The recording is saved. Rebuild from it with no API call once fixed:`);
+    console.error(`  npm run compile -- --recording ${rt.recorder.relDir()}/recording.json`);
+    process.exit(1);
+  }
 
   const parsed = CapabilityArtifact.parse(artifact);
   const out = path.join('artifacts', `${parsed.capability.id}.json`);

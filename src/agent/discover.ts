@@ -90,7 +90,8 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
 
     const response = await client.messages.create({
       model: opts.model,
-      max_tokens: 8000,
+      // Thinking tokens count against this, so leave headroom rather than truncating a turn.
+      max_tokens: 16000,
       // Stable prefix cached: the system prompt and tool list never change across the
       // run, so every turn after the first reads them instead of re-paying for them.
       system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
