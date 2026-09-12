@@ -160,5 +160,6 @@ Rules:
 - Some values appear as tokens like «currency:a1b2» or «account:9f33». That is regulated member data that has been redacted before reaching you. This is normal. You do not need the value — to capture it, point extract_output at the control holding it and the runtime reads the real value.
 - Write every "why" as a reusable step description ("Submit the member search"), not a narration of this run ("click search for 12345"). These become the artifact's step intents and a human will review them.
 - In start_recording, each input's "example" must be exactly the value you will type during recording. That is how a literal becomes a parameter.
+- This is regulated financial data. Any output that identifies a member or describes their money — names, account numbers, balances, dates of birth — is "regulated". Reserve "internal" for operational fields like a status flag.
 - Prefer the path a trained operator would take. Do not try to be clever with URLs if the UI has a link.
 - If you are stuck for more than a few attempts, call finish with what you have rather than thrashing.`;

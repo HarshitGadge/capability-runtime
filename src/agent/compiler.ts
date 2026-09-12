@@ -55,7 +55,7 @@ const isCallerValue = (text: string, inputs: ParamSpec[]): boolean =>
  * label, it will not be on the screen at replay time, and a checkpoint asserting one can
  * never pass — so it is rejected alongside the raw values it replaced.
  */
-const isRedactionToken = (text: string): boolean => /«\w+:[0-9a-f]{6}»/.test(text);
+const isRedactionToken = (text: string): boolean => /«[^»]+»/.test(text);
 
 const unsafeLiteral = (text: string | undefined, inputs: ParamSpec[]): boolean =>
   !!text && (looksSensitive(text) || isCallerValue(text, inputs) || isRedactionToken(text));
@@ -104,10 +104,11 @@ export function compile(input: CompileInput): CapabilityArtifact {
   }
 
   const last = input.actions.at(-1);
+  const successText = sanitizeSuccessText(input.successText, input.inputs);
   const success: Checkpoint = {
-    description: `Goal reached: "${input.successText}" is visible`,
+    description: `Goal reached: "${successText ?? '(screen heading)'}" is visible`,
     all: [
-      { kind: 'text_present', text: { kind: 'const', value: input.successText }, match: 'contains' },
+      ...(successText ? [{ kind: 'text_present' as const, text: { kind: 'const' as const, value: successText }, match: 'contains' as const }] : []),
       ...(last ? headingAssertions(last.after, contentFrame, input.inputs) : []),
     ],
     timeoutMs: 15_000,
@@ -176,7 +177,7 @@ export function assertNoRegulatedData(artifact: CapabilityArtifact): void {
   const hits = [
     ...DEFAULT_RULES.flatMap(rule =>
       (serialized.match(new RegExp(rule.pattern.source, rule.pattern.flags)) ?? []).map(m => `${rule.name}: ${m}`)),
-    ...(serialized.match(/«\w+:[0-9a-f]{6}»/g) ?? []).map(m => `redaction token: ${m}`),
+    ...(serialized.match(/«[^»]+»/g) ?? []).map(m => `redaction token: ${m}`),
   ];
   if (hits.length) {
     throw new Error(
@@ -198,10 +199,15 @@ function buildTarget(el: UiElement, obs: Observation, inputs: ParamSpec[], stepI
   // A locator may only be built from labels — what the control is *called* — never from
   // the data it happens to be displaying. Skipping these is what stops the compiler from
   // writing "the cell reading $18,204.37" into a capability meant to work for any member.
-  if (el.name && !unsafeLiteral(el.name, inputs)) candidates.push({ kind: 'role_name', role: el.role, name: el.name, match: 'normalized' });
+  // A cell's own content is the data being read — "the cell reading J. Whitfield" would
+  // pin the capability to one member as surely as a balance would, and no regex knows a
+  // surname. Cells are located by the label beside them; content-based rungs are for
+  // controls, whose text is what they are called.
+  const isCell = el.role === 'cell' || el.role === 'columnheader';
+  if (el.name && !isCell && !unsafeLiteral(el.name, inputs)) candidates.push({ kind: 'role_name', role: el.role, name: el.name, match: 'normalized' });
   if (el.proximityLabel && !unsafeLiteral(el.proximityLabel, inputs)) candidates.push({ kind: 'proximity_label', role: el.role, label: el.proximityLabel, match: 'normalized' });
   if (el.placeholder && !unsafeLiteral(el.placeholder, inputs)) candidates.push({ kind: 'placeholder', placeholder: el.placeholder, match: 'normalized' });
-  if (el.text && el.text !== el.name && !unsafeLiteral(el.text, inputs)) candidates.push({ kind: 'text', text: el.text, role: el.role, match: 'normalized' });
+  if (el.text && !isCell && el.text !== el.name && !unsafeLiteral(el.text, inputs)) candidates.push({ kind: 'text', text: el.text, role: el.role, match: 'normalized' });
 
   // Region names on record screens carry the record's identity ("Member Detail — 12345").
   // Stripping digits keeps the semanticId stable across members and tenants, which
@@ -343,6 +349,25 @@ function headingAssertions(obs: Observation, contentFrame: string | null, inputs
     }
   }
   return [];
+}
+
+/**
+ * The model nominates the text that proves success, and it reads it off a screen that is
+ * about one specific member — "Member Detail — 12345". Kept verbatim, that checkpoint
+ * would only ever pass for member 12345, and the capability would be a hard-coded lookup
+ * wearing a parameter's clothes. Caller values are cut out along with the separator that
+ * introduced them; if nothing meaningful survives, the screen heading carries the proof.
+ */
+function sanitizeSuccessText(text: string, inputs: ParamSpec[]): string | null {
+  let out = text;
+  for (const spec of inputs) {
+    if (!spec.example) continue;
+    const at = out.indexOf(String(spec.example));
+    if (at >= 0) out = out.slice(0, at).replace(/[\s—–\-:|#]+$/u, '');
+  }
+  out = out.trim();
+  if (out.length < 3 || looksSensitive(out) || isRedactionToken(out)) return null;
+  return out;
 }
 
 // --------------------------------------------------------------- parameterization

@@ -6,6 +6,7 @@ import { Redactor } from '../../src/policy/redaction.js';
 import type { RecordedAction } from '../../src/agent/compiler.js';
 import type { DiscoveryRecording } from '../../src/agent/discover.js';
 import type { Observation, UiElement } from '../../src/schema/observation.js';
+import { scrubDeclaredValues } from '../../src/evidence/scrub.js';
 
 /**
  * TEST FIXTURE ONLY — this is not the discovery path.
@@ -68,6 +69,10 @@ export async function recordScripted(opts: { baseUrl: string; memberId: string; 
     o => find(o, e => e.role === 'cell' && /savings balance/i.test(e.proximityLabel ?? ''), 'savings balance cell'),
     async () => {}, { kind: 'extract', extracts: [{ name: 'savings_balance', from: 'text', transform: 'currency_to_number' }] });
 
+  await step('Read the member name from the record',
+    o => find(o, e => e.role === 'cell' && /member name/i.test(e.proximityLabel ?? ''), 'member name cell'),
+    async () => {}, { kind: 'extract', extracts: [{ name: 'member_name', from: 'text', transform: 'trim' }] });
+
   await browser.close();
 
   return {
@@ -87,6 +92,9 @@ export async function recordScripted(opts: { baseUrl: string; memberId: string; 
       name: 'savings_balance', type: 'currency', required: true,
       description: 'Current balance of the member savings account.',
       sensitivity: 'regulated',
+    }, {
+      name: 'member_name', type: 'string', required: true,
+      description: 'Name on the member record.', sensitivity: 'regulated',
     }],
     actions,
     declaredOutcomes: [
@@ -115,6 +123,12 @@ export async function writeFixtures(baseUrl: string): Promise<void> {
     // The compiler builds targets from labels, never from values, so it is unaffected —
     // which is the property being relied on, and worth stating rather than assuming.
     fs.writeFileSync(path.join(dir, 'recording.json'), JSON.stringify(new Redactor().redactDeep(rec, 'evidence'), null, 2));
+    // Scrub declared-regulated output values from the fixture the way discovery does, so
+    // no recording.json committed to the repo carries member data — synthetic or not.
+    const regulated = rec.outputs.filter(o => o.sensitivity === 'regulated').map(o => o.name);
+    const vals = rec.actions.flatMap(a => a.action.kind === 'extract' && a.element
+      ? a.action.extracts.filter(x => regulated.includes(x.name)).map(x => ({ name: x.name, value: (a.element!.text ?? '').trim() })) : []);
+    scrubDeclaredValues(dir, vals, rec.inputs.map(i => String(i.example)));
     console.log(`fixture -> evidence/${name}/recording.json (${rec.actions.length} actions)`);
   }
 }
@@ -186,6 +200,10 @@ export async function recordSubAccount(opts: { baseUrl: string; memberId: string
     o => find(o, e => e.role === 'cell' && /confirmation number/i.test(e.proximityLabel ?? ''), 'confirmation number cell'),
     async () => {}, { kind: 'extract', extracts: [{ name: 'confirmation_number', from: 'text', transform: 'trim' }] });
 
+  await step('Read the member identity from the confirmation screen',
+    o => find(o, e => e.role === 'cell' && /member/i.test(e.proximityLabel ?? '') && !/name/i.test(e.proximityLabel ?? ''), 'member cell'),
+    async () => {}, { kind: 'extract', extracts: [{ name: 'member', from: 'text', transform: 'trim' }] });
+
   await browser.close();
 
   return {
@@ -203,6 +221,7 @@ export async function recordSubAccount(opts: { baseUrl: string; memberId: string
     ],
     outputs: [
       { name: 'confirmation_number', type: 'string', required: true, description: 'Confirmation reference for the opened sub-account.', sensitivity: 'regulated' },
+      { name: 'member', type: 'string', required: true, description: 'Member identity shown on the confirmation.', sensitivity: 'regulated' },
     ],
     actions,
     declaredOutcomes: [

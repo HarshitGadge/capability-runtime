@@ -1,0 +1,4957 @@
+{
+  "goal": "Look up member 12345 and read their current savings balance",
+  "model": "claude-opus-5",
+  "capability": {
+    "id": "member.read_savings_balance",
+    "name": "Read member savings balance",
+    "description": "Looks up a credit union member by numeric member ID and returns their savings account balance, savings account number, member name and status from the member detail screen. Returns MEMBER_NOT_FOUND if no member matches the identifier."
+  },
+  "inputs": [
+    {
+      "name": "member_id",
+      "type": "string",
+      "required": true,
+      "description": "Numeric member identifier; partial matches are not supported.",
+      "sensitivity": "regulated",
+      "pattern": "^[0-9]+$",
+      "example": "12345"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "savings_balance",
+      "type": "currency",
+      "description": "Current savings account balance for the member.",
+      "sensitivity": "regulated",
+      "required": true
+    },
+    {
+      "name": "savings_account_number",
+      "type": "string",
+      "description": "Savings account number for the member.",
+      "sensitivity": "regulated",
+      "required": true
+    },
+    {
+      "name": "member_name",
+      "type": "string",
+      "description": "Member's name as shown on the detail screen.",
+      "sensitivity": "regulated",
+      "required": true
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "description": "Member account status flag, e.g. active.",
+      "sensitivity": "internal",
+      "required": true
+    }
+  ],
+  "actions": [
+    {
+      "intent": "Enter the member ID into the lookup field",
+      "element": {
+        "role": "textbox",
+        "name": "",
+        "value": "",
+        "proximityLabel": "Member ID",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 273.203125,
+          "y": 56,
+          "width": 125,
+          "height": 21
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Member ID",
+        "region": "Member Lookup",
+        "ref": "content#2"
+      },
+      "before": {
+        "observedAt": "2026-09-12T03:12:19.324Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Member Lookup",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member ID",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 77.203125,
+              "height": 35
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#1"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "",
+            "proximityLabel": "Member ID",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 273.203125,
+              "y": 56,
+              "width": 125,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#2"
+          },
+          {
+            "role": "button",
+            "name": "Search",
+            "value": "Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 408.203125,
+              "y": 54,
+              "width": 69.53125,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#3"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Lookup\nMember ID \nEnter a numeric member identifier. Partial matches are not supported."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T03:12:19.539Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Member Lookup",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member ID",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 77.203125,
+              "height": 35
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#1"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "12345",
+            "proximityLabel": "Member ID",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 273.203125,
+              "y": 56,
+              "width": 125,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#2"
+          },
+          {
+            "role": "button",
+            "name": "Search",
+            "value": "Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 408.203125,
+              "y": 54,
+              "width": 69.53125,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#3"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Lookup\nMember ID \nEnter a numeric member identifier. Partial matches are not supported."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "type",
+        "value": {
+          "kind": "const",
+          "value": "12345"
+        },
+        "clearFirst": true
+      }
+    },
+    {
+      "intent": "Submit the member search",
+      "element": {
+        "role": "button",
+        "name": "Search",
+        "value": "Search",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 408.203125,
+          "y": 54,
+          "width": 69.53125,
+          "height": 25
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Member ID",
+        "region": "Member Lookup",
+        "ref": "content#3"
+      },
+      "before": {
+        "observedAt": "2026-09-12T03:12:22.070Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Member Lookup",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member ID",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 77.203125,
+              "height": 35
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#1"
+          },
+          {
+            "role": "textbox",
+            "name": "",
+            "value": "12345",
+            "proximityLabel": "Member ID",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 273.203125,
+              "y": 56,
+              "width": 125,
+              "height": 21
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#2"
+          },
+          {
+            "role": "button",
+            "name": "Search",
+            "value": "Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 408.203125,
+              "y": 54,
+              "width": 69.53125,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member ID",
+            "region": "Member Lookup",
+            "ref": "content#3"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Lookup\nMember ID \nEnter a numeric member identifier. Partial matches are not supported."
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T03:12:22.341Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Search Results",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Search Results",
+            "region": "Search Results",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180.5,
+              "y": 42.5,
+              "width": 140.390625,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 320.890625,
+              "y": 42.5,
+              "width": 220.375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 541.265625,
+              "y": 42.5,
+              "width": 119.5,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "Action",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 660.765625,
+              "y": 42.5,
+              "width": 118.734375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180.5,
+              "y": 70.5,
+              "width": 140.390625,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | «withheld:member_name» | active | View",
+            "region": "Search Results",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "12345",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 320.890625,
+              "y": 70.5,
+              "width": 220.375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | «withheld:member_name» | active | View",
+            "region": "Search Results",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "«withheld:member_name»",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 541.265625,
+              "y": 70.5,
+              "width": 119.5,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | «withheld:member_name» | active | View",
+            "region": "Search Results",
+            "ref": "content#7"
+          },
+          {
+            "role": "link",
+            "name": "View",
+            "text": "View",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 671.265625,
+              "y": 77,
+              "width": 28.46875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | «withheld:member_name» | active | View",
+            "region": "Search Results",
+            "ref": "content#8"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 114,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Search Results",
+            "ref": "content#9"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Search Results\nMember Member Name Status Action\n12345 «withheld:member_name» active View\nNew Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "click"
+      }
+    },
+    {
+      "intent": "Open the matching member's detail record from the search results",
+      "element": {
+        "role": "link",
+        "name": "View",
+        "text": "View",
+        "disabled": false,
+        "focusable": true,
+        "bounds": {
+          "x": 671.265625,
+          "y": 77,
+          "width": 28.46875,
+          "height": 15
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "12345 | «withheld:member_name» | active | View",
+        "region": "Search Results",
+        "ref": "content#8"
+      },
+      "before": {
+        "observedAt": "2026-09-12T03:12:24.811Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Search Results",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Search Results",
+            "region": "Search Results",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180.5,
+              "y": 42.5,
+              "width": 140.390625,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 320.890625,
+              "y": 42.5,
+              "width": 220.375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 541.265625,
+              "y": 42.5,
+              "width": 119.5,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "Action",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 660.765625,
+              "y": 42.5,
+              "width": 118.734375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | Member Name | Status | Action",
+            "region": "Search Results",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180.5,
+              "y": 70.5,
+              "width": 140.390625,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | «withheld:member_name» | active | View",
+            "region": "Search Results",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "12345",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 320.890625,
+              "y": 70.5,
+              "width": 220.375,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | «withheld:member_name» | active | View",
+            "region": "Search Results",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "«withheld:member_name»",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 541.265625,
+              "y": 70.5,
+              "width": 119.5,
+              "height": 28
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | «withheld:member_name» | active | View",
+            "region": "Search Results",
+            "ref": "content#7"
+          },
+          {
+            "role": "link",
+            "name": "View",
+            "text": "View",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 671.265625,
+              "y": 77,
+              "width": 28.46875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "12345 | «withheld:member_name» | active | View",
+            "region": "Search Results",
+            "ref": "content#8"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 114,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Search Results",
+            "ref": "content#9"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Search Results\nMember Member Name Status Action\n12345 «withheld:member_name» active View\nNew Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/search"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T03:12:25.084Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name «withheld:member_name»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "click"
+      }
+    },
+    {
+      "intent": "Capture the savings balance from the member detail screen",
+      "element": {
+        "role": "cell",
+        "name": "",
+        "proximityLabel": "Savings Balance",
+        "text": "«currency:25fe2a»",
+        "disabled": false,
+        "focusable": false,
+        "bounds": {
+          "x": 381,
+          "y": 149,
+          "width": 408,
+          "height": 25
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Savings Balance | «currency:25fe2a»",
+        "region": "Member 12345",
+        "ref": "content#10"
+      },
+      "before": {
+        "observedAt": "2026-09-12T03:12:28.665Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name «withheld:member_name»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T03:12:28.808Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name «withheld:member_name»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "savings_balance",
+            "from": "text",
+            "transform": "currency_to_number"
+          }
+        ]
+      }
+    },
+    {
+      "intent": "Capture the savings account number from the member detail screen",
+      "element": {
+        "role": "cell",
+        "name": "",
+        "proximityLabel": "Savings Account",
+        "text": "«account:6c21bd»",
+        "disabled": false,
+        "focusable": false,
+        "bounds": {
+          "x": 381,
+          "y": 124,
+          "width": 408,
+          "height": 25
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Savings Account | «account:6c21bd»",
+        "region": "Member 12345",
+        "ref": "content#8"
+      },
+      "before": {
+        "observedAt": "2026-09-12T03:12:29.103Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name «withheld:member_name»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T03:12:29.247Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name «withheld:member_name»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "savings_account_number",
+            "from": "text",
+            "transform": "trim"
+          }
+        ]
+      }
+    },
+    {
+      "intent": "Capture the member name from the member detail screen",
+      "element": {
+        "role": "cell",
+        "name": "",
+        "proximityLabel": "Member Name",
+        "text": "«withheld:member_name»",
+        "disabled": false,
+        "focusable": false,
+        "bounds": {
+          "x": 381,
+          "y": 49,
+          "width": 408,
+          "height": 25
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Member Name | «withheld:member_name»",
+        "region": "Member 12345",
+        "ref": "content#2"
+      },
+      "before": {
+        "observedAt": "2026-09-12T03:12:32.608Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name «withheld:member_name»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T03:12:32.751Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name «withheld:member_name»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "member_name",
+            "from": "text",
+            "transform": "trim"
+          }
+        ]
+      }
+    },
+    {
+      "intent": "Capture the member status flag from the member detail screen",
+      "element": {
+        "role": "cell",
+        "name": "",
+        "proximityLabel": "Status",
+        "text": "active",
+        "disabled": false,
+        "focusable": false,
+        "bounds": {
+          "x": 381,
+          "y": 99,
+          "width": 408,
+          "height": 25
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Status | active",
+        "region": "Member 12345",
+        "ref": "content#6"
+      },
+      "before": {
+        "observedAt": "2026-09-12T03:12:33.059Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name «withheld:member_name»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T03:12:33.202Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Detail — 12345",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Detail — 12345",
+            "region": "Member 12345",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Name",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 49,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Name",
+            "text": "«withheld:member_name»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 49,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Name | «withheld:member_name»",
+            "region": "Member 12345",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member Since",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 74,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member Since",
+            "text": "2016-01-28",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 74,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member Since | 2016-01-28",
+            "region": "Member 12345",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Status",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 99,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Status",
+            "text": "active",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 99,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Status | active",
+            "region": "Member 12345",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 124,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Account",
+            "text": "«account:6c21bd»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 124,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Account | «account:6c21bd»",
+            "region": "Member 12345",
+            "ref": "content#8"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Savings Balance",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 149,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#9"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Savings Balance",
+            "text": "«currency:25fe2a»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 149,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Savings Balance | «currency:25fe2a»",
+            "region": "Member 12345",
+            "ref": "content#10"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Checking Account",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 174,
+              "width": 190,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#11"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Checking Account",
+            "text": "«account:a77e0c»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 381,
+              "y": 174,
+              "width": 408,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Checking Account | «account:a77e0c»",
+            "region": "Member 12345",
+            "ref": "content#12"
+          },
+          {
+            "role": "link",
+            "name": "Open Sub-Account",
+            "text": "Open Sub-Account",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 221,
+              "width": 112.21875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#13"
+          },
+          {
+            "role": "link",
+            "name": "New Search",
+            "text": "New Search",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 310.328125,
+              "y": 221,
+              "width": 71.703125,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Member 12345",
+            "ref": "content#14"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Member Detail — 12345\nMember Name «withheld:member_name»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/member?id=12345"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "status",
+            "from": "text",
+            "transform": "trim"
+          }
+        ]
+      }
+    }
+  ],
+  "declaredOutcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "description": "No member record exists for the supplied member ID.",
+      "whenTextPresent": "No member found"
+    }
+  ],
+  "successText": "Member Detail — 12345",
+  "summary": "Recorded a capability that searches for a member by numeric ID from the Member Lookup form, opens the matching result's detail record, and extracts the savings balance, savings account number, member name and status. A MEMBER_NOT_FOUND outcome is declared for the \"No member found\" search-results screen.",
+  "turns": 14,
+  "stopReason": "goal_reached"
+}

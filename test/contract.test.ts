@@ -40,16 +40,16 @@ describe('tenant overlay', () => {
 
 describe('input contract', () => {
   it('rejects a malformed identifier before the browser is touched', () => {
-    expect(validateInputs(artifact, { memberId: 'abc' })).toMatchObject({ observed: '"abc"' });
+    expect(validateInputs(artifact, { member_id: 'abc' })).toMatchObject({ observed: '"abc"' });
   });
   it('rejects a missing required input', () => {
     expect(validateInputs(artifact, {})).toMatchObject({ observed: 'missing' });
   });
   it('rejects inputs the capability never declared', () => {
-    expect(validateInputs(artifact, { memberId: '12345', extra: 'x' })?.observed).toContain('extra');
+    expect(validateInputs(artifact, { member_id: '12345', extra: 'x' })?.observed).toContain('extra');
   });
   it('accepts a well-formed call', () => {
-    expect(validateInputs(artifact, { memberId: '12345' })).toBeNull();
+    expect(validateInputs(artifact, { member_id: '12345' })).toBeNull();
   });
 });
 

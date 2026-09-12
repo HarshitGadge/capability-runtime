@@ -1,0 +1,178 @@
+{
+  "observedAt": "2026-09-12T03:22:39.080Z",
+  "url": "http://localhost:5173/t/tenant-b/",
+  "title": "Vale Mutual Savings - Member Services",
+  "elements": [
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "",
+      "text": "Menu",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 180,
+        "height": 26
+      },
+      "frame": [
+        "nav"
+      ],
+      "rowText": "Menu",
+      "region": "Navigation",
+      "ref": "nav#0"
+    },
+    {
+      "role": "link",
+      "name": "Find a Member",
+      "text": "Find a Member",
+      "disabled": false,
+      "focusable": true,
+      "bounds": {
+        "x": 6,
+        "y": 32,
+        "width": 79.046875,
+        "height": 14
+      },
+      "frame": [
+        "nav"
+      ],
+      "rowText": "Find a Member",
+      "region": "Navigation",
+      "ref": "nav#1"
+    },
+    {
+      "role": "link",
+      "name": "Reports",
+      "text": "Reports",
+      "disabled": false,
+      "focusable": true,
+      "bounds": {
+        "x": 6,
+        "y": 58,
+        "width": 40.390625,
+        "height": 14
+      },
+      "frame": [
+        "nav"
+      ],
+      "rowText": "Reports",
+      "region": "Navigation",
+      "ref": "nav#2"
+    },
+    {
+      "role": "link",
+      "name": "Sign Off",
+      "text": "Sign Off",
+      "disabled": false,
+      "focusable": true,
+      "bounds": {
+        "x": 6,
+        "y": 84,
+        "width": 42.5625,
+        "height": 14
+      },
+      "frame": [
+        "nav"
+      ],
+      "rowText": "Sign Off",
+      "region": "Navigation",
+      "ref": "nav#3"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "",
+      "text": "Find a Member",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 180,
+        "y": 0,
+        "width": 1100,
+        "height": 26
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "Find a Member",
+      "region": "Find a Member",
+      "ref": "content#0"
+    },
+    {
+      "role": "cell",
+      "name": "",
+      "proximityLabel": "",
+      "text": "Member Number",
+      "disabled": false,
+      "focusable": false,
+      "bounds": {
+        "x": 192,
+        "y": 48,
+        "width": 98.71875,
+        "height": 36
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "Member Number",
+      "region": "Find a Member",
+      "ref": "content#1"
+    },
+    {
+      "role": "textbox",
+      "name": "",
+      "value": "",
+      "proximityLabel": "Member Number",
+      "disabled": false,
+      "focusable": true,
+      "bounds": {
+        "x": 295.71875,
+        "y": 55.5,
+        "width": 125,
+        "height": 21
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "Member Number",
+      "region": "Find a Member",
+      "ref": "content#2"
+    },
+    {
+      "role": "button",
+      "name": "Find Member",
+      "value": "Find Member",
+      "disabled": false,
+      "focusable": true,
+      "bounds": {
+        "x": 430.71875,
+        "y": 53,
+        "width": 103,
+        "height": 26
+      },
+      "frame": [
+        "content"
+      ],
+      "rowText": "Member Number",
+      "region": "Find a Member",
+      "ref": "content#3"
+    }
+  ],
+  "textByFrame": {
+    "(top)": "",
+    "nav": "Menu\nFind a Member\nReports\nSign Off",
+    "content": "Find a Member\nMember Number \nEnter a numeric member identifier. Partial matches are not supported."
+  },
+  "urlByFrame": {
+    "(top)": "http://localhost:5173/t/tenant-b/",
+    "nav": "http://localhost:5173/t/tenant-b/nav",
+    "content": "http://localhost:5173/t/tenant-b/search"
+  },
+  "provider": "web/dom-scan",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  }
+}

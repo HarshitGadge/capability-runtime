@@ -118,10 +118,16 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
   await gate.withContext({ risk: 'safe', stepId: 'entry', intent: 'Open the application entry point' }).navigate(entryPoint);
   await opts.onEntry?.();
 
+  // The model sees the redacted rendering; the recording keeps the real element. Both
+  // are projections of the same observation, joined by `ref`, so a control the model
+  // picked as "[17] cell «currency:25fe2a»" is stored as the cell reading the balance —
+  // and the compiler's uniqueness check then compares like with like. Indexing the
+  // redacted element instead silently strips every semantic locator off any control
+  // whose text was tokenized, leaving only coordinates.
   const screen = async (): Promise<string> => {
-    const obs = await gate.observeForModel();
-    const rendered = renderObservation(obs);
-    index = rendered.index;
+    const obs = await gate.observe();
+    const rendered = renderObservation(gate.redactor.redactDeep(obs, 'llm'));
+    index = new Map([...rendered.index].map(([ref, redacted]) => [ref, obs.elements.find(e => e.ref === redacted.ref) ?? redacted]));
     return rendered.text;
   };
 
@@ -190,7 +196,11 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
       try {
         if (call.name === 'finish') {
           rec.successText = input.success_text;
-          rec.summary = input.summary;
+          // Deliberately not stored: the model's free-text summary can recall specific
+          // values (a confirmation number, a name) from its context that no label-driven
+          // scrub can locate. The structured step trace is the record of what happened.
+          rec.summary = `Recorded ${rec.actions.length}-step capability for: ${goal}`;
+          input.summary = '«not persisted: model free-text»';
           rec.stopReason = 'goal_reached';
           results.push({ type: 'tool_result', tool_use_id: call.id, content: 'Recorded. Run complete.' });
           done = true;
@@ -256,12 +266,11 @@ export async function discover(opts: DiscoveryOptions): Promise<DiscoveryRecordi
         }
 
         await recorder.screenshot(gate, `t${turn}-${call.name}`);
-        const rendered = renderObservation(await gate.observeForModel());
-        index = rendered.index;
+        const text = await screen();
         // Refs are per-observation, so the same screen renders identically turn to turn;
         // that is what makes "the screen has not changed" detectable by string equality.
-        if (call.name !== 'observe') history.push({ tool: call.name, input, screen: rendered.text });
-        results.push({ type: 'tool_result', tool_use_id: call.id, content: rendered.text });
+        if (call.name !== 'observe') history.push({ tool: call.name, input, screen: text });
+        results.push({ type: 'tool_result', tool_use_id: call.id, content: text });
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         recorder.event('note', { message: `tool ${call.name} failed: ${message}` });

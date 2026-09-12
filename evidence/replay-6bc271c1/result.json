@@ -1,0 +1,34 @@
+{
+  "status": "failure",
+  "capabilityId": "member.read_savings_balance",
+  "capabilityVersion": "1.0.0",
+  "runId": "6bc271c1",
+  "tenantId": "tenant-b",
+  "startedAt": "2026-09-12T03:22:27.441Z",
+  "durationMs": 11683,
+  "evidenceDir": "evidence/replay-6bc271c1",
+  "trace": [
+    {
+      "stepId": "enter_the_member_id_into_the_lookup_fiel",
+      "intent": "Enter the member ID into the lookup field",
+      "recoveriesApplied": [],
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 10317
+    }
+  ],
+  "surfaceDrift": {
+    "recorded": "9677b7a99dbe5759",
+    "observed": "",
+    "comparedSteps": 0,
+    "totalSteps": 7,
+    "drifted": null
+  },
+  "kind": "precondition_unmet",
+  "atStepId": "enter_the_member_id_into_the_lookup_fiel",
+  "expected": "entry screen — text present: {\"kind\":\"const\",\"value\":\"Member Lookup\"} (observed: \"Member Lookup\" not in 135 chars of visible text)",
+  "observed": "url=http://localhost:5173/t/tenant-b/",
+  "remediation": "The screen before this step was not what the capability expects. Check the preceding step and any tenant overlay.",
+  "screenshotPath": "evidence/replay-6bc271c1/screenshots/006-FAIL-enter_the_member_id_into_the_lookup_fiel.png",
+  "observationPath": "evidence/replay-6bc271c1/observations/006-FAIL-enter_the_member_id_into_the_lookup_fiel.json"
+}

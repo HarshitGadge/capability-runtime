@@ -1,0 +1,95 @@
+{
+  "status": "success",
+  "capabilityId": "member.read_savings_balance",
+  "capabilityVersion": "1.0.0",
+  "runId": "baca7fe9",
+  "tenantId": "tenant-a",
+  "startedAt": "2026-09-12T03:21:26.370Z",
+  "durationMs": 4643,
+  "evidenceDir": "evidence/replay-baca7fe9",
+  "trace": [
+    {
+      "stepId": "enter_the_member_id_into_the_lookup_fiel",
+      "intent": "Enter the member ID into the lookup field",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 493,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 541,
+      "locatorStrategyUsed": "role_name(button, \"Search\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "open_the_matching_member_s_detail_record",
+      "intent": "Open the matching member's detail record from the search results",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 557,
+      "locatorStrategyUsed": "role_name(link, \"View\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "capture_the_savings_balance_from_the_mem",
+      "intent": "Capture the savings balance from the member detail screen",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 418,
+      "locatorStrategyUsed": "proximity_label(cell, \"Savings Balance\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "capture_the_savings_account_number_from_",
+      "intent": "Capture the savings account number from the member detail screen",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 428,
+      "locatorStrategyUsed": "proximity_label(cell, \"Savings Account\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "capture_the_member_name_from_the_member_",
+      "intent": "Capture the member name from the member detail screen",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 403,
+      "locatorStrategyUsed": "proximity_label(cell, \"Member Name\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "capture_the_member_status_flag_from_the_",
+      "intent": "Capture the member status flag from the member detail screen",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 424,
+      "locatorStrategyUsed": "proximity_label(cell, \"Status\")",
+      "locatorCandidates": 1
+    }
+  ],
+  "surfaceDrift": {
+    "recorded": "9677b7a99dbe5759",
+    "observed": "9677b7a99dbe5759",
+    "comparedSteps": 7,
+    "totalSteps": 7,
+    "drifted": false
+  },
+  "outputs": {
+    "savings_balance": 18204.37,
+    "savings_account_number": "4718355901",
+    "member_name": "J. Whitfield",
+    "status": "active"
+  }
+}

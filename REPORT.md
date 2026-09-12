@@ -27,9 +27,9 @@ Evidence   JSONL + screenshots + observation snapshots, redacted on the way out
 ```
 
 **Perception is accessibility-shaped, not DOM-shaped.** Nothing above `Surface` mentions a
-browser, a selector or markup. Everything is written against `UiElement { role, name, value,
-proximityLabel, bounds, frame }` — the same tuple Windows UIA or macOS AX produces. The interface
-has no `evaluate()` escape hatch; if a capability needed one the abstraction would be a lie.
+browser, a selector or markup; everything is written against `UiElement { role, name, value,
+proximityLabel, bounds, frame }`, the tuple UIA or macOS AX produces. There is no `evaluate()`
+escape hatch — if a capability needed one, the abstraction would be a lie.
 
 **Two perception providers, because a seam nobody has crossed is a claim.** `--provider cdp`
 replays the same artifact through `Accessibility.getFullAXTree` — same four rungs, same
@@ -40,9 +40,9 @@ tree's own row/cell structure — what UIA's Table pattern would give a desktop 
 than from the DOM. The lower rungs of the cascade stay, because the next surface will lack
 something else.
 
-**The policy gate is a decorator, not a checklist.** Discovery and replay both hold a
-`PolicyGate` and neither holds the surface beneath it. There is no code path that can act while
-bypassing policy. A guardrail you have to remember to call is not a guardrail.
+**The policy gate is a decorator, not a checklist.** Discovery and replay hold a `PolicyGate`
+and neither holds the surface beneath it, so no code path can act while bypassing policy. A
+guardrail you have to remember to call is not a guardrail.
 
 **The model decides what to do; the runtime decides how to find it again.** The model picks
 controls by reference number from a rendered screen. The compiler derives targeting from the
@@ -52,19 +52,29 @@ shipped as a latent flake.
 
 **Exploration and recording are separate phases.** The agent's first pass through an unfamiliar
 UI is full of back-tracking. It explores, then calls `start_recording`, the session resets, and it
-performs the flow once cleanly. Only the second pass becomes steps.
+performs the flow once cleanly. Only the second pass becomes steps. In the real runs (`evidence/
+discovery-*`) the model did exactly this unprompted: reached the goal, went back to try an invalid
+member ID, declared `MEMBER_NOT_FOUND` from what it saw, then recorded — 14 turns and about $0.30
+for the balance lookup, more for the eleven-step account opening.
 
-**Trade-off:** one process, files instead of a database, no queue. The control lease is three
-fields that would become a row with a TTL; the inbox is a directory that would become a table.
-None of that is built, per the brief. `src/index.ts` exposes the two calls an agent host needs —
-`toolDefinition(artifact)` for what the agent is shown, `invoke(...)` for what runs when it calls.
+**The real run found two compiler bugs, and the recording paid for neither fix.** The model
+nominated "Member Detail — 12345" as its success text, and the compiler shipped it verbatim — a
+capability that would only ever pass for one member. And because the model picks elements from
+the *redacted* screen, the compiler's uniqueness check compared a token against real text and
+silently discarded every semantic rung on the regulated extractions, leaving coordinates. Both
+were fixed and verified by recompiling the saved recording offline, which is the point of the
+artifact being a derived document.
+
+**Trade-off:** one process, files, no queue. The lease is three fields that would become a row
+with a TTL; the inbox a directory that would become a table. `src/index.ts` exposes what an agent
+host needs: `toolDefinition(artifact)` for what the agent is shown, `invoke(...)` for what runs.
 
 ## 2. Artifact schema
 
-Zod in `src/schema/` yields the validator, the TypeScript types and the JSON Schema from one
-definition. `npm run schema -- --tool <artifact>` renders a capability as a tool definition:
-declared inputs become the parameter schema; declared outputs and business-outcome codes go in
-the description. That is the payoff of a typed contract over a step list.
+Zod in `src/schema/` yields the validator, the types and the JSON Schema from one definition.
+`npm run schema -- --tool <artifact>` renders a capability as a tool definition — inputs become
+the parameter schema, outputs and business-outcome codes go in the description — which is the
+payoff of a typed contract over a step list.
 
 ```
 CapabilityArtifact
@@ -88,21 +98,23 @@ describe where it was and survive almost nothing. Replay stops at the first rung
 all. Coordinates are recorded but never choose an element on their own. `ambiguity` says what to
 do with more than one match: fail, take the first, or escalate.
 
-**Scopes make row selection stable.** `row_containing: {input: memberId}` means "the View link in
-the row for the member we asked about". `ordinal[2]` means "the third one", true until the result
-set changes.
+**Scopes make row selection stable.** `row_containing: {input: member_id}` means "the View link
+in the row for the member we asked about"; `ordinal[2]` means "the third one", true until the
+result set changes.
 
 **Business outcomes are declared.** "No such member" is an answer the caller asked for, not an
 exception. The artifact carries the detector; replay recognises it by what is on screen and
-returns `{status:'business_outcome', code:'MEMBER_NOT_FOUND'}`.
+returns `{status:'business_outcome', code:'MEMBER_NOT_FOUND'}`. The model declares what it
+probed; what it did not probe — a restricted record — replays as a hard failure with the screen
+text in `observed`, and a reviewer promotes it with `--outcome`, a three-field edit to a
+reviewable document rather than a re-record.
 
 **Values are typed references** — `input | extracted | const | secret` — so a reviewer sees which
 values the caller supplies and which come from the environment. Credentials are `secret`,
 resolved from env at run time, never in the document.
 
 **Deliberately absent:** screenshot hashes, DOM-shape assertions, embedded code. Checkpoints are a
-small declarative assertion language, evaluable with no model and no `eval`, reviewable by someone
-who does not read TypeScript.
+small declarative language a non-programmer can review and the engine can evaluate without `eval`.
 
 ## 3. Determinism & error handling
 
@@ -112,10 +124,9 @@ surface and a broken one are then distinguishable, which is the difference betwe
 failure. Each step also carries a wall-clock `timeoutMs` around the action itself.
 
 **Per-step proof.** Each step has a precondition and postcondition generated from the recorded
-screens. Two subtleties surfaced. On a frameset the top URL never changes, so `url_matches`
-evaluates against every frame. And "first heading on the page" picks the navigation menu, which is
-identical on every screen and asserts nothing — the compiler instead identifies the working frame
-as the one whose content varies across the recording.
+screens. Two subtleties: on a frameset the top URL never changes, so `url_matches` evaluates
+against every frame; and "first heading on the page" is the navigation menu, identical everywhere,
+so the compiler identifies the working frame as the one whose content varies across the recording.
 
 **The classification order is the whole difficulty.** After every step:
 
@@ -141,10 +152,10 @@ dropped session is `restart_flow`, because the result set the blocked step expec
 session. Restart is refused once an irreversible step has executed: replaying a transfer because
 the session dropped afterwards is worse than failing.
 
-**Sign-on is an app-level concern, not a step.** Recording it into each capability makes the
+**Sign-on is an app-level concern, not a step.** Recorded into each capability it makes the
 capability unrepeatable when a session already exists and bakes one institution's credentials into
-a shared document. It lives once, in the app profile, and the same `SIGNED_OUT` rule is the
-preflight before a run and the handler mid-flow.
+a shared document. It lives once, in the app profile; the same `SIGNED_OUT` rule is the preflight
+before a run and the handler mid-flow.
 
 **Discovery has its own stopping conditions:** max steps, wall-clock timeout, and dead-end
 detection (the same action repeated, or the screen unchanged across several actions), each
@@ -154,10 +165,10 @@ reported as a distinct stop reason.
 
 **Other surfaces.** A UIA provider fills the same `UiElement` from `ControlType`, `Name`,
 `LabeledBy` and `BoundingRectangle`; macOS AX from `AXRole`/`AXTitle`/`AXFrame`. The schema does
-not change — `frame: string[]` becomes a window/pane path, `role` takes that platform's vocabulary
-— and the engine, checkpoint language, gate and escalation model are untouched. The CDP provider
-is the evidence the seam holds. What *would* need work is acting (a native dropdown is not a
-`<select>`), which is exactly why acting lives behind the interface while finding does not.
+not change — `frame` becomes a window/pane path, `role` takes the platform's vocabulary — and the
+engine, checkpoints, gate and escalation are untouched; the CDP provider is the evidence. What
+*would* need work is acting (a native dropdown is not a `<select>`), which is why acting lives
+behind the interface while finding does not.
 
 **Many tenants, one product.** Artifacts are keyed to the **vendor product**, never a tenant.
 Specialization is a separate `TenantOverlay` that may retarget a control by `semanticId`, remap
@@ -186,10 +197,10 @@ discovery, the dead-end detector. Plain locator misses and postcondition failure
 a human — a broken artifact is an engineering problem, and routing every miss to an operator queue
 is how the queue gets ignored.
 
-**The structural requirement is session lifetime.** If the runner owned the browser, "let a
-human take control of the live session" would be impossible — the window dies with the stuck
-process. `npm run session` starts the browser as its own process; every run attaches over CDP.
-Automation exits while the session, cookies, scroll position and half-filled form stay put.
+**The structural requirement is session lifetime.** If the runner owned the browser, "take
+control of the live session" would be impossible — the window dies with the stuck process. So the
+browser is its own process and every run attaches over CDP; automation exits while the session,
+cookies and half-filled form stay put.
 
 **Control is an explicit fact.** A single-writer lease records who holds the session. The gate
 checks it before *every* action, so a person taking over mid-step is not fighting an automation
@@ -209,10 +220,11 @@ approving every one for the rest of the run. While the human holds the lease, pa
 record what they clicked, changed and submitted into the same evidence stream — an intervention is
 evidence of a gap, and it is the most informative event the system produces.
 
-**Mocked:** the console's presentation — one auto-refreshing page, no video, no auth, no SLA.
-**Real:** the request and its context, the lease, the transfer, the blocking of automation, the
-capture of the human's actions, single-use authorization, and the verified resume.
-`npm run demo:handoff` runs the loop end to end and ends in `SUCCESS`.
+**Mocked:** the console's presentation — one page, no video, no auth. **Real:** the request and
+its context, the lease, the transfer, the blocking of automation, the capture of the human's
+actions, single-use authorization, and the verified resume. `npm run demo:handoff` runs the loop
+end to end; with `--deposit 10` the human-approved step is then rejected by the app and the run
+returns `DEPOSIT_BELOW_MINIMUM` — approval is not the same as success.
 
 ## 6. Safety
 
@@ -235,19 +247,25 @@ disclosed it. Tokens are stable within a run and reversible **in process only**,
 can type a value back into the page and return the real number to the caller while the evidence
 keeps the token.
 
-**Declared sensitivity outranks pattern matching.** A regex cannot recognise a balance that was
-normalized to `18204.37`. Outputs the artifact declares `regulated` are masked in evidence by
-their *declaration* — `«withheld:currency»` — while the real value is returned in process. This
-was a live leak found by grepping the evidence directory, and it is the clearest illustration of
-why pattern redaction is a backstop and typed sensitivity is the control.
+**Declared sensitivity outranks pattern matching.** A regex cannot recognise a balance normalized
+to `18204.37`, and nothing about "J. Whitfield" says regulated. Outputs the artifact declares
+`regulated` are masked in the replay log by *declaration*, and once a discovery run has declared
+its outputs, every value that ever appeared under one of their labels — including on screens the
+model only explored — is scrubbed from the transcript and recording. Labels themselves are never
+scrubbed, because the recording must still recompile. A reviewer can raise a sensitivity the model
+under-declared (`--raise`), never lower one, and the decision is written into provenance. Both
+were live leaks found by grepping the evidence directory; pattern redaction is the backstop, typed
+sensitivity is the control.
 
 **Artifacts are guarded twice.** The compiler will not build a locator or checkpoint from a
 literal that looks regulated, equals a caller-supplied value, or is a redaction token, and
 `assertNoRegulatedData` re-scans the finished document and fails the build. It caught the compiler
 emitting `text: "$18,204.37"` as a locator during development.
 
-**Limits.** Regex over rendered text misses a balance rendered as an image, and the currency
-threshold ($1,000, so "minimum $25.00" survives) is a configuration choice. Risk classification
+**Limits.** The model still *sees* a member's name during discovery — the declaration scrub
+protects what is persisted, not what was sent — and only a classifier, not a regex, would stop
+that. Regex misses a balance rendered as an image, and the currency threshold ($1,000, so "minimum
+$25.00" survives) is a configuration choice. Risk classification
 from labels is a weak signal, which is why it is reviewable rather than load-bearing. The
 allowlist trusts the URL the browser reports. And nothing here defends against a malicious
 *target*: a page that renders instructions to the agent is a prompt-injection surface this system
@@ -256,11 +274,10 @@ does not address.
 ## 7. Cuts
 
 **Not built, on purpose.** Queues, workers, a tenant registry, any distribution — the brief
-penalizes it and it would be the least interesting code here. A desktop provider: the seam is
-argued in §4 and the CDP provider shows swapping perception changes nothing above `Surface`, but
-no UIA code exists. A co-browsing console. Self-healing locators — when targeting degrades the
-system says so loudly rather than re-running a model to rewrite the artifact in production.
-Generalizing from a single recording. Auth on the operator console (localhost only).
+penalizes it. A desktop provider: the seam is argued in §4 and demonstrated with the CDP provider,
+but no UIA code exists. A co-browsing console. Self-healing locators — when targeting degrades the
+system says so rather than letting a model rewrite the artifact in production. Generalizing from a
+single recording. Auth on the operator console (localhost only).
 
 **Next, in order.** (1) Record the same flow against two tenants and diff: literals that differ
 are tenant-specific and belong in overlays automatically. (2) A registry keyed on the surface

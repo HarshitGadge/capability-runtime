@@ -1,8 +1,0 @@
-{"seq":1,"at":"2026-09-12T02:26:08.553Z","kind":"run_started","capability":"member.read_savings_balance","version":"1.0.0","tenant":"tenant-b","provider":"web/dom-scan","inputs":{"memberId":"12345"}}
-{"seq":2,"at":"2026-09-12T02:26:08.820Z","kind":"recovery_triggered","code":"SIGNED_OUT","phase":"preflight","round":0}
-{"seq":3,"at":"2026-09-12T02:26:09.531Z","kind":"recovery_applied","code":"SIGNED_OUT","phase":"preflight"}
-{"seq":4,"at":"2026-09-12T02:26:09.694Z","kind":"note","message":"preflight applied SIGNED_OUT"}
-{"seq":5,"at":"2026-09-12T02:26:09.695Z","kind":"step_started","stepId":"enter_the_member_identifier_in_the_looku","intent":"Enter the member identifier in the lookup form","action":"type","risk":"elevated"}
-{"seq":6,"at":"2026-09-12T02:26:19.960Z","kind":"checkpoint_failed","stepId":"enter_the_member_identifier_in_the_looku","phase":"precondition","failed":"text present: {\"kind\":\"const\",\"value\":\"Member Lookup\"} (observed: \"Member Lookup\" not in 135 chars of visible text)"}
-{"seq":7,"at":"2026-09-12T02:26:20.149Z","kind":"precondition_unmet","atStepId":"enter_the_member_identifier_in_the_looku","expected":"entry screen — text present: {\"kind\":\"const\",\"value\":\"Member Lookup\"} (observed: \"Member Lookup\" not in 135 chars of visible text)","observed":"url=http://localhost:5173/t/tenant-b/","screenshotPath":"evidence/replay-«account:c0f345»/screenshots/006-FAIL-enter_the_member_identifier_in_the_looku.png","observationPath":"evidence/replay-«account:c0f345»/observations/006-FAIL-enter_the_member_identifier_in_the_looku.json"}
-{"seq":8,"at":"2026-09-12T02:26:20.150Z","kind":"precondition_unmet","status":"failure"}

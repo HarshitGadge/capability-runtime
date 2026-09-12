@@ -80,23 +80,32 @@ same action repeated, or the screen unchanged across several actions), or `model
 exits non-zero for anything but the first.
 
 Everything from the run lands in `evidence/discovery-<id>/` — the structured log, the full model
-transcript, per-turn screenshots, and `recording.json`.
+transcript, per-turn screenshots, and `recording.json`. Two real runs are committed:
+`evidence/discovery-10c45c2c` (the balance lookup, 14 turns, ~$0.32) and `evidence/discovery-35f9938e`
+(the sub-account opening, 27 turns, an irreversible step). See `evidence/README.md`.
 
 ### 2. Replay it deterministically
 
 ```bash
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=12345
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=12345
 ```
 
 ```
 RESULT: SUCCESS
-  outputs          {"savings_balance":18204.37}
+  outputs   {"savings_balance":18204.37,"savings_account":"4718355901","member_name":"J. Whitfield","status":"active"}
 
-  ✓ enter_the_member_identifier_in_the_lookup_form  proximity_label(textbox, "Member ID")
-  ✓ submit_the_member_search                        role_name(button, "Search")
-  ✓ open_the_matching_member_record_from_the_results role_name(link, "View")
-  ✓ read_the_current_savings_balance_from_the_record proximity_label(cell, "Savings Balance")
+  ✓ enter_the_member_id_into_the_lookup_field         proximity_label(textbox, "Member ID")
+  ✓ submit_the_member_search                          role_name(button, "Search")
+  ✓ open_the_matching_member_record_from_the_search   role_name(link, "View")
+  ✓ capture_the_savings_balance_...                   proximity_label(cell, "Savings Balance")
+  ✓ capture_the_savings_account_number_...            proximity_label(cell, "Savings Account")
+  ✓ capture_the_member_name_...                       proximity_label(cell, "Member Name")
+  ✓ capture_the_member_status_...                     proximity_label(cell, "Status")
 ```
+
+The model chose to extract four outputs where the goal asked for one; the artifact declares
+each with a type and a sensitivity, and the three regulated ones are withheld from the on-disk
+log while being returned to the caller.
 
 No API key is used. The rightmost column is which rung of the locator cascade actually matched —
 targeting degradation is reported, never silent. Every result also carries a **surface
@@ -105,7 +114,7 @@ changed shape since the recording.
 
 ```bash
 # Same artifact, perceived through the browser's accessibility tree instead of the in-page scanner
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=12345 --provider cdp
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=12345 --provider cdp
 #   RESULT: SUCCESS — same four rungs, same fingerprint. Nothing above `Surface` knows which one ran.
 ```
 
@@ -116,27 +125,27 @@ Exit codes let a caller branch without parsing output: **0** success · **3** bu
 
 ```bash
 # A legitimate business answer, not a crash
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=99999
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=99999
 #   RESULT: BUSINESS_OUTCOME   code MEMBER_NOT_FOUND
 
 # A different business answer, told apart from the one above
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=55501
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=55501
 #   RESULT: BUSINESS_OUTCOME   code ACCESS_RESTRICTED
 
 # Rejected by the contract before a page is opened
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=abc
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=abc
 #   RESULT: FAILURE   kind invalid_input
 
 # A blocking interstitial appears mid-flow and is recovered from
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=12345 --inject interstitial
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=12345 --inject interstitial
 #   RESULT: SUCCESS   ↻ [recovered: MAINTENANCE_INTERSTITIAL]
 
 # The session is dropped mid-flow: re-authenticate and restart the flow
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=12345 --inject session_timeout
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=12345 --inject session_timeout
 #   RESULT: SUCCESS   ↻ [recovered: SIGNED_OUT]   (earlier steps visibly re-run)
 
 # A slow response, absorbed with no fixed sleep anywhere in the system
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=12345 --inject slow
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=12345 --inject slow
 ```
 
 `--inject` arms a fault in the stand-in portal. It is a test-harness control plane
@@ -146,16 +155,16 @@ npm run replay -- --artifact artifacts/member.read_savings_balance.json --input 
 
 ```bash
 # Unspecialized against a new skin: fails, and names exactly what drifted
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=12345 \
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=12345 \
   --tenant tenant-b --no-overlay
 #   RESULT: FAILURE   kind precondition_unmet
 #   expected  text present: "Member Lookup"
 #   remediation  If the tenant renamed this control, add a targetOverride to that tenant's overlay
 
 # With a three-line tenant overlay: the same artifact, reused
-npm run replay -- --artifact artifacts/member.read_savings_balance.json --input memberId=12345 \
+npm run replay -- --artifact artifacts/member.read_savings_balance.json --input member_id=12345 \
   --tenant tenant-b
-#   RESULT: SUCCESS   outputs {"savings_balance":18204.37}
+#   RESULT: SUCCESS   outputs {"savings_balance":18204.37, ...}
 #   ✓ ... proximity_label(textbox, "Member Number")
 #   ✓ ... role_name(button, "Find Member")
 ```
@@ -183,7 +192,7 @@ npm run app                 # 1. the target application
 npm run session             # 2. the shared browser — outlives every run
 npm run operator            # 3. http://localhost:7788
 npm run replay -- --artifact artifacts/member.open_sub_account.json \
-  --input memberId=12345 --input accountType="Holiday Savings" --input openingDeposit=250.00
+  --input member_id=12345 --input account_type="Holiday Savings" --input opening_deposit=250.00
 ```
 
 The run reaches the account-opening step, classifies it `irreversible`, raises an intervention and
@@ -209,7 +218,7 @@ import { toolDefinition, invoke } from './src/index.js';
 
 const tool = toolDefinition(artifact);          // what the agent is shown
 const result = await invoke({                   // what runs when it calls the tool
-  artifact, inputs: { memberId: '12345' }, tenantId: 'tenant-b', baseUrl, overlay,
+  artifact, inputs: { member_id: '12345' }, tenantId: 'tenant-b', baseUrl, overlay,
 });
 switch (result.status) {                        // what it gets back
   case 'success':          /* result.outputs.savings_balance */ break;
@@ -252,10 +261,21 @@ npm run compile -- --recording evidence/fixture-read-balance/recording.json
 `compile` rebuilds an artifact from a saved recording with no API call and no browser. It works on
 a real discovery run's `recording.json` too — the artifact is a *derived* document, and being able
 to regenerate it offline is both the proof that it is decoupled from the model transcript and the
-reason iterating on locator strategy costs nothing.
+reason iterating on locator strategy costs nothing. It earned its keep during this project: the
+first real run exposed two compiler bugs, and both fixes were verified by recompiling the saved
+recording rather than paying for another run.
 
-The scripted fixtures exist so the **tests** need no model. The artifact in `evidence/` comes from
-a real LLM run.
+`compile` is also where a **reviewer** shapes a capability before it ships, with the decision
+recorded in provenance:
+
+```bash
+npm run compile -- --recording evidence/discovery-<id>/recording.json   --raise member_name=regulated \                       # sensitivity may be raised, never lowered
+  --outcome 'ACCESS_RESTRICTED=Authorization required'  # an outcome the model never encountered
+```
+
+The shipped artifacts are compiled from the real discovery runs in `evidence/`, with exactly the
+reviewer flags noted in each artifact's `provenance.notes`. The scripted fixtures exist so the
+**tests** need no model.
 
 ---
 

@@ -16,6 +16,9 @@ import { SESSION_DIR } from '../src/escalation/session.js';
  * Run it with the stand-in portal already up:  npm run app  (in another terminal)
  */
 const OPERATOR_PORT = 7788;
+// `--deposit 10` runs the same handoff but has the authorized step rejected by the app,
+// which is how DEPOSIT_BELOW_MINIMUM shows up as a typed outcome after a human approval.
+const deposit = process.argv.includes('--deposit') ? process.argv[process.argv.indexOf('--deposit') + 1]! : '250.00';
 const children: ChildProcess[] = [];
 const kill = () => children.forEach(c => c.kill());
 process.on('exit', kill);
@@ -40,9 +43,9 @@ heading('2. replaying a capability whose final step opens an account');
 const replay = spawn('npx', [
   'tsx', 'src/cli/replay.ts',
   '--artifact', 'artifacts/member.open_sub_account.json',
-  '--input', 'memberId=12345',
-  '--input', 'accountType=Holiday Savings',
-  '--input', 'openingDeposit=250.00',
+  '--input', 'member_id=12345',
+  '--input', 'account_type=Holiday Savings',
+  '--input', `opening_deposit=${deposit}`,
   '--escalation-wait', '120000',
 ], { stdio: 'inherit' });
 children.push(replay);
@@ -86,4 +89,4 @@ console.log(`   resolution   ${resolved.resolution}`);
 console.log(`   authorized   ${resolved.operatorAuthorizedStep}`);
 console.log(`   note         ${resolved.operatorNote}`);
 kill();
-process.exit(code === 0 ? 0 : 1);
+process.exit(code === 0 || code === 3 ? 0 : 1);

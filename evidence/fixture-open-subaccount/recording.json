@@ -40,6 +40,13 @@
       "required": true,
       "description": "Confirmation reference for the opened sub-account.",
       "sensitivity": "regulated"
+    },
+    {
+      "name": "member",
+      "type": "string",
+      "required": true,
+      "description": "Member identity shown on the confirmation.",
+      "sensitivity": "regulated"
     }
   ],
   "actions": [
@@ -66,7 +73,7 @@
         "ref": "content#2"
       },
       "before": {
-        "observedAt": "2026-09-12T01:22:05.851Z",
+        "observedAt": "2026-09-12T03:21:09.578Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -244,7 +251,7 @@
         }
       },
       "after": {
-        "observedAt": "2026-09-12T01:22:06.067Z",
+        "observedAt": "2026-09-12T03:21:09.792Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -452,7 +459,7 @@
         "ref": "content#3"
       },
       "before": {
-        "observedAt": "2026-09-12T01:22:06.198Z",
+        "observedAt": "2026-09-12T03:21:09.927Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -630,7 +637,7 @@
         }
       },
       "after": {
-        "observedAt": "2026-09-12T01:22:06.471Z",
+        "observedAt": "2026-09-12T03:21:10.200Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -827,7 +834,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "12345 | J. Whitfield | active | View",
+            "rowText": "12345 | «withheld:member» | active | View",
             "region": "Search Results",
             "ref": "content#5"
           },
@@ -835,7 +842,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "12345",
-            "text": "J. Whitfield",
+            "text": "«withheld:member»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -847,14 +854,14 @@
             "frame": [
               "content"
             ],
-            "rowText": "12345 | J. Whitfield | active | View",
+            "rowText": "12345 | «withheld:member» | active | View",
             "region": "Search Results",
             "ref": "content#6"
           },
           {
             "role": "cell",
             "name": "",
-            "proximityLabel": "J. Whitfield",
+            "proximityLabel": "«withheld:member»",
             "text": "active",
             "disabled": false,
             "focusable": false,
@@ -867,7 +874,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "12345 | J. Whitfield | active | View",
+            "rowText": "12345 | «withheld:member» | active | View",
             "region": "Search Results",
             "ref": "content#7"
           },
@@ -886,7 +893,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "12345 | J. Whitfield | active | View",
+            "rowText": "12345 | «withheld:member» | active | View",
             "region": "Search Results",
             "ref": "content#8"
           },
@@ -912,7 +919,7 @@
         "textByFrame": {
           "(top)": "",
           "nav": "Menu\nMember Lookup\nReports\nSign Off",
-          "content": "Search Results\nMember Member Name Status Action\n12345 J. Whitfield active View\nNew Search"
+          "content": "Search Results\nMember Member Name Status Action\n12345 «withheld:member» active View\nNew Search"
         },
         "urlByFrame": {
           "(top)": "http://localhost:5173/t/tenant-a/",
@@ -946,12 +953,12 @@
         "frame": [
           "content"
         ],
-        "rowText": "12345 | J. Whitfield | active | View",
+        "rowText": "12345 | «withheld:member» | active | View",
         "region": "Search Results",
         "ref": "content#8"
       },
       "before": {
-        "observedAt": "2026-09-12T01:22:06.625Z",
+        "observedAt": "2026-09-12T03:21:10.344Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -1148,7 +1155,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "12345 | J. Whitfield | active | View",
+            "rowText": "12345 | «withheld:member» | active | View",
             "region": "Search Results",
             "ref": "content#5"
           },
@@ -1156,7 +1163,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "12345",
-            "text": "J. Whitfield",
+            "text": "«withheld:member»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -1168,14 +1175,14 @@
             "frame": [
               "content"
             ],
-            "rowText": "12345 | J. Whitfield | active | View",
+            "rowText": "12345 | «withheld:member» | active | View",
             "region": "Search Results",
             "ref": "content#6"
           },
           {
             "role": "cell",
             "name": "",
-            "proximityLabel": "J. Whitfield",
+            "proximityLabel": "«withheld:member»",
             "text": "active",
             "disabled": false,
             "focusable": false,
@@ -1188,7 +1195,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "12345 | J. Whitfield | active | View",
+            "rowText": "12345 | «withheld:member» | active | View",
             "region": "Search Results",
             "ref": "content#7"
           },
@@ -1207,7 +1214,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "12345 | J. Whitfield | active | View",
+            "rowText": "12345 | «withheld:member» | active | View",
             "region": "Search Results",
             "ref": "content#8"
           },
@@ -1233,7 +1240,7 @@
         "textByFrame": {
           "(top)": "",
           "nav": "Menu\nMember Lookup\nReports\nSign Off",
-          "content": "Search Results\nMember Member Name Status Action\n12345 J. Whitfield active View\nNew Search"
+          "content": "Search Results\nMember Member Name Status Action\n12345 «withheld:member» active View\nNew Search"
         },
         "urlByFrame": {
           "(top)": "http://localhost:5173/t/tenant-a/",
@@ -1247,7 +1254,7 @@
         }
       },
       "after": {
-        "observedAt": "2026-09-12T01:22:06.897Z",
+        "observedAt": "2026-09-12T03:21:10.616Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -1364,7 +1371,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member Name | J. Whitfield",
+            "rowText": "Member Name | «withheld:member»",
             "region": "Member 12345",
             "ref": "content#1"
           },
@@ -1372,7 +1379,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "Member Name",
-            "text": "J. Whitfield",
+            "text": "«withheld:member»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -1384,7 +1391,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member Name | J. Whitfield",
+            "rowText": "Member Name | «withheld:member»",
             "region": "Member 12345",
             "ref": "content#2"
           },
@@ -1628,7 +1635,7 @@
         "textByFrame": {
           "(top)": "",
           "nav": "Menu\nMember Lookup\nReports\nSign Off",
-          "content": "Member Detail — 12345\nMember Name J. Whitfield\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+          "content": "Member Detail — 12345\nMember Name «withheld:member»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
         },
         "urlByFrame": {
           "(top)": "http://localhost:5173/t/tenant-a/",
@@ -1666,7 +1673,7 @@
         "ref": "content#13"
       },
       "before": {
-        "observedAt": "2026-09-12T01:22:07.029Z",
+        "observedAt": "2026-09-12T03:21:10.753Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -1783,7 +1790,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member Name | J. Whitfield",
+            "rowText": "Member Name | «withheld:member»",
             "region": "Member 12345",
             "ref": "content#1"
           },
@@ -1791,7 +1798,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "Member Name",
-            "text": "J. Whitfield",
+            "text": "«withheld:member»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -1803,7 +1810,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member Name | J. Whitfield",
+            "rowText": "Member Name | «withheld:member»",
             "region": "Member 12345",
             "ref": "content#2"
           },
@@ -2047,7 +2054,7 @@
         "textByFrame": {
           "(top)": "",
           "nav": "Menu\nMember Lookup\nReports\nSign Off",
-          "content": "Member Detail — 12345\nMember Name J. Whitfield\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
+          "content": "Member Detail — 12345\nMember Name «withheld:member»\nMember Since 2016-01-28\nStatus active\nSavings Account «account:6c21bd»\nSavings Balance «currency:25fe2a»\nChecking Account «account:a77e0c»\nOpen Sub-Account  | New Search"
         },
         "urlByFrame": {
           "(top)": "http://localhost:5173/t/tenant-a/",
@@ -2061,7 +2068,7 @@
         }
       },
       "after": {
-        "observedAt": "2026-09-12T01:22:07.284Z",
+        "observedAt": "2026-09-12T03:21:11.019Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -2347,7 +2354,7 @@
         "ref": "content#2"
       },
       "before": {
-        "observedAt": "2026-09-12T01:22:07.422Z",
+        "observedAt": "2026-09-12T03:21:11.163Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -2606,7 +2613,7 @@
         }
       },
       "after": {
-        "observedAt": "2026-09-12T01:22:07.684Z",
+        "observedAt": "2026-09-12T03:21:11.425Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -2895,7 +2902,7 @@
         "ref": "content#4"
       },
       "before": {
-        "observedAt": "2026-09-12T01:22:07.824Z",
+        "observedAt": "2026-09-12T03:21:11.564Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -3154,7 +3161,7 @@
         }
       },
       "after": {
-        "observedAt": "2026-09-12T01:22:08.047Z",
+        "observedAt": "2026-09-12T03:21:11.787Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -3443,7 +3450,7 @@
         "ref": "content#7"
       },
       "before": {
-        "observedAt": "2026-09-12T01:22:08.189Z",
+        "observedAt": "2026-09-12T03:21:11.925Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -3702,7 +3709,7 @@
         }
       },
       "after": {
-        "observedAt": "2026-09-12T01:22:08.450Z",
+        "observedAt": "2026-09-12T03:21:12.193Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -3819,7 +3826,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Confirmation Number | CNF-8845",
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
             "region": "Sub-Account Opened",
             "ref": "content#1"
           },
@@ -3827,7 +3834,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "Confirmation Number",
-            "text": "CNF-8845",
+            "text": "«withheld:confirmation_number»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -3839,7 +3846,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Confirmation Number | CNF-8845",
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
             "region": "Sub-Account Opened",
             "ref": "content#2"
           },
@@ -3859,7 +3866,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member | 12345 — J. Whitfield",
+            "rowText": "Member | «withheld:member»",
             "region": "Sub-Account Opened",
             "ref": "content#3"
           },
@@ -3867,7 +3874,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "Member",
-            "text": "12345 — J. Whitfield",
+            "text": "«withheld:member»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -3879,7 +3886,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member | 12345 — J. Whitfield",
+            "rowText": "Member | «withheld:member»",
             "region": "Sub-Account Opened",
             "ref": "content#4"
           },
@@ -3985,7 +3992,7 @@
         "textByFrame": {
           "(top)": "",
           "nav": "Menu\nMember Lookup\nReports\nSign Off",
-          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number CNF-8845\nMember 12345 — J. Whitfield\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
+          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number «withheld:confirmation_number»\nMember «withheld:member»\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
         },
         "urlByFrame": {
           "(top)": "http://localhost:5173/t/tenant-a/",
@@ -4008,7 +4015,7 @@
         "role": "cell",
         "name": "",
         "proximityLabel": "Confirmation Number",
-        "text": "CNF-8845",
+        "text": "«withheld:confirmation_number»",
         "disabled": false,
         "focusable": false,
         "bounds": {
@@ -4020,12 +4027,12 @@
         "frame": [
           "content"
         ],
-        "rowText": "Confirmation Number | CNF-8845",
+        "rowText": "Confirmation Number | «withheld:confirmation_number»",
         "region": "Sub-Account Opened",
         "ref": "content#2"
       },
       "before": {
-        "observedAt": "2026-09-12T01:22:08.588Z",
+        "observedAt": "2026-09-12T03:21:12.333Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -4142,7 +4149,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Confirmation Number | CNF-8845",
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
             "region": "Sub-Account Opened",
             "ref": "content#1"
           },
@@ -4150,7 +4157,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "Confirmation Number",
-            "text": "CNF-8845",
+            "text": "«withheld:confirmation_number»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -4162,7 +4169,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Confirmation Number | CNF-8845",
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
             "region": "Sub-Account Opened",
             "ref": "content#2"
           },
@@ -4182,7 +4189,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member | 12345 — J. Whitfield",
+            "rowText": "Member | «withheld:member»",
             "region": "Sub-Account Opened",
             "ref": "content#3"
           },
@@ -4190,7 +4197,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "Member",
-            "text": "12345 — J. Whitfield",
+            "text": "«withheld:member»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -4202,7 +4209,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member | 12345 — J. Whitfield",
+            "rowText": "Member | «withheld:member»",
             "region": "Sub-Account Opened",
             "ref": "content#4"
           },
@@ -4308,7 +4315,7 @@
         "textByFrame": {
           "(top)": "",
           "nav": "Menu\nMember Lookup\nReports\nSign Off",
-          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number CNF-8845\nMember 12345 — J. Whitfield\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
+          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number «withheld:confirmation_number»\nMember «withheld:member»\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
         },
         "urlByFrame": {
           "(top)": "http://localhost:5173/t/tenant-a/",
@@ -4322,7 +4329,7 @@
         }
       },
       "after": {
-        "observedAt": "2026-09-12T01:22:08.727Z",
+        "observedAt": "2026-09-12T03:21:12.473Z",
         "url": "http://localhost:5173/t/tenant-a/",
         "title": "Northgate Credit Union - Member Services",
         "elements": [
@@ -4439,7 +4446,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Confirmation Number | CNF-8845",
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
             "region": "Sub-Account Opened",
             "ref": "content#1"
           },
@@ -4447,7 +4454,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "Confirmation Number",
-            "text": "CNF-8845",
+            "text": "«withheld:confirmation_number»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -4459,7 +4466,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Confirmation Number | CNF-8845",
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
             "region": "Sub-Account Opened",
             "ref": "content#2"
           },
@@ -4479,7 +4486,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member | 12345 — J. Whitfield",
+            "rowText": "Member | «withheld:member»",
             "region": "Sub-Account Opened",
             "ref": "content#3"
           },
@@ -4487,7 +4494,7 @@
             "role": "cell",
             "name": "",
             "proximityLabel": "Member",
-            "text": "12345 — J. Whitfield",
+            "text": "«withheld:member»",
             "disabled": false,
             "focusable": false,
             "bounds": {
@@ -4499,7 +4506,7 @@
             "frame": [
               "content"
             ],
-            "rowText": "Member | 12345 — J. Whitfield",
+            "rowText": "Member | «withheld:member»",
             "region": "Sub-Account Opened",
             "ref": "content#4"
           },
@@ -4605,7 +4612,7 @@
         "textByFrame": {
           "(top)": "",
           "nav": "Menu\nMember Lookup\nReports\nSign Off",
-          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number CNF-8845\nMember 12345 — J. Whitfield\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
+          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number «withheld:confirmation_number»\nMember «withheld:member»\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
         },
         "urlByFrame": {
           "(top)": "http://localhost:5173/t/tenant-a/",
@@ -4628,6 +4635,633 @@
           }
         ]
       }
+    },
+    {
+      "intent": "Read the member identity from the confirmation screen",
+      "element": {
+        "role": "cell",
+        "name": "",
+        "proximityLabel": "Member",
+        "text": "«withheld:member»",
+        "disabled": false,
+        "focusable": false,
+        "bounds": {
+          "x": 361,
+          "y": 104,
+          "width": 135.421875,
+          "height": 25
+        },
+        "frame": [
+          "content"
+        ],
+        "rowText": "Member | «withheld:member»",
+        "region": "Sub-Account Opened",
+        "ref": "content#4"
+      },
+      "before": {
+        "observedAt": "2026-09-12T03:21:12.601Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation",
+            "region": "Sub-Account Opened",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation Number",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 79,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
+            "region": "Sub-Account Opened",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Confirmation Number",
+            "text": "«withheld:confirmation_number»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 79,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
+            "region": "Sub-Account Opened",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 104,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | «withheld:member»",
+            "region": "Sub-Account Opened",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member",
+            "text": "«withheld:member»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 104,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | «withheld:member»",
+            "region": "Sub-Account Opened",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 129,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Account Type",
+            "text": "Holiday Savings",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 129,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 154,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Opening Deposit",
+            "text": "$250.00",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 154,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#8"
+          },
+          {
+            "role": "link",
+            "name": "Back to Member",
+            "text": "Back to Member",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 201,
+              "width": 97.921875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Sub-Account Opened",
+            "ref": "content#9"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number «withheld:confirmation_number»\nMember «withheld:member»\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "after": {
+        "observedAt": "2026-09-12T03:21:12.733Z",
+        "url": "http://localhost:5173/t/tenant-a/",
+        "title": "Northgate Credit Union - Member Services",
+        "elements": [
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Menu",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 180,
+              "height": 27
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Menu",
+            "region": "Navigation",
+            "ref": "nav#0"
+          },
+          {
+            "role": "link",
+            "name": "Member Lookup",
+            "text": "Member Lookup",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 33,
+              "width": 96.328125,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Member Lookup",
+            "region": "Navigation",
+            "ref": "nav#1"
+          },
+          {
+            "role": "link",
+            "name": "Reports",
+            "text": "Reports",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 60,
+              "width": 46.0625,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Reports",
+            "region": "Navigation",
+            "ref": "nav#2"
+          },
+          {
+            "role": "link",
+            "name": "Sign Off",
+            "text": "Sign Off",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 6,
+              "y": 87,
+              "width": 48.671875,
+              "height": 15
+            },
+            "frame": [
+              "nav"
+            ],
+            "rowText": "Sign Off",
+            "region": "Navigation",
+            "ref": "nav#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 180,
+              "y": 0,
+              "width": 1100,
+              "height": 27
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation",
+            "region": "Sub-Account Opened",
+            "ref": "content#0"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Confirmation Number",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 79,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
+            "region": "Sub-Account Opened",
+            "ref": "content#1"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Confirmation Number",
+            "text": "«withheld:confirmation_number»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 79,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Confirmation Number | «withheld:confirmation_number»",
+            "region": "Sub-Account Opened",
+            "ref": "content#2"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Member",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 104,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | «withheld:member»",
+            "region": "Sub-Account Opened",
+            "ref": "content#3"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Member",
+            "text": "«withheld:member»",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 104,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Member | «withheld:member»",
+            "region": "Sub-Account Opened",
+            "ref": "content#4"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Account Type",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 129,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#5"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Account Type",
+            "text": "Holiday Savings",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 129,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Account Type | Holiday Savings",
+            "region": "Sub-Account Opened",
+            "ref": "content#6"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "",
+            "text": "Opening Deposit",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 191,
+              "y": 154,
+              "width": 170,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#7"
+          },
+          {
+            "role": "cell",
+            "name": "",
+            "proximityLabel": "Opening Deposit",
+            "text": "$250.00",
+            "disabled": false,
+            "focusable": false,
+            "bounds": {
+              "x": 361,
+              "y": 154,
+              "width": 135.421875,
+              "height": 25
+            },
+            "frame": [
+              "content"
+            ],
+            "rowText": "Opening Deposit | $250.00",
+            "region": "Sub-Account Opened",
+            "ref": "content#8"
+          },
+          {
+            "role": "link",
+            "name": "Back to Member",
+            "text": "Back to Member",
+            "disabled": false,
+            "focusable": true,
+            "bounds": {
+              "x": 180,
+              "y": 201,
+              "width": 97.921875,
+              "height": 15
+            },
+            "frame": [
+              "content"
+            ],
+            "region": "Sub-Account Opened",
+            "ref": "content#9"
+          }
+        ],
+        "textByFrame": {
+          "(top)": "",
+          "nav": "Menu\nMember Lookup\nReports\nSign Off",
+          "content": "Confirmation\nSub-account opened successfully.\nConfirmation Number «withheld:confirmation_number»\nMember «withheld:member»\nAccount Type Holiday Savings\nOpening Deposit $250.00\nBack to Member"
+        },
+        "urlByFrame": {
+          "(top)": "http://localhost:5173/t/tenant-a/",
+          "nav": "http://localhost:5173/t/tenant-a/nav",
+          "content": "http://localhost:5173/t/tenant-a/subaccount"
+        },
+        "provider": "web/dom-scan",
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        }
+      },
+      "action": {
+        "kind": "extract",
+        "extracts": [
+          {
+            "name": "member",
+            "from": "text",
+            "transform": "trim"
+          }
+        ]
+      }
     }
   ],
   "declaredOutcomes": [
@@ -4644,5 +5278,6 @@
   ],
   "successText": "Sub-account opened successfully",
   "summary": "Scripted fixture recording of the sub-account opening flow.",
-  "turns": 0
+  "turns": 0,
+  "stopReason": "goal_reached"
 }

@@ -1,0 +1,43 @@
+{
+  "status": "business_outcome",
+  "capabilityId": "member.read_savings_balance",
+  "capabilityVersion": "1.0.0",
+  "runId": "e9b90c5a",
+  "tenantId": "tenant-a",
+  "startedAt": "2026-09-12T03:21:34.501Z",
+  "durationMs": 12409,
+  "evidenceDir": "evidence/replay-e9b90c5a",
+  "trace": [
+    {
+      "stepId": "enter_the_member_id_into_the_lookup_fiel",
+      "intent": "Enter the member ID into the lookup field",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 492,
+      "locatorStrategyUsed": "proximity_label(textbox, \"Member ID\")",
+      "locatorCandidates": 1
+    },
+    {
+      "stepId": "submit_the_member_search",
+      "intent": "Submit the member search",
+      "recoveriesApplied": [],
+      "status": "ok",
+      "attempts": 1,
+      "durationMs": 10734,
+      "locatorStrategyUsed": "role_name(button, \"Search\")",
+      "locatorCandidates": 1
+    }
+  ],
+  "surfaceDrift": {
+    "recorded": "9677b7a99dbe5759",
+    "observed": "",
+    "comparedSteps": 1,
+    "totalSteps": 7,
+    "drifted": null
+  },
+  "code": "ACCESS_RESTRICTED",
+  "message": "Reviewer-declared: the screen reads \"Authorization required\".",
+  "atStepId": "submit_the_member_search",
+  "outputs": {}
+}

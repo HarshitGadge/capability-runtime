@@ -67,8 +67,12 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'content-type': 'application/json' });
     return res.end(JSON.stringify({ ok: true, ...faults }));
   }
+  // Reset clears fault state only. Clearing sessions here would sign out every other
+  // client of the app — including a discovery run in progress — each time a replay
+  // starts or finishes, which is a harness bug indistinguishable from a session-timeout
+  // fault. The session_timeout fault drops exactly one session, on its armed route.
   if (url.pathname === '/__reset') {
-    faults.kind = 'none'; faults.remaining = 0; sessions.clear();
+    faults.kind = 'none'; faults.remaining = 0;
     res.writeHead(200, { 'content-type': 'application/json' });
     return res.end(JSON.stringify({ ok: true }));
   }

@@ -1,0 +1,40 @@
+{"seq":1,"at":"2026-09-12T03:21:47.798Z","kind":"run_started","capability":"member.read_savings_balance","version":"1.0.0","tenant":"tenant-a","provider":"web/dom-scan","inputs":{"member_id":"12345"}}
+{"seq":2,"at":"2026-09-12T03:21:48.079Z","kind":"recovery_triggered","code":"SIGNED_OUT","phase":"preflight","round":0}
+{"seq":3,"at":"2026-09-12T03:21:48.836Z","kind":"recovery_applied","code":"SIGNED_OUT","phase":"preflight"}
+{"seq":4,"at":"2026-09-12T03:21:48.995Z","kind":"note","message":"preflight applied SIGNED_OUT"}
+{"seq":5,"at":"2026-09-12T03:21:48.995Z","kind":"step_started","stepId":"enter_the_member_id_into_the_lookup_fiel","intent":"Enter the member ID into the lookup field","action":"type","risk":"elevated"}
+{"seq":6,"at":"2026-09-12T03:21:49.280Z","kind":"locator_resolved","stepId":"enter_the_member_id_into_the_lookup_fiel","semanticId":"member_lookup.member_id","used":"proximity_label(textbox, \"Member ID\")","candidates":1,"attempts":[{"strategy":"proximity_label(textbox, \"Member ID\")","matched":1}]}
+{"seq":7,"at":"2026-09-12T03:21:49.495Z","kind":"checkpoint_passed","stepId":"enter_the_member_id_into_the_lookup_fiel","phase":"postcondition"}
+{"seq":8,"at":"2026-09-12T03:21:49.495Z","kind":"step_succeeded","stepId":"enter_the_member_id_into_the_lookup_fiel","locatorStrategyUsed":"proximity_label(textbox, \"Member ID\")","locatorCandidates":1}
+{"seq":9,"at":"2026-09-12T03:21:49.495Z","kind":"step_started","stepId":"submit_the_member_search","intent":"Submit the member search","action":"click","risk":"safe"}
+{"seq":10,"at":"2026-09-12T03:21:49.780Z","kind":"locator_resolved","stepId":"submit_the_member_search","semanticId":"member_lookup.search","used":"role_name(button, \"Search\")","candidates":1,"attempts":[{"strategy":"role_name(button, \"Search\")","matched":1}]}
+{"seq":11,"at":"2026-09-12T03:21:50.050Z","kind":"checkpoint_passed","stepId":"submit_the_member_search","phase":"postcondition"}
+{"seq":12,"at":"2026-09-12T03:21:50.050Z","kind":"step_succeeded","stepId":"submit_the_member_search","locatorStrategyUsed":"role_name(button, \"Search\")","locatorCandidates":1}
+{"seq":13,"at":"2026-09-12T03:21:50.050Z","kind":"step_started","stepId":"open_the_matching_member_s_detail_record","intent":"Open the matching member's detail record from the search results","action":"click","risk":"safe"}
+{"seq":14,"at":"2026-09-12T03:21:50.315Z","kind":"locator_resolved","stepId":"open_the_matching_member_s_detail_record","semanticId":"search_results.view","used":"role_name(link, \"View\")","candidates":1,"attempts":[{"strategy":"role_name(link, \"View\")","matched":1}]}
+{"seq":15,"at":"2026-09-12T03:22:00.748Z","kind":"recovery_triggered","code":"MAINTENANCE_INTERSTITIAL","atStep":"open_the_matching_member_s_detail_record","attempt":1}
+{"seq":16,"at":"2026-09-12T03:22:00.881Z","kind":"locator_resolved","stepId":"ack_maintenance","semanticId":"interstitial.acknowledge","used":"role_name(button, \"Acknowledge\")","candidates":1,"attempts":[{"strategy":"role_name(button, \"Acknowledge\")","matched":1}]}
+{"seq":17,"at":"2026-09-12T03:22:01.009Z","kind":"recovery_applied","code":"MAINTENANCE_INTERSTITIAL","then":"retry_step"}
+{"seq":18,"at":"2026-09-12T03:22:01.157Z","kind":"checkpoint_passed","stepId":"open_the_matching_member_s_detail_record","phase":"postcondition","afterRecovery":"MAINTENANCE_INTERSTITIAL"}
+{"seq":19,"at":"2026-09-12T03:22:01.157Z","kind":"step_started","stepId":"capture_the_savings_balance_from_the_mem","intent":"Capture the savings balance from the member detail screen","action":"extract","risk":"safe"}
+{"seq":20,"at":"2026-09-12T03:22:01.436Z","kind":"locator_resolved","stepId":"capture_the_savings_balance_from_the_mem","semanticId":"member.savings_balance","used":"proximity_label(cell, \"Savings Balance\")","candidates":1,"attempts":[{"strategy":"proximity_label(cell, \"Savings Balance\")","matched":1}]}
+{"seq":21,"at":"2026-09-12T03:22:01.437Z","kind":"note","message":"extracted savings_balance","sensitivity":"regulated","value":"«withheld:currency»"}
+{"seq":22,"at":"2026-09-12T03:22:01.580Z","kind":"checkpoint_passed","stepId":"capture_the_savings_balance_from_the_mem","phase":"postcondition"}
+{"seq":23,"at":"2026-09-12T03:22:01.580Z","kind":"step_succeeded","stepId":"capture_the_savings_balance_from_the_mem","locatorStrategyUsed":"proximity_label(cell, \"Savings Balance\")","locatorCandidates":1}
+{"seq":24,"at":"2026-09-12T03:22:01.580Z","kind":"step_started","stepId":"capture_the_savings_account_number_from_","intent":"Capture the savings account number from the member detail screen","action":"extract","risk":"safe"}
+{"seq":25,"at":"2026-09-12T03:22:01.856Z","kind":"locator_resolved","stepId":"capture_the_savings_account_number_from_","semanticId":"member.savings_account","used":"proximity_label(cell, \"Savings Account\")","candidates":1,"attempts":[{"strategy":"proximity_label(cell, \"Savings Account\")","matched":1}]}
+{"seq":26,"at":"2026-09-12T03:22:01.856Z","kind":"note","message":"extracted savings_account_number","sensitivity":"regulated","value":"«withheld:string»"}
+{"seq":27,"at":"2026-09-12T03:22:02.001Z","kind":"checkpoint_passed","stepId":"capture_the_savings_account_number_from_","phase":"postcondition"}
+{"seq":28,"at":"2026-09-12T03:22:02.001Z","kind":"step_succeeded","stepId":"capture_the_savings_account_number_from_","locatorStrategyUsed":"proximity_label(cell, \"Savings Account\")","locatorCandidates":1}
+{"seq":29,"at":"2026-09-12T03:22:02.001Z","kind":"step_started","stepId":"capture_the_member_name_from_the_member_","intent":"Capture the member name from the member detail screen","action":"extract","risk":"safe"}
+{"seq":30,"at":"2026-09-12T03:22:02.285Z","kind":"locator_resolved","stepId":"capture_the_member_name_from_the_member_","semanticId":"member.member_name","used":"proximity_label(cell, \"Member Name\")","candidates":1,"attempts":[{"strategy":"proximity_label(cell, \"Member Name\")","matched":1}]}
+{"seq":31,"at":"2026-09-12T03:22:02.285Z","kind":"note","message":"extracted member_name","sensitivity":"regulated","value":"«withheld:string»"}
+{"seq":32,"at":"2026-09-12T03:22:02.419Z","kind":"checkpoint_passed","stepId":"capture_the_member_name_from_the_member_","phase":"postcondition"}
+{"seq":33,"at":"2026-09-12T03:22:02.419Z","kind":"step_succeeded","stepId":"capture_the_member_name_from_the_member_","locatorStrategyUsed":"proximity_label(cell, \"Member Name\")","locatorCandidates":1}
+{"seq":34,"at":"2026-09-12T03:22:02.419Z","kind":"step_started","stepId":"capture_the_member_status_flag_from_the_","intent":"Capture the member status flag from the member detail screen","action":"extract","risk":"safe"}
+{"seq":35,"at":"2026-09-12T03:22:02.690Z","kind":"locator_resolved","stepId":"capture_the_member_status_flag_from_the_","semanticId":"member.status","used":"proximity_label(cell, \"Status\")","candidates":1,"attempts":[{"strategy":"proximity_label(cell, \"Status\")","matched":1}]}
+{"seq":36,"at":"2026-09-12T03:22:02.690Z","kind":"note","message":"extracted status","sensitivity":"internal","value":"active"}
+{"seq":37,"at":"2026-09-12T03:22:02.832Z","kind":"checkpoint_passed","stepId":"capture_the_member_status_flag_from_the_","phase":"postcondition"}
+{"seq":38,"at":"2026-09-12T03:22:02.832Z","kind":"step_succeeded","stepId":"capture_the_member_status_flag_from_the_","locatorStrategyUsed":"proximity_label(cell, \"Status\")","locatorCandidates":1}
+{"seq":39,"at":"2026-09-12T03:22:02.974Z","kind":"checkpoint_passed","phase":"success","description":"Goal reached: \"Member Detail\" is visible"}
+{"seq":40,"at":"2026-09-12T03:22:02.974Z","kind":"run_finished","status":"success","outputs":{"savings_balance":"«withheld:currency»","savings_account_number":"«withheld:string»","member_name":"«withheld:string»","status":"active"}}

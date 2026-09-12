@@ -5,6 +5,7 @@ import { discover } from '../agent/discover.js';
 import { compile } from '../agent/compiler.js';
 import { CapabilityArtifact } from '../schema/artifact.js';
 import { stabilize } from '../replay/preflight.js';
+import { scrubDeclaredValues, collectValuesByLabel } from '../evidence/scrub.js';
 import { parseArgs, str, flag, loadProfile, baseUrlFor, buildRuntime, resetFaults } from './common.js';
 
 /**
@@ -109,6 +110,30 @@ try {
   }
 
   const parsed = CapabilityArtifact.parse(artifact);
+
+  // Now that the artifact declares which outputs are regulated, scrub their extracted
+  // values from this run's evidence — the transcript included. Input examples are kept:
+  // they are the caller's parameter, and the recording needs them to parameterize.
+  const withheld = new Set(parsed.outputs.filter(o => o.sensitivity === 'regulated' || o.sensitivity === 'secret').map(o => o.name));
+  const values = recording.actions.flatMap(a =>
+    a.action.kind === 'extract' && a.element
+      ? a.action.extracts.filter(x => withheld.has(x.name)).map(x => ({ name: x.name, value: (a.element!.text ?? a.element!.name ?? '').trim() }))
+      : []);
+  const labels = parsed.steps.flatMap(s => s.action.kind === 'extract' && s.target
+    ? s.action.extracts.filter(x => withheld.has(x.name)).flatMap(x =>
+        s.target!.strategies.filter(st => st.kind === 'proximity_label').map(st => ({ name: x.name, label: (st as { label: string }).label })))
+    : []);
+  // Never scrub structure. Labels and screen headings are how the artifact finds things
+  // and proves where it is; a scrub that tokenized "Status" because a value happened to
+  // read "Status" would leave a recording that no longer recompiles to this artifact.
+  const structural = new Set<string>([
+    ...parsed.inputs.map(i => String(i.example ?? '')),
+    ...parsed.steps.flatMap(s => (s.target?.strategies ?? []).flatMap(st => 'label' in st ? [st.label] : 'name' in st ? [st.name] : 'text' in st ? [st.text] : [])),
+    ...[parsed.success, ...parsed.steps.flatMap(s => [s.precondition, s.postcondition])]
+      .flatMap(cp => cp?.all ?? []).flatMap(a => a.kind === 'text_present' && a.text.kind === 'const' ? [String(a.text.value)] : []),
+  ]);
+  const scrubbed = scrubDeclaredValues(rt.recorder.dir, [...values, ...collectValuesByLabel(rt.recorder.dir, labels)], [...structural]);
+  console.log(`  scrubbed  ${values.length} regulated output value(s) from ${scrubbed.files.length} evidence file(s)`);
   const out = path.join('artifacts', `${parsed.capability.id}.json`);
   fs.mkdirSync('artifacts', { recursive: true });
   fs.writeFileSync(out, JSON.stringify(parsed, null, 2));
