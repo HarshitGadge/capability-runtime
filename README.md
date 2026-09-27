@@ -1,5 +1,7 @@
 # capability-runtime
 
+[![tests](https://github.com/HarshitGadge/capability-runtime/actions/workflows/tests.yml/badge.svg)](https://github.com/HarshitGadge/capability-runtime/actions/workflows/tests.yml)
+
 An LLM discovers a flow on a live application once. The run is frozen into a typed, versioned
 **capability artifact**. That artifact then replays **deterministically, with no model in the
 loop** — returning declared outputs, distinguishing legitimate business answers from real
